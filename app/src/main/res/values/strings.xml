@@ -107,4 +107,38 @@
     <!-- other -->
     <string name="warning_fill_info">Please Fill Information Needed!</string>
 
+
+    <string name="signup">SignUp</string>
+    <string name="have_account">Already have an account? <b>Log in</b></string>
+    <string name="login">Log in</string>
+    <string name="first_name">First name</string>
+    <string name="second_name">Second name</string>
+    <string name="gender">Gender</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="birth_date">Birth date</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="forgotPass">Forgot your password?</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="nihal">Nihal</string>
+    <string name="time">10:00</string>
+    <string name="vitaminc">Vitamin C</string>
+    <string name="doseNum">250</string>
+    <string name="medUnit">g</string>
+    <string name="take">take</string>
+    <string name="pillNum">1</string>
+    <string name="pill">Pill(s)</string>
+    <string name="timeZone">AM</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+
 </resources>

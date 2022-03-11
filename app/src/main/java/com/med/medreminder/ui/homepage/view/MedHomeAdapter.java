@@ -49,11 +49,11 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
           holder.medTime_txt.setText(medicines.get(position).getTime());
-          holder.timeZone_txt.setText(medicines.get(position).getTimeZone());
+//          holder.timeZone_txt.setText(medicines.get(position).getTimeZone());
           holder.medName_txt.setText(medicines.get(position).getName());
           holder.medName_txt.setText(medicines.get(position).getName());
-          holder.medUnit_txt.setText(medicines.get(position).getUnit());
-          holder.pillNum_txt.setText(medicines.get(position).getQuantity());
+//          holder.medUnit_txt.setText(medicines.get(position).getUnit());
+//          holder.pillNum_txt.setText(medicines.get(position).getQuantity());
           holder.pill_txt.setText(medicines.get(position).getForm());
         Glide.with(context).load(medicines.get(position).getImage())
                 //.apply(new RequestOptions().override(200,200))

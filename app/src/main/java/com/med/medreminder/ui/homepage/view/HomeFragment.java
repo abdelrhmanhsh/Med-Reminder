@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.homepage.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
 
 import java.util.ArrayList;
 
@@ -71,6 +73,13 @@ public class HomeFragment extends Fragment implements onMedClickListener{
         medHomeAdapter.setMedInfo(medicines);
 
         allMed_rv.setAdapter(medHomeAdapter);
+
+        addMed_floatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), AddMedActivity.class));
+            }
+        });
 
     }
 

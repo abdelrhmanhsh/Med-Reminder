@@ -213,5 +213,6 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     public void addMed(Medicine medicine) {
         presenterInterface.addMed(medicine);
         Toast.makeText(getContext(), "Medicine Added!", Toast.LENGTH_SHORT).show();
+        getActivity().finish();
     }
 }
