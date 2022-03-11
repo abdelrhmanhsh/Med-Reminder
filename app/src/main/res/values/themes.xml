@@ -14,4 +14,10 @@
         <!-- Customize your theme here. -->
 
     </style>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorOnPrimary">@color/blue_background</item>
+        <item name="colorAccent">@color/blue_background</item>
+        <item name="android:textColor">@color/blue_background</item>
+    </style>
+
 </resources>
