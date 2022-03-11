@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_medicine_graph"
+    app:startDestination="@id/addMedNameFragment">
+
+    <fragment
+        android:id="@+id/addMedNameFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedNameFragment"
+        android:label="fragment_add_med_name"
+        tools:layout="@layout/fragment_add_med_name" >
+
+        <action
+            android:id="@+id/actionAddMedNameToForm"
+            app:destination="@id/addMedFormFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedFormFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedFormFragment"
+        android:label="fragment_add_med_form"
+        tools:layout="@layout/fragment_add_med_form" >
+
+        <argument
+            android:name="medicine"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedFormToStrength"
+            app:destination="@id/addMedStrengthFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedStrengthFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedStrengthFragment"
+        android:label="fragment_add_med_strength"
+        tools:layout="@layout/fragment_add_med_strength" >
+
+        <argument
+            android:name="form"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedStrengthToReason"
+            app:destination="@id/addMedReasonFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedReasonFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedReasonFragment"
+        android:label="fragment_add_med_reason"
+        tools:layout="@layout/fragment_add_med_reason" >
+
+        <argument
+            android:name="strength"
+            app:argType="string"
+            android:defaultValue="0"/>
+
+        <action
+            android:id="@+id/actionAddMedReasonToDaily"
+            app:destination="@id/addMedDailyFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedDailyFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedDailyFragment"
+        android:label="fragment_add_med_daily"
+        tools:layout="@layout/fragment_add_med_daily" >
+
+        <argument
+            android:name="reason"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedDailyToOften"
+            app:destination="@id/addMedOftenFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/actionAddMedDailyToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedOftenFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedOftenFragment"
+        android:label="fragment_add_med_often"
+        tools:layout="@layout/fragment_add_med_often" >
+
+        <argument
+            android:name="daily"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedOftenToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/actionAddMedOftenToTime"
+            app:destination="@id/addMedTimeFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedTimeFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedTimeFragment"
+        android:label="fragment_add_med_time"
+        tools:layout="@layout/fragment_add_med_time" >
+
+        <argument
+            android:name="often"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedTimeToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedAlmostFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedAlmostFragment"
+        android:label="fragment_add_med_almost"
+        tools:layout="@layout/fragment_add_med_almost" >
+
+        <argument
+            android:name="almost"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedAlmostToTreatmentStartDate"
+            app:destination="@id/addMedTreatmentDurationStartDateFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/actionAddMedAlmostToRefillLeft"
+            app:destination="@id/addMedRefillLeftFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/actionAddMedAlmostToInstructionsFood"
+            app:destination="@id/addMedInstructionsFoodFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/actionAddMedAlmostToChangeIcon"
+            app:destination="@id/addMedChangeIconFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"  />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedTreatmentDurationStartDateFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedTreatmentDurationStartDateFragment"
+        android:label="fragment_add_med_treatment_start_date"
+        tools:layout="@layout/fragment_add_med_treatment_start_date" >
+
+        <argument
+            android:name="medicine"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedTreatmentStartDateToTreatmentHowLong"
+            app:destination="@id/addMedTreatmentHowLongFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedTreatmentHowLongFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedTreatmentHowLongFragment"
+        android:label="fragment_add_med_treatment_how_long"
+        tools:layout="@layout/fragment_add_med_treatment_how_long" >
+
+        <argument
+            android:name="start_date"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedTreatmentHowLongToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/actionAddMedTreatmentHowLongToEndDate"
+            app:destination="@id/addMedTreatmentDurationEndDateFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedRefillLeftFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedRefillLeftFragment"
+        android:label="fragment_add_med_refill_left"
+        tools:layout="@layout/fragment_add_med_refill_left" >
+
+        <argument
+            android:name="medicine"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedRefillLeftToRefillLimit"
+            app:destination="@id/addMedRefillLimitFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedInstructionsFoodFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedInstructionsFoodFragment"
+        android:label="fragment_add_med_instructions_food"
+        tools:layout="@layout/fragment_add_med_instructions_food" >
+
+        <action
+            android:id="@+id/actionAddMedInstructionsFoodToInstructionsOther"
+            app:destination="@id/addMedInstructionsOtherFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedInstructionsOtherFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedInstructionsOtherFragment"
+        android:label="fragment_add_med_instructions_other"
+        tools:layout="@layout/fragment_add_med_instructions_other" >
+        <action
+            android:id="@+id/action_addMedInstructionsOtherFragment_to_addMedAlmostFragment"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedRefillLimitFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedRefillLimitFragment"
+        android:label="fragment_add_med_refill_limit"
+        tools:layout="@layout/fragment_add_med_refill_limit" >
+
+        <argument
+            android:name="med_left"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedRefillLimitToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedTreatmentDurationEndDateFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedTreatmentDurationEndDateFragment"
+        android:label="AddMedTreatmentDurationEndDateFragment"
+        tools:layout="@layout/fragment_add_med_treatment_duration_end_date">
+
+        <argument
+            android:name="treatment_duration"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedTreatmentDurationEndDateToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/addMedChangeIconFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedChangeIconFragment"
+        android:label="fragment_add_med_change_icon"
+        tools:layout="@layout/fragment_add_med_change_icon" >
+
+        <argument
+            android:name="medicine"
+            app:argType="string"
+            android:defaultValue="default"/>
+
+        <action
+            android:id="@+id/actionAddMedChangeIconToAlmost"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+
+</navigation>
