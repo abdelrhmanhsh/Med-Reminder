@@ -1,11 +1,10 @@
-package com.med.medreminder.ui.addmedicine;
+package com.med.medreminder.ui.addmedicine.view;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -23,67 +22,70 @@ import com.med.medreminder.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddMedReasonFragment extends Fragment implements View.OnClickListener {
+public class AddMedRefillLimitFragment extends Fragment implements View.OnClickListener {
 
-    public static final String TAG = "AddMedReasonFragment";
+    public static final String TAG = "AddMedRefillLimitFragment";
 
-    Button btnNext;
-    EditText reasonInput;
+    TextView textTitle;
     ProgressBar progressBar;
-    TextView textTitle, textSkip;
+    Button btnSet;
+    EditText inputRefillLimit;
     String incomingMedicine;
     JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_med_reason, container, false);
+        return inflater.inflate(R.layout.fragment_add_med_refill_limit, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnNext = view.findViewById(R.id.btn_next_reason);
-        reasonInput = view.findViewById(R.id.input_med_reason);
-        progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.title);
-        textSkip = view.findViewById(R.id.skip);
+        progressBar = view.findViewById(R.id.progress_bar);
+        btnSet = view.findViewById(R.id.btn_set_refill_limit);
+        inputRefillLimit = view.findViewById(R.id.input_refill_limit);
 
-        btnNext.setOnClickListener(this);
-
-        progressBar.setProgress(40);
+        progressBar.setProgress(90);
+        btnSet.setOnClickListener(this);
 
         outgoingMedicine = getArgs();
 
     }
 
-    private void actionNext(View view){
-        if(!reasonInput.getText().toString().equals("")){
+    private void actionSet(View view){
 
-            String type = reasonInput.getText().toString();
+        if(!inputRefillLimit.getText().toString().equals("")){
+
+            String refillLimit = inputRefillLimit.getText().toString();
 
             try {
-                outgoingMedicine.put("reason", type);
+                outgoingMedicine.put("refill_limit", refillLimit);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             String medicine = outgoingMedicine.toString();
 
-            AddMedReasonFragmentDirections.ActionAddMedReasonToDaily
-                    action = AddMedReasonFragmentDirections.actionAddMedReasonToDaily();
-            action.setReason(medicine);
+            AddMedRefillLimitFragmentDirections.ActionAddMedRefillLimitToAlmost
+                    action = AddMedRefillLimitFragmentDirections.actionAddMedRefillLimitToAlmost();
+            action.setAlmost(medicine);
             Navigation.findNavController(view).navigate(action);
 
         } else {
             Toast.makeText(getContext(), getString(R.string.warning_fill_info), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private JSONObject getArgs(){
-        AddMedReasonFragmentArgs args = AddMedReasonFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getStrength();
+
+        AddMedRefillLimitFragmentArgs args =
+                AddMedRefillLimitFragmentArgs.fromBundle(getArguments());
+        incomingMedicine = args.getMedLeft();
+
         Log.i(TAG, "getArgs: " + incomingMedicine);
 
         JSONObject incomingJson = null;
@@ -93,7 +95,6 @@ public class AddMedReasonFragment extends Fragment implements View.OnClickListen
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         String title = "Unknown";
         try {
             title = incomingJson.getString("name");
@@ -106,7 +107,7 @@ public class AddMedReasonFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.btn_next_reason)
-            actionNext(view);
+        if(view.getId() == R.id.btn_set_refill_limit)
+            actionSet(view);
     }
 }

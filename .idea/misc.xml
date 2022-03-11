@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/white_rounded_button.xml" value="0.24814814814814815" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24635416666666668" />
         <entry key="app/src/main/res/layout/fragment_add_med_almost.xml" value="0.2128623188405797" />
+        <entry key="app/src/main/res/layout/fragment_add_med_change_icon.xml" value="0.23731884057971014" />
         <entry key="app/src/main/res/layout/fragment_add_med_daily.xml" value="0.2128623188405797" />
         <entry key="app/src/main/res/layout/fragment_add_med_form.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_med_instructions_food.xml" value="0.25" />
@@ -21,9 +22,11 @@
         <entry key="app/src/main/res/layout/fragment_add_med_refill_remind_time.xml" value="0.20471014492753623" />
         <entry key="app/src/main/res/layout/fragment_add_med_strength.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_med_time.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_add_med_treatment_duration_end_date.xml" value="0.23731884057971014" />
         <entry key="app/src/main/res/layout/fragment_add_med_treatment_duration_start_date.xml" value="0.20471014492753623" />
+        <entry key="app/src/main/res/layout/fragment_add_med_treatment_end_date.xml" value="0.23731884057971014" />
         <entry key="app/src/main/res/layout/fragment_add_med_treatment_how_long.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_add_med_treatment_start_date.xml" value="0.16984457367182135" />
+        <entry key="app/src/main/res/layout/fragment_add_med_treatment_start_date.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_med_when.xml" value="0.2128623188405797" />
       </map>
     </option>

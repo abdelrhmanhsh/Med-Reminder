@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.addmedicine.AddMedDailyFragment"
+    tools:context=".ui.addmedicine.view.AddMedDailyFragment"
     android:background="@color/blue_background">
 
     <!-- fifth in add med -->

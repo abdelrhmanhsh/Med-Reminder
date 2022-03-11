@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.addmedicine.AddMedAlmostFragment"
+    tools:context=".ui.addmedicine.view.AddMedAlmostFragment"
     android:background="@color/blue_background">
 
     <!-- ninth in add med -->
@@ -93,21 +93,21 @@
         android:gravity="start|center_vertical"
         android:background="@drawable/white_rounded_button" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_instructions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_get_refill_reminder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/add_instructions"
-        android:textAllCaps="false"
-        android:paddingStart="20dp"
-        android:gravity="start|center_vertical"
-        android:background="@drawable/white_rounded_button"  />
+<!--    <androidx.appcompat.widget.AppCompatButton-->
+<!--        android:id="@+id/btn_add_instructions"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/btn_get_refill_reminder"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:text="@string/add_instructions"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:paddingStart="20dp"-->
+<!--        android:gravity="start|center_vertical"-->
+<!--        android:background="@drawable/white_rounded_button"  />-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_change_med_icon"
@@ -124,7 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_add_instructions" />
+        app:layout_constraintTop_toBottomOf="@id/btn_get_refill_reminder" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_almost_save"

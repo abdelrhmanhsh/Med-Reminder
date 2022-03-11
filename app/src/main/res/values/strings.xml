@@ -76,6 +76,10 @@
     <string name="selection_set_end_date">Set end date</string>
     <string name="selection_ongoing_treatment">Ongoing treatment</string>
 
+    <!-- almost (treatment - end date) -->
+    <string name="set_end_date">Set end date -</string>
+
+
     <!-- almost (refill - left) -->
     <string name="left_question">How many pill(s) do you have left?</string>
 
@@ -96,6 +100,9 @@
 
     <!-- almost (instructions - other) -->
     <string name="instructions_other_question">Any other instructions?</string>
+
+    <!-- almost (icon) -->
+    <string name="choose_med_icon">Choose this icon med</string>
 
     <!-- other -->
     <string name="warning_fill_info">Please Fill Information Needed!</string>

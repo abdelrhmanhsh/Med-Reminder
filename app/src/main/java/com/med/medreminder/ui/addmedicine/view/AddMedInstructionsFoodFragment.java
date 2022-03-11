@@ -1,4 +1,4 @@
-package com.med.medreminder.ui.addmedicine;
+package com.med.medreminder.ui.addmedicine.view;
 
 import android.os.Bundle;
 

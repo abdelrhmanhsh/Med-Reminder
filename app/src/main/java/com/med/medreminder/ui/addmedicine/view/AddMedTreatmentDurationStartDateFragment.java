@@ -1,11 +1,10 @@
-package com.med.medreminder.ui.addmedicine;
+package com.med.medreminder.ui.addmedicine.view;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -13,48 +12,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.med.medreminder.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddMedTimeFragment extends Fragment implements View.OnClickListener {
+public class AddMedTreatmentDurationStartDateFragment extends Fragment implements View.OnClickListener {
 
-    public static final String TAG = "AddMedTimeFragment";
+    public static final String TAG = "AddMedTreatmentDurationStartDateFragment";
 
-    Button btnNext;
-    ProgressBar progressBar;
-    TimePicker timePicker;
     TextView textTitle;
+    ProgressBar progressBar;
+    DatePicker datePicker;
+    Button btnNext;
     String incomingMedicine;
     JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_med_time, container, false);
+        return inflater.inflate(R.layout.fragment_add_med_treatment_start_date, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnNext = view.findViewById(R.id.btn_next_time);
-        progressBar = view.findViewById(R.id.progress_bar);
-        timePicker = view.findViewById(R.id.time_picker);
         textTitle = view.findViewById(R.id.title);
+        progressBar = view.findViewById(R.id.progress_bar);
+        datePicker = view.findViewById(R.id.date_picker);
+        btnNext = view.findViewById(R.id.btn_next_treatment_start);
 
-        timePicker.setIs24HourView(true);
-        timePicker.setHour(20);
-        timePicker.setMinute(0);
-
-        progressBar.setProgress(80);
-
+        progressBar.setProgress(90);
         btnNext.setOnClickListener(this);
 
         outgoingMedicine = getArgs();
@@ -62,29 +55,31 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
     }
 
     private void actionNext(View view){
-        int hour = timePicker.getHour();
-        int minute = timePicker.getMinute();
 
-        String time = hour + ":" + minute;
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year = datePicker.getYear();
+
+        String date = day + "-" + month + "-" + year;
 
         try {
-            outgoingMedicine.put("time", time);
+            outgoingMedicine.put("start_date", date);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String medicine = outgoingMedicine.toString();
 
-        AddMedTimeFragmentDirections.ActionAddMedTimeToAlmost
-                action = AddMedTimeFragmentDirections.actionAddMedTimeToAlmost();
-        action.setAlmost(medicine);
+        AddMedTreatmentDurationStartDateFragmentDirections.ActionAddMedTreatmentStartDateToTreatmentHowLong
+                action = AddMedTreatmentDurationStartDateFragmentDirections.actionAddMedTreatmentStartDateToTreatmentHowLong();
+        action.setStartDate(medicine);
         Navigation.findNavController(view).navigate(action);
-
     }
 
     private JSONObject getArgs(){
-        AddMedTimeFragmentArgs args = AddMedTimeFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getOften();
+        AddMedTreatmentDurationStartDateFragmentArgs args =
+                AddMedTreatmentDurationStartDateFragmentArgs.fromBundle(getArguments());
+        incomingMedicine = args.getMedicine();
 
         Log.i(TAG, "getArgs: " + incomingMedicine);
 
@@ -95,7 +90,6 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         String title = "Unknown";
         try {
             title = incomingJson.getString("name");
@@ -108,7 +102,7 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btn_next_time)
+        if(view.getId() == R.id.btn_next_treatment_start)
             actionNext(view);
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.addmedicine.AddMedTreatmentHowLongFragment"
+    tools:context=".ui.addmedicine.view.AddMedTreatmentHowLongFragment"
     android:background="@color/blue_background">
 
     <View
@@ -37,7 +37,7 @@
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="How long is the treatment from the start date?"
+        android:text="@string/how_long_question"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -134,7 +134,7 @@
         android:textAllCaps="false"
         android:paddingStart="20dp"
         android:gravity="start|center_vertical"
-        android:background="@drawable/white_rounded_button"  />
+        android:background="@drawable/white_rounded_button" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/selection_ongoing_treatment"

@@ -1,4 +1,4 @@
-package com.med.medreminder.ui.addmedicine;
+package com.med.medreminder.ui.addmedicine.view;
 
 import android.os.Bundle;
 
@@ -23,76 +23,57 @@ import com.med.medreminder.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lib.kingja.switchbutton.SwitchMultiButton;
+public class AddMedReasonFragment extends Fragment implements View.OnClickListener {
 
-public class AddMedStrengthFragment extends Fragment implements View.OnClickListener {
+    public static final String TAG = "AddMedReasonFragment";
 
-    public static final String TAG = "AddMedStrengthFragment";
-
-    SwitchMultiButton switchMultiButton;
     Button btnNext;
+    EditText reasonInput;
     ProgressBar progressBar;
-    EditText strengthInput;
     TextView textTitle, textSkip;
-    String incomingMedicine, strengthType;
+    String incomingMedicine;
     JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_add_med_strength, container, false);
+        return inflater.inflate(R.layout.fragment_add_med_reason, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        switchMultiButton = view.findViewById(R.id.switch_multi_button);
-        btnNext = view.findViewById(R.id.btn_next_strength);
+        btnNext = view.findViewById(R.id.btn_next_reason);
+        reasonInput = view.findViewById(R.id.input_med_reason);
         progressBar = view.findViewById(R.id.progress_bar);
-        strengthInput = view.findViewById(R.id.input_med_strength);
         textTitle = view.findViewById(R.id.title);
         textSkip = view.findViewById(R.id.skip);
 
         btnNext.setOnClickListener(this);
 
-        progressBar.setProgress(30);
-
-        strengthType = "g";
-        switchMultiButton.setText(
-                getString(R.string.selection_g),
-                getString(R.string.selection_iu),
-                getString(R.string.selection_mcg),
-                getString(R.string.selection_meg),
-                getString(R.string.selection_mg)
-        ).setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
-            @Override
-            public void onSwitch(int position, String tabText) {
-                strengthType = tabText;
-            }
-        });
+        progressBar.setProgress(40);
 
         outgoingMedicine = getArgs();
 
     }
 
     private void actionNext(View view){
-        if(!strengthInput.getText().toString().equals("")){
+        if(!reasonInput.getText().toString().equals("")){
 
-            String type = strengthInput.getText().toString() + " " + strengthType;
+            String type = reasonInput.getText().toString();
 
             try {
-                outgoingMedicine.put("strength", type);
+                outgoingMedicine.put("reason", type);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             String medicine = outgoingMedicine.toString();
 
-            AddMedStrengthFragmentDirections.ActionAddMedStrengthToReason
-                    action = AddMedStrengthFragmentDirections.actionAddMedStrengthToReason();
-            action.setStrength(medicine);
+            AddMedReasonFragmentDirections.ActionAddMedReasonToDaily
+                    action = AddMedReasonFragmentDirections.actionAddMedReasonToDaily();
+            action.setReason(medicine);
             Navigation.findNavController(view).navigate(action);
 
         } else {
@@ -101,8 +82,8 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
     }
 
     private JSONObject getArgs(){
-        AddMedStrengthFragmentArgs args = AddMedStrengthFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getForm();
+        AddMedReasonFragmentArgs args = AddMedReasonFragmentArgs.fromBundle(getArguments());
+        incomingMedicine = args.getStrength();
         Log.i(TAG, "getArgs: " + incomingMedicine);
 
         JSONObject incomingJson = null;
@@ -125,7 +106,7 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.btn_next_strength)
+        if(view.getId() == R.id.btn_next_reason)
             actionNext(view);
     }
 }

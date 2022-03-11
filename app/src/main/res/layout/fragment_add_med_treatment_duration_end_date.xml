@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.addmedicine.view.AddMedRefillLeftFragment"
+    tools:context=".ui.addmedicine.view.AddMedTreatmentDurationStartDateFragment"
     android:background="@color/blue_background">
 
     <View
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHeight_percent=".25"/>
+        app:layout_constraintHeight_percent=".25" />
 
     <View
         android:id="@+id/bottom_view"
@@ -38,7 +38,7 @@
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/left_question"
+        android:text="@string/set_end_date"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:padding="25dp"
@@ -57,35 +57,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent=".8" />
 
-    <EditText
-        android:id="@+id/input_med_left"
-        android:layout_width="0dp"
+    <DatePicker
+        android:id="@+id/date_picker"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:gravity="center"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
         app:layout_constraintTop_toBottomOf="@id/top_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent=".3"
-        android:layout_marginTop="20dp"/>
-
-    <TextView
-        android:id="@+id/text_pills_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pills_left"
-        android:textSize="18sp"
-        android:textColor="@color/title_cyan"
-        app:layout_constraintTop_toBottomOf="@id/input_med_left"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="50dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_next_med_left"
+        android:id="@+id/btn_set_end_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/next"
+        android:text="@string/set"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:textColor="@color/white"

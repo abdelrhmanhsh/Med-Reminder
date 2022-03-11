@@ -1,4 +1,4 @@
-package com.med.medreminder.ui.addmedicine;
+package com.med.medreminder.ui.addmedicine.view;
 
 import android.os.Bundle;
 
@@ -17,13 +17,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.med.medreminder.R;
+import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
+import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddMedAlmostFragment extends Fragment implements View.OnClickListener {
+public class AddMedAlmostFragment extends Fragment implements View.OnClickListener, AddMedViewInterface {
 
     public static final String TAG = "AddMedAlmostFragment";
 
@@ -32,6 +37,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     TextView textTitle;
     String incomingMedicine;
     JSONObject outgoingMedicine;
+
+    AddMedPresenterInterface presenterInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,17 +52,20 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         btnSetTreatmentDuration = view.findViewById(R.id.btn_set_treatment_duration);
         btnGetRefillReminder = view.findViewById(R.id.btn_get_refill_reminder);
-        btnAddInstructions = view.findViewById(R.id.btn_add_instructions);
+//        btnAddInstructions = view.findViewById(R.id.btn_add_instructions);
         btnChangeMedIcon = view.findViewById(R.id.btn_change_med_icon);
         btnSave = view.findViewById(R.id.btn_almost_save);
         progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.description);
 
+        presenterInterface = new AddMedPresenter(this,
+                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+
         progressBar.setProgress(90);
 
         btnSetTreatmentDuration.setOnClickListener(this);
         btnGetRefillReminder.setOnClickListener(this);
-        btnAddInstructions.setOnClickListener(this);
+//        btnAddInstructions.setOnClickListener(this);
         btnChangeMedIcon.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
@@ -87,22 +97,40 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     }
 
     private void actionSetTreatmentDuration(View view){
-        Toast.makeText(getContext(), "Set Duration Treatment", Toast.LENGTH_SHORT).show();
+
+        String medicine = outgoingMedicine.toString();
+
+        AddMedAlmostFragmentDirections.ActionAddMedAlmostToTreatmentStartDate
+                action = AddMedAlmostFragmentDirections.actionAddMedAlmostToTreatmentStartDate();
+        action.setMedicine(medicine);
+        Navigation.findNavController(view).navigate(action);
     }
 
     private void actionGetRefillReminder(View view){
-        Toast.makeText(getContext(), "Get Refill Reminder", Toast.LENGTH_SHORT).show();
+        String medicine = outgoingMedicine.toString();
+
+        AddMedAlmostFragmentDirections.ActionAddMedAlmostToRefillLeft
+                action = AddMedAlmostFragmentDirections.actionAddMedAlmostToRefillLeft();
+        action.setMedicine(medicine);
+        Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionAddInstructions(View view){
-        Toast.makeText(getContext(), "Add Instructions", Toast.LENGTH_SHORT).show();
-    }
+//    private void actionAddInstructions(View view){
+////        NavDirections directions =  AddMedAlmostFragmentDirections.actionAddMedAlmostToInstructionsFood();
+////        Navigation.findNavController(view).navigate(directions);
+//        Toast.makeText(getContext(), "Add Instructions", Toast.LENGTH_SHORT).show();
+//    }
 
     private void actionChangeMedIcon(View view){
-        Toast.makeText(getContext(), "Change Med Icon", Toast.LENGTH_SHORT).show();
+        String medicine = outgoingMedicine.toString();
+
+        AddMedAlmostFragmentDirections.ActionAddMedAlmostToChangeIcon
+                action = AddMedAlmostFragmentDirections.actionAddMedAlmostToChangeIcon();
+        action.setMedicine(medicine);
+        Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionSave(View view){
+    private void actionSave(){
 
         try {
 
@@ -111,27 +139,46 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             String strength = outgoingMedicine.getString("strength");
             String reason = outgoingMedicine.getString("reason");
             String isDaily = outgoingMedicine.getString("isDaily");
-            String often = "Only As Needed";
-            String time = "Only As Needed";
-//            String often = outgoingMedicine.getString("often");
-//            String when = outgoingMedicine.getString("when");
-//            String time = outgoingMedicine.getString("time");
+            String often = getString(R.string.selection_only_as_needed);
+            String time = getString(R.string.selection_only_as_needed);
+            String startDate = getString(R.string.selection_only_as_needed);
+            String endDate = getString(R.string.selection_only_as_needed);
+            String medLeft = getString(R.string.selection_only_as_needed);
+            String refillLimit = getString(R.string.selection_only_as_needed);
+            int medIcon = R.drawable.ic_medicine_other;
 
+            // check for nullable columns
             if(outgoingMedicine.has("often") && !outgoingMedicine.isNull("often")){
                 often = outgoingMedicine.getString("often");
             }
             if(outgoingMedicine.has("time") && !outgoingMedicine.isNull("time")){
                 time = outgoingMedicine.getString("time");
             }
+            if(outgoingMedicine.has("start_date") && !outgoingMedicine.isNull("start_date")){
+                startDate = outgoingMedicine.getString("start_date");
+            }
+            if(outgoingMedicine.has("end_date") && !outgoingMedicine.isNull("end_date")){
+                endDate = outgoingMedicine.getString("end_date");
+            }
+            if(outgoingMedicine.has("med_left") && !outgoingMedicine.isNull("med_left")){
+                medLeft = outgoingMedicine.getString("med_left");
+            }
+            if(outgoingMedicine.has("refill_limit") && !outgoingMedicine.isNull("refill_limit")){
+                refillLimit = outgoingMedicine.getString("refill_limit");
+            }
+            if(outgoingMedicine.has("image") && !outgoingMedicine.isNull("image")){
+                medIcon = outgoingMedicine.getInt("image");
+            }
 
-            Medicine medicine = new Medicine(name, form, strength, reason, isDaily, often, time);
+            Medicine medicine = new Medicine(0, name, form, strength, reason, isDaily, often, time,
+                    startDate, endDate, medLeft, refillLimit, medIcon);
             Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
+            addMed(medicine);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Toast.makeText(getContext(), "Save", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -144,21 +191,27 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 actionGetRefillReminder(view);
                 break;
 
-            case R.id.btn_add_instructions:
-                actionAddInstructions(view);
-                break;
+//            case R.id.btn_add_instructions:
+//                actionAddInstructions(view);
+//                break;
 
             case R.id.btn_change_med_icon:
                 actionChangeMedIcon(view);
                 break;
 
             case R.id.btn_almost_save:
-                actionSave(view);
+                actionSave();
                 break;
 
             default:
                 Log.e(TAG, "onClick: error");
 
         }
+    }
+
+    @Override
+    public void addMed(Medicine medicine) {
+        presenterInterface.addMed(medicine);
+        Toast.makeText(getContext(), "Medicine Added!", Toast.LENGTH_SHORT).show();
     }
 }
