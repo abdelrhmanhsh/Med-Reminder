@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/fragment_starting"
+    android:id="@+id/mobile_navigation">
+
+    <fragment
+        android:id="@+id/fragment_starting"
+        android:name="com.med.medreminder.ui.starterPage.view.StartingFragment"
+        tools:layout="@layout/fragment_starting" >
+        <action
+           android:id="@+id/fragmentToSignup"
+            app:destination="@id/fragment_signup"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/fragmentToLogin"
+            app:destination="@id/fragment_login"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_down"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_signup"
+        android:name="com.med.medreminder.ui.signup.view.SignupFragment"
+        tools:layout="@layout/fragment_signup" />
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.med.medreminder.ui.login.view.LoginFragment"
+        tools:layout="@layout/fragment_login" >
+
+
+    </fragment>
+</navigation>
