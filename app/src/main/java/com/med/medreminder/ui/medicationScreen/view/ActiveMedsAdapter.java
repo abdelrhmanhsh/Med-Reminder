@@ -10,14 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.med.medreminder.R;
-import com.med.medreminder.model.Medicine;
 
 public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.ViewHolder> {
 
-    Medicine[] medicines;
-    public ActiveMedsAdapter(Medicine[] medicines){
-        this.medicines = medicines;
-    }
+//    Medicine[] medicines;
+//    public ActiveMedsAdapter(Medicine[] medicines){
+//        this.medicines = medicines;
+//    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         View row;
@@ -72,16 +71,17 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
         @Override
         public void onBindViewHolder(@NonNull ActiveMedsAdapter.ViewHolder holder, int position) {
             //replacement of data in view holder
-            holder.getMedTime().setText(medicines[position].getTime());
-            holder.getMedName().setText(medicines[position].getName());
-            holder.getMedDose().setText(medicines[position].getStrength());
-            holder.getImg().setImageResource(medicines[position].getImage());
-            holder.getPillNum().setText(medicines[position].getRefillLimit()+"");
+//            holder.getMedTime().setText(medicines[position].getTime());
+//            holder.getMedName().setText(medicines[position].getName());
+//            holder.getMedDose().setText(medicines[position].getStrength());
+//            holder.getImg().setImageResource(medicines[position].getImage());
+//            holder.getPillNum().setText(medicines[position].getRefillLimit()+"");
         }
 
     @Override
     public int getItemCount() {
-        return medicines.length;
+        return 0;
+//        return medicines.length;
     }
 
 }

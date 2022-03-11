@@ -51,13 +51,13 @@ public class MedicationScreenFragment extends Fragment {
         activeMeds = view.findViewById(R.id.recyclerView_ActiveMeds);
         inactiveMeds = view.findViewById(R.id.recyclerView_InctiveMeds);
         medBtn = view.findViewById(R.id.medBtn);
-        activeAdapter = new ActiveMedsAdapter(MedicationsScreen.active_meds);
+//        activeAdapter = new ActiveMedsAdapter(MedicationsScreen.active_meds);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         activeMeds.setLayoutManager(layoutManager);
         activeMeds.setAdapter(activeAdapter);
 
-        inactiveAdapter = new InactiveMedsAdapter(MedicationsScreen.inactive_meds);
+//        inactiveAdapter = new InactiveMedsAdapter(MedicationsScreen.inactive_meds);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
         layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
         inactiveMeds.setLayoutManager(layoutManager2);
