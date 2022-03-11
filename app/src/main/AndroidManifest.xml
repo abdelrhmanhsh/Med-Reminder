@@ -10,10 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
         <activity
-            android:name=".ui.homepage.view.HomeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_home" />
-        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>

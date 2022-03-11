@@ -1,33 +1,162 @@
 package com.med.medreminder.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "medicines")
 public class Medicine {
 
-        //public int id;
-        String name;
-        String form;
-        String dose;
-//        String reason;
-//        String isDaily;
-//        String often;
-        String time;
-        String timeZone;
-        String unit;
-        String quantity;
-        int image;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
 
-        public Medicine(int image, String name, String form, String dose, String time, String timeZone, String unit, String quantity) {
-            this.image = image;
-            this.name = name;
-            this.form = form;
-            this.dose = dose;
-//            this.reason = reason;
-//            this.isDaily = isDaily;
-//            this.often = often;
-            this.time = time;
-            this.timeZone = timeZone;
-            this.unit = unit;
-            this.quantity = quantity;
-        }
+    @ColumnInfo(name = "name")
+    String name;
+
+    @ColumnInfo(name = "form")
+    String form;
+
+    @ColumnInfo(name = "strength")
+    String strength;
+
+    @ColumnInfo(name = "reason")
+    String reason;
+
+    @ColumnInfo(name = "isDaily")
+    String isDaily;
+
+    @ColumnInfo(name = "often")
+    String often;
+
+    @ColumnInfo(name = "time")
+    String time;
+
+    @ColumnInfo(name = "startDate")
+    String startDate;
+
+    @ColumnInfo(name = "endDate")
+    String endDate;
+
+    @ColumnInfo(name = "medLeft")
+    String medLeft;
+
+    @ColumnInfo(name = "refillLimit")
+    String refillLimit;
+
+    @ColumnInfo(name = "image")
+    int image;
+
+    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, String medLeft, String refillLimit, int image) {
+        this.id = id;
+        this.name = name;
+        this.form = form;
+        this.strength = strength;
+        this.reason = reason;
+        this.isDaily = isDaily;
+        this.often = often;
+        this.time = time;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.medLeft = medLeft;
+        this.refillLimit = refillLimit;
+        this.image = image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+    }
+
+    public String getStrength() {
+        return strength;
+    }
+
+    public void setStrength(String strength) {
+        this.strength = strength;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getIsDaily() {
+        return isDaily;
+    }
+
+    public void setIsDaily(String isDaily) {
+        this.isDaily = isDaily;
+    }
+
+    public String getOften() {
+        return often;
+    }
+
+    public void setOften(String often) {
+        this.often = often;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getMedLeft() {
+        return medLeft;
+    }
+
+    public void setMedLeft(String medLeft) {
+        this.medLeft = medLeft;
+    }
+
+    public String getRefillLimit() {
+        return refillLimit;
+    }
+
+    public void setRefillLimit(String refillLimit) {
+        this.refillLimit = refillLimit;
+    }
 
     public int getImage() {
         return image;
@@ -37,100 +166,22 @@ public class Medicine {
         this.image = image;
     }
 
-    public String getQuantity() {
-        return quantity;
+    @Override
+    public String toString() {
+        return "Medicine{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", form='" + form + '\'' +
+                ", strength='" + strength + '\'' +
+                ", reason='" + reason + '\'' +
+                ", isDaily='" + isDaily + '\'' +
+                ", often='" + often + '\'' +
+                ", time='" + time + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", medLeft='" + medLeft + '\'' +
+                ", refillLimit='" + refillLimit + '\'' +
+                ", image=" + image +
+                '}';
     }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
-
-    public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getForm() {
-            return form;
-        }
-
-        public void setForm(String form) {
-            this.form = form;
-        }
-
-        public String getDose() {
-            return dose;
-        }
-
-        public void setDose(String dose) {
-            this.dose = dose;
-        }
-
-//        public String getReason() {
-//            return reason;
-//        }
-//
-//        public void setReason(String reason) {
-//            this.reason = reason;
-//        }
-//
-//        public String getIsDaily() {
-//            return isDaily;
-//        }
-//
-//        public void setIsDaily(String isDaily) {
-//            this.isDaily = isDaily;
-//        }
-//
-//        public String getOften() {
-//            return often;
-//        }
-//
-//        public void setOften(String often) {
-//            this.often = often;
-//        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        @Override
-        public String toString() {
-            return "Medicine{" +
-                    "name='" + name + '\'' +
-                    ", form='" + form + '\'' +
-                    ", dose='" + dose + '\'' +
-                    ", unit='" + unit + '\'' +
-                    ", quantity='" + quantity + '\'' +
-//                    ", reason='" + reason + '\'' +
-//                    ", isDaily='" + isDaily + '\'' +
-//                    ", often='" + often + '\'' +
-                    ", time='" + time + '\'' +
-                    '}';
-        }
-    }
-
-
+}

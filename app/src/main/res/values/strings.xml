@@ -1,37 +1,110 @@
 <resources>
     <string name="app_name">MedReminder</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="signup">SignUp</string>
-    <string name="have_account">Already have an account? <b>Log in</b></string>
-    <string name="login">Log in</string>
-    <string name="first_name">First name</string>
-    <string name="second_name">Second name</string>
-    <string name="gender">Gender</string>
-    <string name="female">Female</string>
-    <string name="male">Male</string>
-    <string name="birth_date">Birth date</string>
-    <string name="password">Password</string>
-    <string name="email">Email</string>
-    <string name="forgotPass">Forgot your password?</string>
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="nihal">Nihal</string>
-    <string name="time">10:00</string>
-    <string name="vitaminc">Vitamin C</string>
-    <string name="doseNum">250</string>
-    <string name="medUnit">g</string>
-    <string name="take">take</string>
-    <string name="pillNum">1</string>
-    <string name="pill">Pill(s)</string>
-    <string name="timeZone">AM</string>
-    <string name="sunday">Sun</string>
-    <string name="monday">Mon</string>
-    <string name="tuesday">Tue</string>
-    <string name="wednesday">Wed</string>
-    <string name="thursday">Thu</string>
-    <string name="friday">Fri</string>
-    <string name="saturday">Sat</string>
+
+    <!-- add medicine fragments -->
+    <!-- first (name) -->
+    <string name="add_medicine">Add Medicine</string>
+    <string name="name_question">What med would you like to add?</string>
+    <string name="med_name">Med Name</string>
+    <string name="next">Next</string>
+
+    <!-- second (form) -->
+    <string name="form_question">What form is the med?</string>
     <string name="skip">Skip</string>
+    <string name="selection_pill">Pill</string>
+    <string name="selection_solution">Solution</string>
+    <string name="selection_injection">Injection</string>
+    <string name="selection_powder">Powder</string>
+    <string name="selection_drops">Drops</string>
+    <string name="selection_inhaler">Inhaler</string>
+    <string name="selection_other">Other</string>
+
+    <!-- third (strength) -->
+    <string name="strength_question">What strength is the med?</string>
+    <string name="selection_g">g</string>
+    <string name="selection_iu">IU</string>
+    <string name="selection_mcg">mcg</string>
+    <string name="selection_meg">mEg</string>
+    <string name="selection_mg">mg</string>
+
+    <!-- forth (reason) -->
+    <string name="reason_question">What are you taking it for?</string>
+    <string name="med_reason">Med Reason</string>
+
+    <!-- fifth (daily) -->
+    <string name="daily_question">Do you need to take this med every day?</string>
+    <string name="selection_only_as_needed">Only As Needed</string>
+    <string name="selection_yes">Yes</string>
+    <string name="selection_no">No</string>
+
+    <!-- sixth (often) -->
+    <string name="often_question">How often do you take it?</string>
+    <string name="selection_once_daily">Once Daily</string>
+    <string name="selection_twice_daily">Twice Daily</string>
+    <string name="selection_three_times">3 times a day</string>
+    <string name="selection_four_times">4 times a day</string>
+    <string name="selection_six_times">6 times a day</string>
+    <string name="selection_every_six_hours">Every 6 hours</string>
+
+    <!-- seventh (when) -->
+    <string name="when_question">At what time of day do you take your first dose?</string>
+    <string name="selection_morning">Morning</string>
+    <string name="selection_noon">Noon</string>
+    <string name="selection_evening">Evening</string>
+    <string name="selection_night">Night</string>
+
+    <!-- eighth (time) -->
+    <string name="time_question">What time do you want to be reminded?</string>
+
+    <!-- ninth (almost) -->
+    <string name="almost_question">Almost done. Would you like to:</string>
+    <string name="set_treatment_duration">Set treatment duration?</string>
+    <string name="get_refill_reminders">Get refill reminder?</string>
+    <string name="add_instructions">Add instructions?</string>
+    <string name="change_med_icon">Change this med icon?</string>
+    <string name="save">Save</string>
+
+    <!-- almost (treatment - start date) -->
+    <string name="set_start_date">Set start date -</string>
+
+    <!-- almost (treatment - how long) -->
+    <string name="how_long_question">How long is the treatment from the start date?</string>
+    <string name="selection_thirty_days">30 days</string>
+    <string name="selection_one_week">1 week</string>
+    <string name="selection_ten_days">10 days</string>
+    <string name="selection_five_days">5 days</string>
+    <string name="selection_set_end_date">Set end date</string>
+    <string name="selection_ongoing_treatment">Ongoing treatment</string>
+
+    <!-- almost (treatment - end date) -->
+    <string name="set_end_date">Set end date -</string>
+
+
+    <!-- almost (refill - left) -->
+    <string name="left_question">How many pill(s) do you have left?</string>
+
+    <!-- almost (refill - refill limit) -->
+    <string name="refill_limit_question">When should we remind you to refill your prescription?</string>
+    <string name="remind_when_i_have">Remind me when i have:</string>
+    <string name="pills_left">Pill(s) left</string>
+
+    <!-- almost (refill - time) -->
+    <string name="set">Set</string>
+
+    <!-- almost (instructions - food) -->
+    <string name="instructions_food_question">Should this be taken with food?</string>
+    <string name="selection_before_eating">Before eating</string>
+    <string name="selection_while_eating">While eating</string>
+    <string name="selection_after_eating">After eating</string>
+    <string name="selection_doesnt_matter">Doesn\'t Matter</string>
+
+    <!-- almost (instructions - other) -->
+    <string name="instructions_other_question">Any other instructions?</string>
+
+    <!-- almost (icon) -->
+    <string name="choose_med_icon">Choose this icon med</string>
+
+    <!-- other -->
+    <string name="warning_fill_info">Please Fill Information Needed!</string>
+
 </resources>

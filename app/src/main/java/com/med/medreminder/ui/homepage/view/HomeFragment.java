@@ -56,11 +56,11 @@ public class HomeFragment extends Fragment implements onMedClickListener{
 
         medicines = new ArrayList<>();
 
-        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
+//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
+//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
+//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
+//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
+//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
 
         allMed_rv.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getContext());
