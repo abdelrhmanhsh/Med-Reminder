@@ -10,13 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 public class InactiveMedsAdapter extends RecyclerView.Adapter<InactiveMedsAdapter.ViewHolder>{
 
-//    private Medicine[] medicines;
-//    public InactiveMedsAdapter(Medicine[] medicines){
-//        this.medicines = medicines;
-//    }
+    private Medicine[] medicines;
+    public InactiveMedsAdapter(Medicine[] medicines){
+        this.medicines = medicines;
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         View row;
@@ -58,15 +59,14 @@ public class InactiveMedsAdapter extends RecyclerView.Adapter<InactiveMedsAdapte
     @Override
     public void onBindViewHolder(@NonNull InactiveMedsAdapter.ViewHolder holder, int position) {
         //replacement of data in view holder
-//        holder.getMedName().setText(medicines[position].getName());
+        holder.getMedName().setText(medicines[position].getName());
 //        holder.getMedDose().setText(medicines[position].getDose());
 //        holder.getMedUnit().setText(medicines[position].getQuantity());
-//        holder.getImg().setImageResource(medicines[position].getImage());
+        holder.getImg().setImageResource(medicines[position].getImage());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
-//        return medicines.length;
+        return medicines.length;
     }
 }

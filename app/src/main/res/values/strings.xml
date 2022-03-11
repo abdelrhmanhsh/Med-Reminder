@@ -141,4 +141,26 @@
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
 
+
+    <string name="ActiveMeds">Active Meds</string>
+    <string name="InactiveMeds">Inactive Meds</string>
+    <string name="MedName">Med Name</string>
+    <string name="dose">Dosage</string>
+    <string name="PillsLeft">Pills Left</string>
+    <string name="addMed">Add a med</string>
+    <string name="last_name">Last Name</string>
+    <string name="default_color">Default Color</string>
+    <string name="add_dependency">Add Dependent</string>
+    <string name="ConfirmText">By clicking the “Done”, you confirm that you received the consent of the dependent (when applicable) to the association of the dependent’s personal information with their health information and confirm you have read and agreed to our Terms and Privacy Policy</string>
+    <string name="done">Done</string>
+    <string name="ManageMedsText">Manage meds for your family members</string>
+    <string name="phone">Phone</string>
+    <string name="shareMeds">Share my meds with this Medfriend</string>
+    <string name="medFriendDesc">A Medfriend is a family member or a friend that helps you remember to take your meds in case you forget.</string>
+    <string name="send">Send</string>
+    <string name="inviteMedFriend">Invite Medfriend</string>
+    <string name="Drug">Drug Name</string>
+    <string name="left">left</string>
+    <string name="title_medication_screen">Medication Screen</string>
+
 </resources>

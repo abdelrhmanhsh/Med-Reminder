@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 public class MedicationsScreen extends AppCompatActivity {
 

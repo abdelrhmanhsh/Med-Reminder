@@ -4,32 +4,76 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentDashboardBinding;
+import com.med.medreminder.ui.medicationScreen.view.ActiveMedsAdapter;
+import com.med.medreminder.ui.medicationScreen.view.InactiveMedsAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class DashboardFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private RecyclerView activeMeds;
+    private RecyclerView inactiveMeds;
+    private ActiveMedsAdapter activeAdapter;
+    private InactiveMedsAdapter inactiveAdapter;
+    //Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time,int image, int totalPills,String timeZone,String dose,String quantity) {
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    private Button medBtn;
 
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textDashboard;
-        return root;
+    public DashboardFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activeMeds = view.findViewById(R.id.recyclerView_ActiveMeds);
+        inactiveMeds = view.findViewById(R.id.recyclerView_InctiveMeds);
+        medBtn = view.findViewById(R.id.medBtn);
+//        activeAdapter = new ActiveMedsAdapter(MedicationsScreen.active_meds);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        activeMeds.setLayoutManager(layoutManager);
+        activeMeds.setAdapter(activeAdapter);
+
+//        inactiveAdapter = new InactiveMedsAdapter(MedicationsScreen.inactive_meds);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
+        layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
+        inactiveMeds.setLayoutManager(layoutManager2);
+        inactiveMeds.setAdapter(inactiveAdapter);
+
+        medBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Medication Drug Screen
+                //Intent intent = new Intent(MedicationScreenFragment.this, MedicationDrugScreen.class);
+                //startActivity(intent);
+            }
+        });
+
+    }
+
 }

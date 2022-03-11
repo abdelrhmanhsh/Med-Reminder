@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
         <entry key="app/src/main/res/drawable/radius_view.xml" value="0.2638888888888889" />
         <entry key="app/src/main/res/drawable/white_rounded_button.xml" value="0.26564102564102565" />
         <entry key="app/src/main/res/layout/activity_add_med.xml" value="0.21875" />
@@ -11,8 +12,11 @@
         <entry key="app/src/main/res/layout/fragment_add_med_form.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/fragment_add_med_time.xml" value="0.23007246376811594" />
         <entry key="app/src/main/res/layout/fragment_add_med_treatment_how_long.xml" value="0.21875" />
+        <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.11979166666666667" />
+        <entry key="app/src/main/res/layout/fragment_medication_screen.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/fragment_mediciation_drug_screen_display.xml" value="0.335" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>
   </component>
