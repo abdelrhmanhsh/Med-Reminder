@@ -1,8 +1,10 @@
-package com.med.medreminder;
+package com.med.medreminder.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.med.medreminder.R;
 
 public class MainActivity extends AppCompatActivity {
 
