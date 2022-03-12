@@ -38,15 +38,28 @@ public class Medicine {
     String endDate;
 
     @ColumnInfo(name = "medLeft")
-    String medLeft;
+    int medLeft;
 
     @ColumnInfo(name = "refillLimit")
-    String refillLimit;
+    int refillLimit;
 
     @ColumnInfo(name = "image")
     int image;
 
-    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, String medLeft, String refillLimit, int image) {
+    private static Medicine instance = null;
+
+
+    public Medicine() {
+    }
+
+    public static Medicine getInstance() {
+        if(instance == null){
+            instance = new Medicine();
+        }
+        return instance;
+    }
+
+    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, int medLeft, int refillLimit, int image) {
         this.id = id;
         this.name = name;
         this.form = form;
@@ -61,6 +74,7 @@ public class Medicine {
         this.refillLimit = refillLimit;
         this.image = image;
     }
+
 
     public int getId() {
         return id;
@@ -142,19 +156,19 @@ public class Medicine {
         this.endDate = endDate;
     }
 
-    public String getMedLeft() {
+    public int getMedLeft() {
         return medLeft;
     }
 
-    public void setMedLeft(String medLeft) {
+    public void setMedLeft(int medLeft) {
         this.medLeft = medLeft;
     }
 
-    public String getRefillLimit() {
+    public int getRefillLimit() {
         return refillLimit;
     }
 
-    public void setRefillLimit(String refillLimit) {
+    public void setRefillLimit(int refillLimit) {
         this.refillLimit = refillLimit;
     }
 
@@ -179,8 +193,8 @@ public class Medicine {
                 ", time='" + time + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
-                ", medLeft='" + medLeft + '\'' +
-                ", refillLimit='" + refillLimit + '\'' +
+                ", medLeft='" + medLeft +
+                ", refillLimit='" + refillLimit +
                 ", image=" + image +
                 '}';
     }

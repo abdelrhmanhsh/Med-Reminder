@@ -106,6 +106,10 @@
 
     <!-- other -->
     <string name="warning_fill_info">Please Fill Information Needed!</string>
+    <string name="pick_time_for_dose">Pick time for dose</string>
+
+
+
 
 
     <string name="signup">SignUp</string>
@@ -127,7 +131,7 @@
     <string name="nihal">Nihal</string>
     <string name="time">10:00</string>
     <string name="vitaminc">Vitamin C</string>
-    <string name="doseNum">250</string>
+    <string name="doseNum">250 g</string>
     <string name="medUnit">g</string>
     <string name="take">take</string>
     <string name="pillNum">1</string>
@@ -140,6 +144,7 @@
     <string name="thursday">Thu</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
+
 
 
     <string name="ActiveMeds">Active Meds</string>
@@ -162,5 +167,6 @@
     <string name="Drug">Drug Name</string>
     <string name="left">left</string>
     <string name="title_medication_screen">Medication Screen</string>
+
 
 </resources>

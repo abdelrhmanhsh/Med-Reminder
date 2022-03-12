@@ -110,11 +110,25 @@
             app:layout_constraintTop_toTopOf="@+id/back_ic"/>
 
 
-     <!--   <androidx.recyclerview.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/days_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/sun_txt"
-            app:layout_constraintTop_toTopOf="@+id/back_ic"/>  -->
+            app:layout_constraintTop_toTopOf="@+id/back_ic"/>
+
+        <TextView
+            android:id="@+id/monthYearTV"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="Feb 2021"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@+id/days_rv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/black"/>
 
 
 

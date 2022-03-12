@@ -13,6 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder" >
+        <activity android:name=".ui.addmedicine.view.AddMedActivity"
+            android:exported="true"/>
         <activity
             android:name=".ui.medfriend.view.MedFriendActivity"
             android:exported="true" />
@@ -22,9 +24,6 @@
         <activity
             android:name=".ui.medicationScreen.view.MedicationsScreen"
             android:exported="true" />
-        <activity
-            android:name=".ui.addmedicine.view.AddMedActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
