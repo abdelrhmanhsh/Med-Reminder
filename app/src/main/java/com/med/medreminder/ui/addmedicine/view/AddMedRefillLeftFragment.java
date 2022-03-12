@@ -1,0 +1,87 @@
+package com.med.medreminder.ui.addmedicine.view;
+
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class AddMedRefillLeftFragment extends Fragment implements View.OnClickListener {
+
+    public static final String TAG = "AddMedRefillLeftFragment";
+
+    TextView textTitle;
+    ProgressBar progressBar;
+    Button btnNext;
+    EditText inputMedLeft;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_add_med_refill_left, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        textTitle = view.findViewById(R.id.title);
+        progressBar = view.findViewById(R.id.progress_bar);
+        btnNext = view.findViewById(R.id.btn_next_med_left);
+        inputMedLeft = view.findViewById(R.id.input_med_left);
+
+        progressBar.setProgress(90);
+        btnNext.setOnClickListener(this);
+
+        setTitleText();
+
+    }
+
+    private void actionNext(View view){
+
+        if(!inputMedLeft.getText().toString().equals("")){
+
+            int medLeft = Integer.parseInt(inputMedLeft.getText().toString());
+
+            Medicine medicine = Medicine.getInstance();
+            medicine.setMedLeft(medLeft);
+
+            NavDirections action = AddMedRefillLeftFragmentDirections.actionAddMedRefillLeftToRefillLimit();
+            Navigation.findNavController(view).navigate(action);
+
+        } else {
+            Toast.makeText(getContext(), getString(R.string.warning_fill_info), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.btn_next_med_left)
+            actionNext(view);
+    }
+
+}
