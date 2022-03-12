@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.homepage.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentDashboardBinding;
+import com.med.medreminder.ui.meddisplayedit.view.MedDisplayEditActivity;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedsAdapter;
 import com.med.medreminder.ui.medicationScreen.view.InactiveMedsAdapter;
 
@@ -71,6 +73,7 @@ public class DashboardFragment extends Fragment {
                 //Medication Drug Screen
                 //Intent intent = new Intent(MedicationScreenFragment.this, MedicationDrugScreen.class);
                 //startActivity(intent);
+                startActivity(new Intent(getActivity(), MedDisplayEditActivity.class));
             }
         });
 

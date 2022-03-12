@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent=".25"
+        android:background="@color/blue_background"/>
+
+    <ImageView
+        android:id="@+id/icon_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <ImageView
+        android:id="@+id/icon_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/icon_edit"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <ImageView
+        android:id="@+id/med_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".1"
+        android:layout_marginStart="25dp" />
+
+    <TextView
+        android:id="@+id/med_name"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:textColor="@color/white"
+        app:layout_constraintVertical_bias=".1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/med_icon"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:id="@+id/text_reminders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reminders"
+        android:textColor="@color/heavy_grey"
+        app:layout_constraintTop_toBottomOf="@id/top_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:padding="18dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_suspend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/top_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/suspend"
+        android:textColor="@color/title_cyan"
+        android:background="@drawable/button_blue_border"
+        android:layout_margin="18dp"/>
+
+    <TextView
+        android:id="@+id/text_reminders_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/text_reminders"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="18dp"
+        android:textColor="@color/black"
+        android:paddingEnd="18dp"/>
+
+    <TextView
+        android:id="@+id/text_conditions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/conditions"
+        android:textColor="@color/heavy_grey"
+        app:layout_constraintTop_toBottomOf="@id/text_reminders_description"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:padding="18dp" />
+
+    <TextView
+        android:id="@+id/text_conditions_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/text_conditions"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="18dp"
+        android:textColor="@color/black"
+        android:paddingEnd="18dp" />
+
+    <TextView
+        android:id="@+id/text_prescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/prescription_refill"
+        android:textColor="@color/heavy_grey"
+        app:layout_constraintTop_toBottomOf="@id/text_conditions_description"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:padding="18dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_refill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/text_conditions_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/refill"
+        android:textColor="@color/title_cyan"
+        android:background="@drawable/button_blue_border"
+        android:layout_margin="18dp"/>
+
+    <TextView
+        android:id="@+id/text_prescription_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/text_prescription"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="18dp"
+        android:textColor="@color/black"
+        android:paddingEnd="18dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

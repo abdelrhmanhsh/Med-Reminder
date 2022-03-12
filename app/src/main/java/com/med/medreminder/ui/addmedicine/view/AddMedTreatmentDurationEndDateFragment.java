@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +31,6 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
     ProgressBar progressBar;
     DatePicker datePicker;
     Button btnSet;
-    String incomingMedicine;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,35 +50,9 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
         progressBar.setProgress(90);
         btnSet.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
-
-    private JSONObject getArgs(){
-
-        AddMedTreatmentDurationEndDateFragmentArgs args =
-                AddMedTreatmentDurationEndDateFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getTreatmentDuration();
-
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
-    }
-
 
     private void actionSetEndDate(View view){
 
@@ -88,19 +62,17 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
 
         String date = day + "-" + month + "-" + year;
 
-        try {
-            outgoingMedicine.put("end_date", date);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setEndDate(date);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedTreatmentDurationEndDateFragmentDirections.ActionAddMedTreatmentDurationEndDateToAlmost
-                action = AddMedTreatmentDurationEndDateFragmentDirections.actionAddMedTreatmentDurationEndDateToAlmost();
-        action.setAlmost(medicine);
+        NavDirections action = AddMedTreatmentDurationEndDateFragmentDirections.actionAddMedTreatmentDurationEndDateToAlmost();
         Navigation.findNavController(view).navigate(action);
 
+    }
+
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     @Override

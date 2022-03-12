@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +30,6 @@ public class AddMedFormFragment extends Fragment implements View.OnClickListener
     Button btnPill, btnSolution, btnInjection, btnPowder, btnDrops, btnInhaler, btnOther;
     ProgressBar progressBar;
     TextView textTitle;
-    String incomingMedicine, type;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,176 +62,42 @@ public class AddMedFormFragment extends Fragment implements View.OnClickListener
 //        btnInhaler.setOnClickListener(this);
         btnOther.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
-    private void actionSelectionPill(View view){
+    private void actionSetForm(View view, String form){
 
-        type = getString(R.string.selection_pill);
-        try {
-            outgoingMedicine.put("form", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setForm(form);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-        action.setForm(medicine);
+        NavDirections action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
         Navigation.findNavController(view).navigate(action);
 
     }
 
-//    private void actionSelectionSolution(View view){
-//        type = getString(R.string.selection_solution);
-//        try {
-//            outgoingMedicine.put("form", type);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-//                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-//        action.setForm(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-
-    private void actionSelectionInjection(View view){
-        type = getString(R.string.selection_injection);
-        try {
-            outgoingMedicine.put("form", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-        action.setForm(medicine);
-        Navigation.findNavController(view).navigate(action);
-    }
-
-//    private void actionSelectionPowder(View view){
-//        type = getString(R.string.selection_powder);
-//        try {
-//            outgoingMedicine.put("form", type);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-//                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-//        action.setForm(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-
-    private void actionSelectionDrops(View view){
-        type = getString(R.string.selection_drops);
-        try {
-            outgoingMedicine.put("form", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-        action.setForm(medicine);
-        Navigation.findNavController(view).navigate(action);
-    }
-
-//    private void actionSelectionInhaler(View view){
-//        type = getString(R.string.selection_inhaler);
-//        try {
-//            outgoingMedicine.put("form", type);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-//                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-//        action.setForm(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-
-    private void actionSelectionOther(View view){
-        type = getString(R.string.selection_other);
-        try {
-            outgoingMedicine.put("form", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedFormFragmentDirections.ActionAddMedFormToStrength
-                action = AddMedFormFragmentDirections.actionAddMedFormToStrength();
-        action.setForm(medicine);
-        Navigation.findNavController(view).navigate(action);
-    }
-
-    private JSONObject getArgs(){
-        AddMedFormFragmentArgs args = AddMedFormFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getMedicine();
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.selection_pill:
-                actionSelectionPill(view);
+                actionSetForm(view, getString(R.string.selection_pill));
                 break;
-
-//            case R.id.selection_solution:
-//                actionSelectionSolution(view);
-//                break;
 
             case R.id.selection_injection:
-                actionSelectionInjection(view);
+                actionSetForm(view, getString(R.string.selection_injection));
                 break;
-
-//            case R.id.selection_powder:
-//                actionSelectionPowder(view);
-//                break;
 
             case R.id.selection_drops:
-                actionSelectionDrops(view);
+                actionSetForm(view, getString(R.string.selection_drops));
                 break;
 
-//            case R.id.selection_inhaler:
-//                actionSelectionInhaler(view);
-//                break;
-
             case R.id.selection_other:
-                actionSelectionOther(view);
+                actionSetForm(view, getString(R.string.selection_other));
                 break;
 
             default:

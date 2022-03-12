@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,22 +54,11 @@ public class AddMedNameFragment extends Fragment implements View.OnClickListener
     private void actionNext(View view){
         if(!inputMedName.getText().toString().equals("")){
 
+            Medicine medicine = Medicine.getInstance();
             String medName = inputMedName.getText().toString();
+            medicine.setName(medName);
 
-            JSONObject medicine = new JSONObject();
-
-            try {
-                medicine.put("name", medName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            String outgoingMedicine = medicine.toString();
-
-            AddMedNameFragmentDirections.ActionAddMedNameToForm
-                    action = AddMedNameFragmentDirections.actionAddMedNameToForm();
-            action.setMedicine(outgoingMedicine);
-
+            NavDirections action = AddMedNameFragmentDirections.actionAddMedNameToForm();
             Navigation.findNavController(view).navigate(action);
 
         } else {

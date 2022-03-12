@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-// if more than once repeat the next two fragments
 public class AddMedOftenFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "AddMedOftenFragment";
@@ -31,8 +31,6 @@ public class AddMedOftenFragment extends Fragment implements View.OnClickListene
             btnSixTimes, btnEverySixHours, btnOnlyAsNeeded;
     ProgressBar progressBar;
     TextView textTitle;
-    String incomingMedicine, often;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,181 +62,51 @@ public class AddMedOftenFragment extends Fragment implements View.OnClickListene
 //        btnEverySixHours.setOnClickListener(this);
         btnOnlyAsNeeded.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
-    private JSONObject getArgs(){
-        AddMedOftenFragmentArgs args = AddMedOftenFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getDaily();
-        Log.i(TAG, "getArgs: " + incomingMedicine);
+    private void actionSetOften(View view, String often){
 
-        JSONObject incomingJson = null;
+        Medicine medicine = Medicine.getInstance();
+        medicine.setOften(often);
 
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
-    }
-
-    private void actionSelectionOnceDaily(View view){
-
-        often = getString(R.string.selection_once_daily);
-
-        try {
-            outgoingMedicine.put("often", often);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedOftenFragmentDirections.ActionAddMedOftenToTime
-                action = AddMedOftenFragmentDirections.actionAddMedOftenToTime();
-        action.setOften(medicine);
+        NavDirections action = AddMedOftenFragmentDirections.actionAddMedOftenToTime();
         Navigation.findNavController(view).navigate(action);
+
     }
 
-    private void actionSelectionTwiceDaily(View view){
-        often = getString(R.string.selection_twice_daily);
+    private void actionSetOnlyAsNeeded(View view, String often){
 
-        try {
-            outgoingMedicine.put("often", often);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setOften(often);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedOftenFragmentDirections.ActionAddMedOftenToTime
-                action = AddMedOftenFragmentDirections.actionAddMedOftenToTime();
-        action.setOften(medicine);
+        NavDirections action = AddMedOftenFragmentDirections.actionAddMedOftenToAlmost();
         Navigation.findNavController(view).navigate(action);
+
     }
 
-    private void actionSelectionThreeTimes(View view){
-        often = getString(R.string.selection_three_times);
-
-        try {
-            outgoingMedicine.put("often", often);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedOftenFragmentDirections.ActionAddMedOftenToTime
-                action = AddMedOftenFragmentDirections.actionAddMedOftenToTime();
-        action.setOften(medicine);
-        Navigation.findNavController(view).navigate(action);
-    }
-
-//    private void actionSelectionFourTimes(View view){
-//        often = getString(R.string.selection_four_times);
-//
-//        try {
-//            outgoingMedicine.put("often", often);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedOftenFragmentDirections.ActionAddMedOftenToWhen
-//                action = AddMedOftenFragmentDirections.actionAddMedOftenToWhen();
-//        action.setOften(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-//
-//    private void actionSelectionSixTimes(View view){
-//        often = getString(R.string.selection_six_times);
-//
-//        try {
-//            outgoingMedicine.put("often", often);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedOftenFragmentDirections.ActionAddMedOftenToWhen
-//                action = AddMedOftenFragmentDirections.actionAddMedOftenToWhen();
-//        action.setOften(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-//
-//    private void actionSelectionEverySixHours(View view){
-//        often = getString(R.string.selection_every_six_hours);
-//
-//        try {
-//            outgoingMedicine.put("often", often);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedOftenFragmentDirections.ActionAddMedOftenToWhen
-//                action = AddMedOftenFragmentDirections.actionAddMedOftenToWhen();
-//        action.setOften(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
-
-    private void actionSelectionOnlyAsNeeded(View view){
-        often = getString(R.string.selection_only_as_needed);
-
-        try {
-            outgoingMedicine.put("often", often);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedOftenFragmentDirections.ActionAddMedOftenToAlmost
-                action = AddMedOftenFragmentDirections.actionAddMedOftenToAlmost();
-        action.setAlmost(medicine);
-        Navigation.findNavController(view).navigate(action);
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.selection_once_daily:
-                actionSelectionOnceDaily(view);
+                actionSetOften(view, getString(R.string.selection_once_daily));
                 break;
             case R.id.selection_twice_daily:
-                actionSelectionTwiceDaily(view);
+                actionSetOften(view, getString(R.string.selection_twice_daily));
                 break;
 
             case R.id.selection_three_times:
-                actionSelectionThreeTimes(view);
+                actionSetOften(view, getString(R.string.selection_three_times));
                 break;
 
-//            case R.id.selection_four_times:
-//                actionSelectionFourTimes(view);
-//                break;
-//
-//            case R.id.selection_six_times:
-//                actionSelectionSixTimes(view);
-//                break;
-//
-//            case R.id.selection_every_six_hours:
-//                actionSelectionEverySixHours(view);
-//                break;
-
             case R.id.selection_only_as_needed:
-                actionSelectionOnlyAsNeeded(view);
+                actionSetOnlyAsNeeded(view, getString(R.string.selection_only_as_needed));
                 break;
 
         }

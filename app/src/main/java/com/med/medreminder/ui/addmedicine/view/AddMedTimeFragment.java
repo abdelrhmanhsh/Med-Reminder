@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,9 +31,8 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
     ProgressBar progressBar;
     TimePicker timePicker;
     TextView textTitle, textDoseNum;
-    String incomingMedicine, doseNum;
+    String doseNum;
     String doseTimes = "";
-    JSONObject outgoingMedicine;
     int often = 1;
     int oftenDec;
     int doseCount = 1;
@@ -60,25 +61,25 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
         btnNext.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
         if(often > 1){
-            doseNum = "Pick time for dose " + doseCount + ".";
+            doseNum = getString(R.string.pick_time_for_dose) + " " + doseCount + ".";
             textDoseNum.setText(doseNum);
         }
 
     }
 
-    private void actionNext(View view){
+    private void actionNext(View view) {
 
-        if(often == 1){
+        if (often == 1) {
 
             setTime(view);
 
         } else {
 
-            if(oftenDec == 1){
-                doseNum = "Pick time for dose " + doseCount + ".";
+            if (oftenDec == 1) {
+                doseNum = getString(R.string.pick_time_for_dose) + doseCount + ".";
                 textDoseNum.setText(doseNum);
 
                 int hour = timePicker.getHour();
@@ -88,22 +89,15 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
                 doseTimes += time;
 
-                try {
-                    outgoingMedicine.put("time", doseTimes);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Medicine medicine = Medicine.getInstance();
+                medicine.setTime(doseTimes);
 
-                String medicine = outgoingMedicine.toString();
-
-                AddMedTimeFragmentDirections.ActionAddMedTimeToAlmost
-                        action = AddMedTimeFragmentDirections.actionAddMedTimeToAlmost();
-                action.setAlmost(medicine);
+                NavDirections action = AddMedTimeFragmentDirections.actionAddMedTimeToAlmost();
                 Navigation.findNavController(view).navigate(action);
 
             } else {
                 doseCount++;
-                doseNum = "Pick time for dose " + doseCount + ".";
+                doseNum = getString(R.string.pick_time_for_dose) + " " + doseCount + ".";
                 textDoseNum.setText(doseNum);
 
                 int hour = timePicker.getHour();
@@ -111,14 +105,10 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
                 String time = hour + ":" + minute;
 
-                doseTimes += time + ", ";
-                Log.i(TAG, "actionNext: often Dec inside while" + oftenDec);
+                doseTimes += time + ",";
             }
-
         }
-
         oftenDec--;
-
     }
 
     private void setTime(View view){
@@ -128,42 +118,18 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
         String time = hour + ":" + minute;
 
-        try {
-            outgoingMedicine.put("time", time);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setTime(time);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedTimeFragmentDirections.ActionAddMedTimeToAlmost
-                action = AddMedTimeFragmentDirections.actionAddMedTimeToAlmost();
-        action.setAlmost(medicine);
+        NavDirections action = AddMedTimeFragmentDirections.actionAddMedTimeToAlmost();
         Navigation.findNavController(view).navigate(action);
+
     }
 
-    private JSONObject getArgs(){
-        AddMedTimeFragmentArgs args = AddMedTimeFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getOften();
+    private void setTitleText(){
 
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        String oftenStr = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-            oftenStr = incomingJson.getString("often");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        String oftenStr = medicine.getOften();
 
         switch (oftenStr){
             case "Once Daily":
@@ -183,9 +149,7 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
         }
 
         oftenDec = often;
-
-        textTitle.setText(title);
-        return incomingJson;
+        textTitle.setText(medicine.getName());
     }
 
     @Override

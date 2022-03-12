@@ -27,11 +27,6 @@
         android:label="fragment_add_med_form"
         tools:layout="@layout/fragment_add_med_form" >
 
-        <argument
-            android:name="medicine"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedFormToStrength"
             app:destination="@id/addMedStrengthFragment"
@@ -48,11 +43,6 @@
         android:label="fragment_add_med_strength"
         tools:layout="@layout/fragment_add_med_strength" >
 
-        <argument
-            android:name="form"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedStrengthToReason"
             app:destination="@id/addMedReasonFragment"
@@ -67,11 +57,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedReasonFragment"
         android:label="fragment_add_med_reason"
         tools:layout="@layout/fragment_add_med_reason" >
-
-        <argument
-            android:name="strength"
-            app:argType="string"
-            android:defaultValue="0"/>
 
         <action
             android:id="@+id/actionAddMedReasonToDaily"
@@ -88,11 +73,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedDailyFragment"
         android:label="fragment_add_med_daily"
         tools:layout="@layout/fragment_add_med_daily" >
-
-        <argument
-            android:name="reason"
-            app:argType="string"
-            android:defaultValue="default"/>
 
         <action
             android:id="@+id/actionAddMedDailyToOften"
@@ -118,11 +98,6 @@
         android:label="fragment_add_med_often"
         tools:layout="@layout/fragment_add_med_often" >
 
-        <argument
-            android:name="daily"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedOftenToAlmost"
             app:destination="@id/addMedAlmostFragment"
@@ -146,11 +121,6 @@
         android:label="fragment_add_med_time"
         tools:layout="@layout/fragment_add_med_time" >
 
-        <argument
-            android:name="often"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedTimeToAlmost"
             app:destination="@id/addMedAlmostFragment"
@@ -166,11 +136,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedAlmostFragment"
         android:label="fragment_add_med_almost"
         tools:layout="@layout/fragment_add_med_almost" >
-
-        <argument
-            android:name="almost"
-            app:argType="string"
-            android:defaultValue="default"/>
 
         <action
             android:id="@+id/actionAddMedAlmostToTreatmentStartDate"
@@ -211,11 +176,6 @@
         android:label="fragment_add_med_treatment_start_date"
         tools:layout="@layout/fragment_add_med_treatment_start_date" >
 
-        <argument
-            android:name="medicine"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedTreatmentStartDateToTreatmentHowLong"
             app:destination="@id/addMedTreatmentHowLongFragment"
@@ -231,11 +191,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedTreatmentHowLongFragment"
         android:label="fragment_add_med_treatment_how_long"
         tools:layout="@layout/fragment_add_med_treatment_how_long" >
-
-        <argument
-            android:name="start_date"
-            app:argType="string"
-            android:defaultValue="default"/>
 
         <action
             android:id="@+id/actionAddMedTreatmentHowLongToAlmost"
@@ -260,11 +215,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedRefillLeftFragment"
         android:label="fragment_add_med_refill_left"
         tools:layout="@layout/fragment_add_med_refill_left" >
-
-        <argument
-            android:name="medicine"
-            app:argType="string"
-            android:defaultValue="default"/>
 
         <action
             android:id="@+id/actionAddMedRefillLeftToRefillLimit"
@@ -312,11 +262,6 @@
         android:label="fragment_add_med_refill_limit"
         tools:layout="@layout/fragment_add_med_refill_limit" >
 
-        <argument
-            android:name="med_left"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedRefillLimitToAlmost"
             app:destination="@id/addMedAlmostFragment"
@@ -333,11 +278,6 @@
         android:label="AddMedTreatmentDurationEndDateFragment"
         tools:layout="@layout/fragment_add_med_treatment_duration_end_date">
 
-        <argument
-            android:name="treatment_duration"
-            app:argType="string"
-            android:defaultValue="default"/>
-
         <action
             android:id="@+id/actionAddMedTreatmentDurationEndDateToAlmost"
             app:destination="@id/addMedAlmostFragment"
@@ -352,11 +292,6 @@
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedChangeIconFragment"
         android:label="fragment_add_med_change_icon"
         tools:layout="@layout/fragment_add_med_change_icon" >
-
-        <argument
-            android:name="medicine"
-            app:argType="string"
-            android:defaultValue="default"/>
 
         <action
             android:id="@+id/actionAddMedChangeIconToAlmost"

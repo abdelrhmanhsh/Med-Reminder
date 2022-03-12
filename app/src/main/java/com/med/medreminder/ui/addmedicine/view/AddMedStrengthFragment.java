@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,8 +35,7 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
     ProgressBar progressBar;
     EditText strengthInput;
     TextView textTitle, textSkip;
-    String incomingMedicine, strengthType;
-    JSONObject outgoingMedicine;
+    String strengthType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,26 +73,18 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
             }
         });
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
     private void actionNext(View view){
         if(!strengthInput.getText().toString().equals("")){
 
-            String type = strengthInput.getText().toString() + " " + strengthType;
+            String strength = strengthInput.getText().toString() + " " + strengthType;
+            Medicine medicine = Medicine.getInstance();
+            medicine.setStrength(strength);
 
-            try {
-                outgoingMedicine.put("strength", type);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            String medicine = outgoingMedicine.toString();
-
-            AddMedStrengthFragmentDirections.ActionAddMedStrengthToReason
-                    action = AddMedStrengthFragmentDirections.actionAddMedStrengthToReason();
-            action.setStrength(medicine);
+            NavDirections action = AddMedStrengthFragmentDirections.actionAddMedStrengthToReason();
             Navigation.findNavController(view).navigate(action);
 
         } else {
@@ -100,27 +92,9 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
         }
     }
 
-    private JSONObject getArgs(){
-        AddMedStrengthFragmentArgs args = AddMedStrengthFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getForm();
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     @Override

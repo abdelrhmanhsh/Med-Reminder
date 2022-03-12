@@ -55,6 +55,7 @@
 
     <!-- eighth (time) -->
     <string name="time_question">What time do you want to be reminded?</string>
+    <string name="pick_time_for_dose">Pick time for dose</string>
 
     <!-- ninth (almost) -->
     <string name="almost_question">Almost done. Would you like to:</string>
@@ -106,6 +107,24 @@
 
     <!-- other -->
     <string name="warning_fill_info">Please Fill Information Needed!</string>
+
+    <!-- med display -->
+    <string name="reminders">Reminders</string>
+    <string name="conditions">Conditions</string>
+    <string name="prescription_refill">Prescription Refill</string>
+    <string name="suspend">Suspend</string>
+    <string name="refill">Refill</string>
+
+    <!-- med edit -->
+    <string name="medication_name">Medication Name</string>
+    <string name="reminder_times">Reminder Times</string>
+    <string name="schedule">Schedule</string>
+    <string name="duration">Duration</string>
+    <string name="med_icon">Med Icon</string>
+    <string name="condition">Condition</string>
+    <string name="strength">Strength</string>
+    <string name="enter_amount_of_meds">Enter the amount of meds you currently have to get a refill reminder</string>
+    <string name="refill_reminder">Refill reminder</string>
 
 
     <string name="signup">SignUp</string>
