@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.med.medreminder.ui.medicationScreen.view.MedicationsScreen;
 import com.med.medreminder.R;
+import com.med.medreminder.ui.homepage.view.DashboardFragment;
 
 import java.util.Calendar;
 
@@ -65,7 +65,7 @@ public class DependentActivity extends AppCompatActivity {
         exit_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DependentActivity.this, MedicationsScreen.class);
+                Intent intent = new Intent(DependentActivity.this, DashboardFragment.class);
                 startActivity(intent);
             }
         });
@@ -73,7 +73,7 @@ public class DependentActivity extends AppCompatActivity {
         done_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DependentActivity.this, MedicationsScreen.class);
+                Intent intent = new Intent(DependentActivity.this, DashboardFragment.class);
                 startActivity(intent);
             }
         });

@@ -4,6 +4,11 @@ import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
 
+import java.util.List;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 public class Repository implements RepositoryInterface{
 
     private Context context;
@@ -26,5 +31,10 @@ public class Repository implements RepositoryInterface{
     @Override
     public void insertMedicine(Medicine medicine) {
         localSource.insert(medicine);
+    }
+
+    @Override
+    public LiveData<List<Medicine>> getStoredMedicines() {
+        return localSource.getAllStoredMedicines();
     }
 }
