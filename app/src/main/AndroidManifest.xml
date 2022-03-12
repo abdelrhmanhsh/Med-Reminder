@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.med.medreminder" >
+    package="com.med.medreminder">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -10,17 +13,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MedReminder" >
-        <activity
-            android:name=".ui.addmedicine.view.AddMedActivity"
-            android:exported="false" />
+        android:theme="@style/Theme.MedReminder">
         <activity
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

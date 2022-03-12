@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +32,6 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
     ProgressBar progressBar;
     Button btnSet;
     EditText inputRefillLimit;
-    String incomingMedicine;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +51,7 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
         progressBar.setProgress(90);
         btnSet.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
@@ -59,19 +59,12 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
 
         if(!inputRefillLimit.getText().toString().equals("")){
 
-            String refillLimit = inputRefillLimit.getText().toString();
+            int refillLimit = Integer.parseInt(inputRefillLimit.getText().toString());
 
-            try {
-                outgoingMedicine.put("refill_limit", refillLimit);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Medicine medicine = Medicine.getInstance();
+            medicine.setRefillLimit(refillLimit);
 
-            String medicine = outgoingMedicine.toString();
-
-            AddMedRefillLimitFragmentDirections.ActionAddMedRefillLimitToAlmost
-                    action = AddMedRefillLimitFragmentDirections.actionAddMedRefillLimitToAlmost();
-            action.setAlmost(medicine);
+            NavDirections action = AddMedRefillLimitFragmentDirections.actionAddMedRefillLimitToAlmost();
             Navigation.findNavController(view).navigate(action);
 
         } else {
@@ -80,29 +73,9 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
 
     }
 
-    private JSONObject getArgs(){
-
-        AddMedRefillLimitFragmentArgs args =
-                AddMedRefillLimitFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getMedLeft();
-
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     @Override

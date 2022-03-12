@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.medicationScreen.view;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,16 +8,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.ViewHolder> {
 
-//    Medicine[] medicines;
-//    public ActiveMedsAdapter(Medicine[] medicines){
-//        this.medicines = medicines;
-//    }
+    OnActiveMedClickListener onActiveMedClickListener;
+    List<Medicine> medicineList = new ArrayList<>();
+    Context context;
+
+    public ActiveMedsAdapter(OnActiveMedClickListener onActiveMedClickListener, List<Medicine> medicineList, Context context) {
+        this.onActiveMedClickListener = onActiveMedClickListener;
+        this.medicineList = medicineList;
+        this.context = context;
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         View row;
@@ -27,6 +38,7 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
         TextView medUnit_txt;
         ImageView med_img;
         TextView pillNum_txt;
+        CardView active_card;
 
 
         public ViewHolder(@NonNull View convertView) {
@@ -76,6 +88,12 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
 //            holder.getMedDose().setText(medicines[position].getStrength());
 //            holder.getImg().setImageResource(medicines[position].getImage());
 //            holder.getPillNum().setText(medicines[position].getRefillLimit()+"");
+            holder.active_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onActiveMedClickListener.onActiveCLick(medicineList.get(position));
+                }
+            });
         }
 
     @Override

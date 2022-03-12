@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,9 +30,6 @@ public class AddMedDailyFragment extends Fragment implements View.OnClickListene
     Button btnYes, btnNo, btnOnlyAsNeeded;
     ProgressBar progressBar;
     TextView textTitle;
-    String incomingMedicine;
-    JSONObject outgoingMedicine;
-    String isDaily;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,82 +54,31 @@ public class AddMedDailyFragment extends Fragment implements View.OnClickListene
 //        btnNo.setOnClickListener(this);
         btnOnlyAsNeeded.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
-    private JSONObject getArgs(){
-        AddMedDailyFragmentArgs args = AddMedDailyFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getReason();
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
-    private void actionSelectionYes(View view){
-        isDaily = getString(R.string.selection_yes);
+    private void actionSelectionYes(View view, String isDaily){
 
-        try {
-            outgoingMedicine.put("isDaily", isDaily);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setIsDaily(isDaily);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedDailyFragmentDirections.ActionAddMedDailyToOften
-                action = AddMedDailyFragmentDirections.actionAddMedDailyToOften();
-        action.setDaily(medicine);
+        NavDirections action = AddMedDailyFragmentDirections.actionAddMedDailyToOften();
         Navigation.findNavController(view).navigate(action);
+
     }
 
-//    private void actionSelectionNo(View view){
-//        isDaily = getString(R.string.selection_no);
-//
-//        try {
-//            outgoingMedicine.put("isDaily", isDaily);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        String medicine = outgoingMedicine.toString();
-//
-//        AddMedDailyFragmentDirections.ActionAddMedDailyToOften
-//                action = AddMedDailyFragmentDirections.actionAddMedDailyToOften();
-//        action.setDaily(medicine);
-//        Navigation.findNavController(view).navigate(action);
-//    }
+    private void actionSelectionOnlyAsNeeded(View view, String isDaily){
 
-    private void actionSelectionOnlyAsNeeded(View view){
+        Medicine medicine = Medicine.getInstance();
+        medicine.setIsDaily(isDaily);
 
-        isDaily = getString(R.string.selection_only_as_needed);
-
-        try {
-            outgoingMedicine.put("isDaily", isDaily);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String medicine = outgoingMedicine.toString();
-
-        AddMedDailyFragmentDirections.ActionAddMedDailyToAlmost
-                action = AddMedDailyFragmentDirections.actionAddMedDailyToAlmost();
-        action.setAlmost(medicine);
+        NavDirections action = AddMedDailyFragmentDirections.actionAddMedDailyToAlmost();
         Navigation.findNavController(view).navigate(action);
 
     }
@@ -140,14 +87,11 @@ public class AddMedDailyFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.selection_yes:
-                actionSelectionYes(view);
+                actionSelectionYes(view, getString(R.string.selection_yes));
                 break;
-//            case R.id.selection_no:
-//                actionSelectionNo(view);
-//                break;
 
             case R.id.selection_only_as_needed:
-                actionSelectionOnlyAsNeeded(view);
+                actionSelectionOnlyAsNeeded(view, getString(R.string.selection_only_as_needed));
                 break;
         }
     }

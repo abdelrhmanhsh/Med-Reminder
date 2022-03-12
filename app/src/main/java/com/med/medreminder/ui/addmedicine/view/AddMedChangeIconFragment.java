@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +30,6 @@ public class AddMedChangeIconFragment extends Fragment implements View.OnClickLi
     TextView textTitle;
     ProgressBar progressBar;
     ImageView imgPill, imgInjection, imgDrops, imgOther;
-    String incomingMedicine;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,47 +55,20 @@ public class AddMedChangeIconFragment extends Fragment implements View.OnClickLi
         imgDrops.setOnClickListener(this);
         imgOther.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
     }
 
-    private JSONObject getArgs(){
-        AddMedChangeIconFragmentArgs args = AddMedChangeIconFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getMedicine();
-
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        textTitle.setText(title);
-        return incomingJson;
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     private void actionIconSelected(View view, int imgResource){
-        try {
-            outgoingMedicine.put("image", imgResource);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setImage(imgResource);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedChangeIconFragmentDirections.ActionAddMedChangeIconToAlmost
-                action = AddMedChangeIconFragmentDirections.actionAddMedChangeIconToAlmost();
-        action.setAlmost(medicine);
+        NavDirections action = AddMedChangeIconFragmentDirections.actionAddMedChangeIconToAlmost();
         Navigation.findNavController(view).navigate(action);
     }
 

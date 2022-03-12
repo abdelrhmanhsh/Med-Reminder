@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.Medicine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +31,6 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
     ProgressBar progressBar;
     DatePicker datePicker;
     Button btnNext;
-    String incomingMedicine;
-    JSONObject outgoingMedicine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,8 +50,13 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
         progressBar.setProgress(90);
         btnNext.setOnClickListener(this);
 
-        outgoingMedicine = getArgs();
+        setTitleText();
 
+    }
+
+    private void setTitleText(){
+        Medicine medicine = Medicine.getInstance();
+        textTitle.setText(medicine.getName());
     }
 
     private void actionNext(View view){
@@ -62,42 +67,12 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
 
         String date = day + "-" + month + "-" + year;
 
-        try {
-            outgoingMedicine.put("start_date", date);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Medicine medicine = Medicine.getInstance();
+        medicine.setStartDate(date);
 
-        String medicine = outgoingMedicine.toString();
-
-        AddMedTreatmentDurationStartDateFragmentDirections.ActionAddMedTreatmentStartDateToTreatmentHowLong
-                action = AddMedTreatmentDurationStartDateFragmentDirections.actionAddMedTreatmentStartDateToTreatmentHowLong();
-        action.setStartDate(medicine);
+        NavDirections action = AddMedTreatmentDurationStartDateFragmentDirections.actionAddMedTreatmentStartDateToTreatmentHowLong();
         Navigation.findNavController(view).navigate(action);
-    }
 
-    private JSONObject getArgs(){
-        AddMedTreatmentDurationStartDateFragmentArgs args =
-                AddMedTreatmentDurationStartDateFragmentArgs.fromBundle(getArguments());
-        incomingMedicine = args.getMedicine();
-
-        Log.i(TAG, "getArgs: " + incomingMedicine);
-
-        JSONObject incomingJson = null;
-
-        try {
-            incomingJson = new JSONObject(incomingMedicine);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String title = "Unknown";
-        try {
-            title = incomingJson.getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        textTitle.setText(title);
-        return incomingJson;
     }
 
     @Override
