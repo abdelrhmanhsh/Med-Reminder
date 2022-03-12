@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.med.medreminder.R;
 import com.med.medreminder.ui.MainActivity;
+import com.med.medreminder.ui.homepage.view.DashboardFragment;
 
 public class MyWorker extends Worker {
 
@@ -69,7 +70,7 @@ public class MyWorker extends Worker {
         PendingIntent intent = WorkManager.getInstance(context)
                 .createCancelPendingIntent(getId());
 
-        Intent refillIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent refillIntent = new Intent(getApplicationContext(), DashboardFragment.class);
         refillIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         refillIntent.putExtra("Refill","Refill");
         PendingIntent refillPIntent = PendingIntent.getActivity(getApplicationContext(),1,refillIntent,PendingIntent.FLAG_ONE_SHOT);
