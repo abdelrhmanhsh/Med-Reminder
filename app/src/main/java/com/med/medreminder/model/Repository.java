@@ -9,7 +9,7 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-public class Repository implements RepositoryInterface{
+public class Repository implements RepositoryInterface {
 
     private Context context;
     LocalSource localSource;
@@ -31,6 +31,21 @@ public class Repository implements RepositoryInterface{
     @Override
     public void insertMedicine(Medicine medicine) {
         localSource.insert(medicine);
+    }
+
+    @Override
+    public void updateMedicine(Medicine medicine) {
+        localSource.update(medicine);
+    }
+
+    @Override
+    public void deleteMedicine(Medicine medicine) {
+        localSource.delete(medicine);
+    }
+
+    @Override
+    public LiveData<Medicine> getMedicineById(int id) {
+        return localSource.getMedicineById(id);
     }
 
     @Override

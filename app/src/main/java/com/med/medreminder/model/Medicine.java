@@ -37,6 +37,12 @@ public class Medicine {
     @ColumnInfo(name = "endDate")
     String endDate;
 
+    @ColumnInfo(name = "startDateMillis")
+    long startDateMillis;
+
+    @ColumnInfo(name = "endDateMillis")
+    long endDateMillis;
+
     @ColumnInfo(name = "medLeft")
     int medLeft;
 
@@ -45,6 +51,9 @@ public class Medicine {
 
     @ColumnInfo(name = "image")
     int image;
+
+//    @ColumnInfo(name = "suspend")
+//    boolean suspend;
 
 
     private static Medicine instance = null;
@@ -58,7 +67,7 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, int medLeft, int refillLimit, int image) {
+    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image) {
         this.id = id;
         this.name = name;
         this.form = form;
@@ -69,6 +78,8 @@ public class Medicine {
         this.time = time;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.startDateMillis = startDateMillis;
+        this.endDateMillis = endDateMillis;
         this.medLeft = medLeft;
         this.refillLimit = refillLimit;
         this.image = image;
@@ -154,6 +165,22 @@ public class Medicine {
         this.endDate = endDate;
     }
 
+    public long getStartDateMillis() {
+        return startDateMillis;
+    }
+
+    public void setStartDateMillis(long startDateMillis) {
+        this.startDateMillis = startDateMillis;
+    }
+
+    public long getEndDateMillis() {
+        return endDateMillis;
+    }
+
+    public void setEndDateMillis(long endDateMillis) {
+        this.endDateMillis = endDateMillis;
+    }
+
     public int getMedLeft() {
         return medLeft;
     }
@@ -191,6 +218,8 @@ public class Medicine {
                 ", time='" + time + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
+                ", startDateMillis=" + startDateMillis +
+                ", endDateMillis=" + endDateMillis +
                 ", medLeft=" + medLeft +
                 ", refillLimit=" + refillLimit +
                 ", image=" + image +

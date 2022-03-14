@@ -99,7 +99,8 @@ public class MyWorker extends Worker {
                 .addAction(android.R.drawable.ic_input_add,refill,refillPIntent)
                 .build();
 
-        return new ForegroundInfo(100, notification);
+//        return new ForegroundInfo(100, notification);
+        return null;
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

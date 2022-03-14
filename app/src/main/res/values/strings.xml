@@ -98,7 +98,6 @@
     <string name="selection_while_eating">While eating</string>
     <string name="selection_after_eating">After eating</string>
     <string name="selection_doesnt_matter">Doesn\'t Matter</string>
-    <string name="pick_time_for_dose">Pick time for dose</string>
 
 
     <!-- almost (instructions - other) -->
@@ -110,11 +109,13 @@
     <!-- other -->
     <string name="warning_fill_info">Please Fill Information Needed!</string>
 
+    <!-- med edit/display -->
     <!-- med display -->
     <string name="reminders">Reminders</string>
     <string name="conditions">Conditions</string>
     <string name="prescription_refill">Prescription Refill</string>
     <string name="suspend">Suspend</string>
+    <string name="resume">Resume</string>
     <string name="refill">Refill</string>
 
     <!-- med edit -->
@@ -127,8 +128,24 @@
     <string name="strength">Strength</string>
     <string name="enter_amount_of_meds">Enter the amount of meds you currently have to get a refill reminder</string>
     <string name="refill_reminder">Refill reminder</string>
+    <string name="click_to_add_reminder">Click to add reminder</string>
+    <string name="delete">Delete</string>
+    <string name="delete_alert_message">Deleting this medication will stop any future notifications.</string>
+    <string name="suspend_alert_title">Suspend Med</string>
+    <string name="suspend_alert_message">Suspend all future reminders for this medication?</string>
 
+    <!-- dialog refill med -->
+    <string name="refill_your_prescription">Refill your prescription</string>
+    <string name="add">Add</string>
+    <string name="cancel">CANCEL</string>
+    <string name="ok">OK</string>
 
+    <!-- dialog resume med -->
+    <string name="resume_your_medication">Resume your medication</string>
+    <string name="resume_dialog_description">Please specify medication duration</string>
+    <string name="continuous">continuous</string>
+    <string name="days">Days</string>
+    <string name="RESUME">RESUME</string>
 
 
 

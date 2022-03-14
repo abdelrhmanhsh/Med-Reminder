@@ -13,4 +13,5 @@ public class MedDisplayEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_med_display_edit);
     }
+
 }

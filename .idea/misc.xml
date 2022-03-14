@@ -13,6 +13,8 @@
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.11979166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_med_display_edit.xml" value="0.20652173913043478" />
+        <entry key="app/src/main/res/layout/dialog_refill_med.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_resume_med.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add_med_change_icon.xml" value="0.12335359675785208" />
         <entry key="app/src/main/res/layout/fragment_add_med_form.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/fragment_add_med_refill_limit.xml" value="0.12335359675785208" />
@@ -21,7 +23,7 @@
         <entry key="app/src/main/res/layout/fragment_add_med_treatment_how_long.xml" value="0.21875" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.11979166666666667" />
-        <entry key="app/src/main/res/layout/fragment_medication_drug_screen_display.xml" value="0.2105978260869565" />
+        <entry key="app/src/main/res/layout/fragment_medication_drug_screen_display.xml" value="0.21620802972216563" />
         <entry key="app/src/main/res/layout/fragment_medication_drug_screen_edit.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_medication_screen.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/fragment_mediciation_drug_screen_display.xml" value="0.25" />

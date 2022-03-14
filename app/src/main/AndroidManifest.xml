@@ -23,9 +23,6 @@
             android:name=".ui.dependency.view.DependentActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.medicationScreen.view.MedicationsScreen"
-            android:exported="true" />
-        <activity
             android:name=".ui.addmedicine.view.AddMedActivity"
             android:exported="false" />
         <activity

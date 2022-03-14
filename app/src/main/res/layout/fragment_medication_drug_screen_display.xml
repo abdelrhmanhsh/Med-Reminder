@@ -58,13 +58,46 @@
         android:textSize="22sp"
         android:layout_marginStart="20dp"/>
 
+    <View
+        android:id="@+id/resume_med_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent=".1"
+        app:layout_constraintTop_toBottomOf="@id/top_view"
+        android:background="@color/light_grey" />
+
+    <TextView
+        android:id="@+id/text_resume_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reminders are suspended"
+        android:textColor="@color/blue_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias=".3"
+        android:layout_marginStart="30dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_resume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias=".285"
+        android:text="@string/resume"
+        android:textColor="@color/title_cyan"
+        android:background="@drawable/button_blue_border"
+        android:layout_marginEnd="18dp"/>
+
     <TextView
         android:id="@+id/text_reminders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reminders"
         android:textColor="@color/heavy_grey"
-        app:layout_constraintTop_toBottomOf="@id/top_view"
+        app:layout_constraintTop_toBottomOf="@id/resume_med_view"
         app:layout_constraintStart_toStartOf="parent"
         android:textStyle="bold"
         android:padding="18dp" />
@@ -73,7 +106,7 @@
         android:id="@+id/btn_suspend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/top_view"
+        app:layout_constraintTop_toBottomOf="@id/resume_med_view"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/suspend"
         android:textColor="@color/title_cyan"

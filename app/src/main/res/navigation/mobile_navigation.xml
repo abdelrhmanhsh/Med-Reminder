@@ -15,11 +15,25 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.med.medreminder.ui.homepage.view.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/actionNavigationDashboardToDisplayEditMedicationGraph"
+            app:destination="@id/display_edit_medication_graph"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_down">
+            <argument
+                android:name="id"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.med.medreminder.ui.homepage.view.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <include app:graph="@navigation/display_edit_medication_graph" />
 </navigation>

@@ -18,6 +18,8 @@ import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
 import com.med.medreminder.ui.homepage.presenter.HomeMedPresenter;
 import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
+import com.med.medreminder.ui.meddisplayedit.view.DisplayEditViewInterface;
+import com.med.medreminder.ui.meddisplayedit.view.MedDisplayEditActivity;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedsAdapter;
 import com.med.medreminder.ui.medicationScreen.view.InactiveMedsAdapter;
 import com.med.medreminder.ui.medicationScreen.view.OnActiveMedClickListener;
@@ -26,13 +28,17 @@ import com.med.medreminder.ui.medicationScreen.view.OnInactiveMedClickListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 
-public class DashboardFragment extends Fragment implements OnInactiveMedClickListener, OnActiveMedClickListener, homeMedViewInterface {
+public class DashboardFragment extends Fragment implements OnInactiveMedClickListener,
+        OnActiveMedClickListener, homeMedViewInterface {
 
     private RecyclerView activeMeds;
     private RecyclerView inactiveMeds;
@@ -40,7 +46,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     private InactiveMedsAdapter inactiveAdapter;
     private Button medBtn;
     homeMedPresenterInterface homeMedPresenterInterface;
-
+    DisplayEditViewInterface displayEditViewInterface;
 
     private FragmentDashboardBinding binding;
 
@@ -98,6 +104,26 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     @Override
     public void onActiveCLick(Medicine medicine) {
+//        Intent intent = new Intent(getActivity(), MedDisplayEditActivity.class);
+//        intent.putExtra("id", medicine.getId());
+//        startActivity(intent);
+
+
+//        DashboardFragmentDirections.ActionNavigationDashboardToDisplayEditMedicationGraph action =
+//                DashboardFragmentDirections.actionNavigationDashboardToDisplayEditMedicationGraph();
+//        action.setId(medicine.getId());
+//        Navigation.findNavController(getView()).navigate(action);
+
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", medicine.getId());
+        bundle.putBoolean("suspended", true);
+        NavController navController = Navigation.findNavController(getView());
+        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+
+
+//        NavDirections action = DashboardFragmentDirections.actionNavigationDashboardToDisplayEditMedicationGraph();
+//        Navigation.findNavController(getView()).navigate(action);
 
     }
 

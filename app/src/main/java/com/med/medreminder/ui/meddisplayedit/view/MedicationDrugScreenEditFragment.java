@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.meddisplayedit.view;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
@@ -7,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -25,7 +29,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
+import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
+
+import java.util.Calendar;
 
 import lib.kingja.switchbutton.SwitchMultiButton;
 
@@ -42,9 +52,14 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     ImageView imgCurrent, imgPill, imgInjection, imgDrops, imgOther;
     Button btnDone;
     SwitchMultiButton switchMultiButton;
+    DisplayPresenterInterface presenterInterface;
 
     String strengthType;
     String[] often = { "Once Daily", "Twice Daily", "3 times a day" };
+    String endDate;
+    int imgRes;
+
+    Medicine updateMed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +103,9 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         imgOther.setOnClickListener(this);
         btnDone.setOnClickListener(this);
 
+        presenterInterface = new DisplayEditPresenter(this,
+                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+
         strengthType = "";
 
         switchMultiButton.setText(
@@ -106,10 +124,13 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         medReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
-                    Toast.makeText(getContext(), "Reminder ON", Toast.LENGTH_SHORT).show();
+                if (isChecked) {
+                    reminderTimesOftenSpinner.setVisibility(View.VISIBLE);
+                    int itemNum = reminderTimesOftenSpinner.getSelectedItemPosition();
+                    actionOftenReminder(itemNum);
+                }
                 else
-                    Toast.makeText(getContext(), "Reminder OFF", Toast.LENGTH_SHORT).show();
+                    actionHideAllReminders();
             }
         });
 
@@ -129,42 +150,58 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         reminderTimesOftenSpinner.setAdapter(adapter);
 
-        Medicine medicine = new Medicine(3, "name", "Pill", "500 mEg", "Reason", "Yes",
-                "3 times a day", "9:0,19:30,5:0", "15-3-2022", "30-3-2022", 30, 2,
-                R.drawable.ic_pill);
+        MedicationDrugScreenEditFragmentArgs args = MedicationDrugScreenEditFragmentArgs.fromBundle(getArguments());
+        int id = args.getMedId();
 
-        getMed(medicine);
+        getMedicine(id);
 
     }
 
-    private void getMed(Medicine medicine){
-        getMedDetails(medicine);
+    private void getMedicine(int id){
+        LiveData<Medicine> medicine = getMedDetails(id);
+        medicine.observe(this, new Observer<Medicine>() {
+            @Override
+            public void onChanged(Medicine medicine) {
+                updateUI(medicine);
+            }
+        });
     }
 
-    @Override
-    public void getMedDetails(Medicine medicine) {
+    private void updateUI(Medicine medicine){
+
+        updateMed = medicine;
+        endDate = medicine.getEndDate();
+        imgRes = medicine.getImage();
 
         inputEditName.setText(medicine.getName());
         inputEditCondition.setText(medicine.getReason());
-        inputEditStrength.setText(medicine.getStrength());
         inputEditMedAmount.setText(String.valueOf(medicine.getMedLeft()));
         inputEditRefillLimit.setText(String.valueOf(medicine.getRefillLimit()));
 
+        imgCurrent.setImageResource(medicine.getImage());
 
         //set spinner
         int selection = 0;
 
         switch (medicine.getOften()){
             case "Once Daily":
+                medReminderSwitch.setChecked(true);
                 selection = 0;
                 break;
 
             case "Twice Daily":
+                medReminderSwitch.setChecked(true);
                 selection = 1;
                 break;
 
             case "3 times a day":
+                medReminderSwitch.setChecked(true);
                 selection = 2;
+                break;
+
+            case "Only As Needed":
+                medReminderSwitch.setChecked(false);
+                reminderTimesOftenSpinner.setVisibility(View.GONE);
                 break;
 
         }
@@ -173,7 +210,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         // set time texts
         String time = medicine.getTime();
         String[] times;
-        String firstTime = "";
+        String firstTime;
         String secondTime, thirdTime;
         if(time.contains(",")){
 
@@ -200,18 +237,11 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         firstReminder.setText(firstTime);
 
         // radio button selection
-        switch (medicine.getIsDaily()){
-            case "Yes":
-                radioSetEndDate.setChecked(true);
-                break;
+        if(medicine.getEndDate().equals("Ongoing treatment"))
+            radioOngoing.setChecked(true);
+        else
+            radioSetEndDate.setChecked(true);
 
-            case "Ongoing Treatment":
-                radioOngoing.setChecked(true);
-                break;
-
-            default:
-                Log.e(TAG, "getMedDetails: error check radio button");
-        }
 
         // if not null
         textStartDate.setText("Start date: " + medicine.getStartDate());
@@ -244,19 +274,60 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                 Log.e(TAG, "getMedDetails: error check radio button");
         }
         switchMultiButton.setSelectedTab(switchSelection);
+        inputEditStrength.setText(type[0]);
 
     }
 
+    @Override
+    public LiveData<Medicine> getMedDetails(int id) {
+        return presenterInterface.getMedDetails(id);
+    }
+
+    private void actionOftenReminder(int itemSelected){
+        switch (itemSelected){
+            case 0:
+                actionOnceDaily();
+                break;
+            case 1:
+                actionTwiceDaily();
+                break;
+
+            case 2:
+                actionThreeTimesDaily();
+                break;
+        }
+    }
+
+    private void actionHideAllReminders(){
+        reminderTimesOftenSpinner.setVisibility(View.GONE);
+        firstReminder.setVisibility(View.GONE);
+        secondReminder.setVisibility(View.GONE);
+        thirdReminder.setVisibility(View.GONE);
+    }
+
+
     private void actionOnceDaily(){
         firstReminder.setVisibility(View.VISIBLE);
+
+        if(firstReminder.getText().toString().equals("")){
+            firstReminder.setText(getString(R.string.click_to_add_reminder));
+        }
+
         secondReminder.setVisibility(View.GONE);
         thirdReminder.setVisibility(View.GONE);
     }
 
     private void actionTwiceDaily(){
-
         firstReminder.setVisibility(View.VISIBLE);
         secondReminder.setVisibility(View.VISIBLE);
+
+        if(firstReminder.getText().toString().equals("")){
+            firstReminder.setText(getString(R.string.click_to_add_reminder));
+        }
+        if(secondReminder.getText().toString().equals("")){
+            secondReminder.setText(getString(R.string.click_to_add_reminder));
+        }
+
         thirdReminder.setVisibility(View.GONE);
     }
 
@@ -264,6 +335,16 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         firstReminder.setVisibility(View.VISIBLE);
         secondReminder.setVisibility(View.VISIBLE);
         thirdReminder.setVisibility(View.VISIBLE);
+
+        if(firstReminder.getText().toString().equals("")){
+            firstReminder.setText(getString(R.string.click_to_add_reminder));
+        }
+        if(secondReminder.getText().toString().equals("")){
+            secondReminder.setText(getString(R.string.click_to_add_reminder));
+        }
+        if(thirdReminder.getText().toString().equals("")){
+            thirdReminder.setText(getString(R.string.click_to_add_reminder));
+        }
 
     }
 
@@ -288,21 +369,19 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     }
 
     private void actionRadioSetEndDate(){
-
-        TimePickerDialog.OnTimeSetListener myTimeListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if (view.isShown()) {
-                    Toast.makeText(getContext(), "end date set done " + hourOfDay + ":" + minute,
-                            Toast.LENGTH_SHORT).show();
-                }
+        final Calendar newCalendar = Calendar.getInstance();
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                int month = monthOfYear + 1;
+                Toast.makeText(getContext(), "end date set done " + dayOfMonth + "-" + month + "-" + year,
+                        Toast.LENGTH_SHORT).show();
+                endDate = dayOfMonth + "-" + month + "-" + year;
             }
-        };
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, myTimeListener, 20, 0, true);
-        timePickerDialog.setTitle("Select End Date");
-        timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        timePickerDialog.show();
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     private void actionReminderText(String title){
@@ -334,10 +413,104 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
 
     private void actionChangeMedImage(int imgResource){
         imgCurrent.setImageResource(imgResource);
+        imgRes = imgResource;
     }
 
-    private void actionDone(){
-        Toast.makeText(getContext(), "Edit Done!", Toast.LENGTH_SHORT).show();
+    private void actionDone(Medicine medicine){
+        editMed(medicine);
+    }
+
+    private void editMed(Medicine medicine){
+
+        //update med name
+        updateMed.setName(inputEditName.getText().toString());
+
+        // update med reminder(s)
+        String time = "";
+
+        if(!medReminderSwitch.isChecked()){
+            updateMed.setTime("");
+            updateMed.setOften(getString(R.string.selection_only_as_needed));
+        } else {
+            switch (reminderTimesOftenSpinner.getSelectedItemPosition()){
+                case 0:
+                    if(!firstReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time = firstReminder.getText().toString();
+                    break;
+
+                case 1:
+                    if(!firstReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time = firstReminder.getText().toString();
+                    if(!secondReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time += "," + secondReminder.getText().toString();
+                    break;
+
+                case 2:
+                    if(!firstReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time = firstReminder.getText().toString();
+                    if(!secondReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time += "," + secondReminder.getText().toString();
+                    if(!thirdReminder.getText().equals(getString(R.string.click_to_add_reminder)))
+                        time += "," + thirdReminder.getText().toString();
+                    break;
+            }
+            updateMed.setTime(time);
+
+            String editOften;
+            String[] times;
+            if(time.contains(",")){
+
+                times = time.split(",");
+
+                // two times
+                if (times.length==2){
+                    editOften = "Twice Daily";
+
+                } else {    // three times
+
+                    editOften = "3 times a day";
+                }
+            } else {
+                editOften = "Once Daily";
+            }
+            if(!time.equals(""))
+                updateMed.setOften(editOften);
+            else
+                updateMed.setOften(getString(R.string.selection_only_as_needed));
+        }
+
+        // set end date
+        if(radioOngoing.isChecked())
+            updateMed.setEndDate(getString(R.string.selection_ongoing_treatment));
+        else
+            updateMed.setEndDate(endDate);
+
+        //update med icon
+        updateMed.setImage(imgRes);
+
+        //update med reason
+        updateMed.setReason(inputEditCondition.getText().toString());
+
+        //update strength
+        String strength = inputEditStrength.getText().toString() + " " + strengthType;
+        updateMed.setStrength(strength);
+
+        //update refill reminders
+        updateMed.setMedLeft(Integer.parseInt(inputEditMedAmount.getText().toString()));
+        updateMed.setRefillLimit(Integer.parseInt(inputEditRefillLimit.getText().toString()));
+
+        updateMed(medicine);
+    }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        presenterInterface.updateMed(medicine);
+        Toast.makeText(getContext(), "Med Updated!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deleteMed(Medicine medicine) {
+
     }
 
     @Override
@@ -368,8 +541,9 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                 actionChangeMedImage(R.drawable.ic_medicine_other);
                 break;
             case R.id.btn_done_edit:
-                actionDone();
+                actionDone(updateMed);
                 break;
         }
     }
+
 }

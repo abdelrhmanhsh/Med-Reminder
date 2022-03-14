@@ -10,6 +10,9 @@ import androidx.lifecycle.LiveData;
 public interface LocalSource {
 
     void insert(Medicine medicine);
+    void update(Medicine medicine);
+    void delete(Medicine medicine);
+    LiveData<Medicine> getMedicineById(int id);
     LiveData<List<Medicine>> getAllStoredMedicines();
 
 

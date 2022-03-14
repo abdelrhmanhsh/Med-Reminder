@@ -1,10 +1,10 @@
-package com.med.medreminder.ui.meddisplayedit.view;
+package com.med.medreminder.ui.meddisplayedit.presenter;
 
 import androidx.lifecycle.LiveData;
 
 import com.med.medreminder.model.Medicine;
 
-public interface DisplayEditViewInterface {
+public interface DisplayPresenterInterface {
 
     LiveData<Medicine> getMedDetails(int id);
     void updateMed(Medicine medicine);

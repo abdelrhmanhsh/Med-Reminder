@@ -2,6 +2,7 @@ package com.med.medreminder.db;
 
 import android.content.Context;
 
+import com.med.medreminder.R;
 import com.med.medreminder.model.Medicine;
 
 import java.util.List;
@@ -38,6 +39,31 @@ public class ConcreteLocalSource implements LocalSource{
                 dao.insertMedicine(medicine);
             }
         }).start();
+    }
+
+    @Override
+    public void update(Medicine medicine) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.updateMedicine(medicine);
+            }
+        }).start();
+    }
+
+    @Override
+    public void delete(Medicine medicine) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.deleteMedicine(medicine);
+            }
+        }).start();
+    }
+
+    @Override
+    public LiveData<Medicine> getMedicineById(int id) {
+        return dao.getMedicineById(id);
     }
 
     @Override

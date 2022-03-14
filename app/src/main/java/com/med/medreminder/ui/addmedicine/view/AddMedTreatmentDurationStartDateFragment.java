@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +18,10 @@ import android.widget.TextView;
 import com.med.medreminder.R;
 import com.med.medreminder.model.Medicine;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddMedTreatmentDurationStartDateFragment extends Fragment implements View.OnClickListener {
 
@@ -65,10 +65,24 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
         int month = datePicker.getMonth();
         int year = datePicker.getYear();
 
-        String date = day + "-" + month + "-" + year;
+        String dateStr = day + "-" + month + "-" + year;
 
         Medicine medicine = Medicine.getInstance();
-        medicine.setStartDate(date);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+
+        try{
+
+            Date date = sdf.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            medicine.setStartDateMillis(calendar.getTimeInMillis());
+
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+
+        medicine.setStartDate(dateStr);
 
         NavDirections action = AddMedTreatmentDurationStartDateFragmentDirections.actionAddMedTreatmentStartDateToTreatmentHowLong();
         Navigation.findNavController(view).navigate(action);

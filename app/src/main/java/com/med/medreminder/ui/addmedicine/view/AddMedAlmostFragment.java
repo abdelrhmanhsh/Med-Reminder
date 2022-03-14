@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.model.Medicine;
@@ -25,8 +24,10 @@ import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class AddMedAlmostFragment extends Fragment implements View.OnClickListener, AddMedViewInterface {
 
@@ -56,8 +57,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.description);
 
-        presenterInterface = new AddMedPresenter(this,
-                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+        presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext())));
 
         progressBar.setProgress(90);
 
@@ -95,13 +96,59 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         Medicine filledMed = Medicine.getInstance();
 
+        //check for nullables
+        if(filledMed.getOften()==null){
+            filledMed.setOften(getString(R.string.selection_only_as_needed));
+        }
+        if(filledMed.getTime()==null){
+            filledMed.setTime("");
+        }
+        if(filledMed.getStartDate()==null){
+            String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            filledMed.setStartDate(todayDate);
+
+            Date date = new Date();
+            long timeMillis = date.getTime();
+
+            filledMed.setStartDateMillis(timeMillis);
+
+        }
+        if(filledMed.getEndDate()==null){
+            filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
+        }
+        if(filledMed.getImage()==0){
+            filledMed.setImage(R.drawable.ic_medicine_other);
+        }
+
+
         Medicine medicine = new Medicine(0, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
-                filledMed.getStartDate(), filledMed.getEndDate(), filledMed.getMedLeft(),
-                filledMed.getRefillLimit(), filledMed.getImage());
+                filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
+                filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
+                filledMed.getImage());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
+
+        // Set reminders HERE ------------------------------------------------------------
+
+
+        filledMed.setOften(getString(R.string.selection_only_as_needed));
+        filledMed.setTime("");
+        String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        filledMed.setStartDate(todayDate);
+
+        Date date = new Date();
+        long timeMillis = date.getTime();
+
+        filledMed.setStartDateMillis(timeMillis);
+
+        filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
+        filledMed.setEndDateMillis(0);
+        filledMed.setImage(R.drawable.ic_medicine_other);
+
+        filledMed.setMedLeft(0);
+        filledMed.setRefillLimit(0);
 
     }
 
