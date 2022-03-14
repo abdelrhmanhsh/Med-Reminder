@@ -105,11 +105,12 @@
             app:layout_constraintStart_toStartOf="@+id/firstName_edt"
             app:layout_constraintTop_toBottomOf="@+id/gender_txt"
             android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_pirates"
+            <RadioButton android:id="@+id/radio_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="@string/female"/>
-            <RadioButton android:id="@+id/radio_ninjas"
+            <RadioButton android:id="@+id/radio_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/male"/>
@@ -196,9 +197,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/blue_background"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="20dp"
             android:text="@string/signup"
             android:textColor="@color/white"/>
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/signup_btn"
+            app:layout_constraintStart_toStartOf="@+id/signup_btn"
+            app:layout_constraintEnd_toEndOf="@+id/signup_btn"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/>
 
 
 

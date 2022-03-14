@@ -1,6 +1,7 @@
 package com.med.medreminder.ui.homepage.view;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -10,12 +11,19 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.ActivityHomeBinding;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
+    //FirebaseUser currentUser;
+    String currUserName;
+    YourPreference yourPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +31,11 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+//        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser != null){
+//            currUserName = currentUser.getDisplayName()
+//        }
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -34,9 +47,15 @@ public class HomeActivity extends AppCompatActivity {
        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        yourPreference = YourPreference.getInstance(this);
         binding.toolbar.setOnClickListener(view -> {
 
         });
+
+        Log.d("TAG", "onSuccess:**********!!!!!!!!!! " + yourPreference.getData(Constants.FIRST_NAME));
+
+        binding.usernameTxt.setText(yourPreference.getData(Constants.FIRST_NAME));
+
     }
 
 }
