@@ -22,6 +22,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHolder> {
@@ -60,7 +61,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.med_img);
 
-        holder.med_card.setOnClickListener(view -> {
+        holder.constraint_layout.setOnClickListener(view -> {
             onMedClickListener.onCLick(medicines.get(position));
         });
     }
@@ -77,6 +78,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
         TextView medName_txt;
         TextView medStrength_txt;
         TextView medForm_txt;
+        ConstraintLayout constraint_layout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +88,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
             medName_txt = itemView.findViewById(R.id.medName_txt);
             medStrength_txt = itemView.findViewById(R.id.medStrength_txt);
             medForm_txt = itemView.findViewById(R.id.medForm_txt);
+            constraint_layout = itemView.findViewById(R.id.constraint_layout);
         }
     }
 }

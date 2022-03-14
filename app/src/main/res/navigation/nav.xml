@@ -29,7 +29,17 @@
     <fragment
         android:id="@+id/fragment_signup"
         android:name="com.med.medreminder.ui.signup.view.SignupFragment"
-        tools:layout="@layout/fragment_signup" />
+        tools:layout="@layout/fragment_signup" >
+
+        <action
+            android:id="@+id/signupToLogin"
+            app:destination="@id/fragment_login"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_down"/>
+
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_login"
