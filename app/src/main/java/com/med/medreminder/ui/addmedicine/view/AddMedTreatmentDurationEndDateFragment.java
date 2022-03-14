@@ -23,6 +23,11 @@ import com.med.medreminder.model.Medicine;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class AddMedTreatmentDurationEndDateFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "AddMedTreatmentDurationEndDateFragment";
@@ -57,13 +62,27 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
     private void actionSetEndDate(View view){
 
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
+        int month = datePicker.getMonth()+1;
         int year = datePicker.getYear();
 
         String date = day + "-" + month + "-" + year;
 
         Medicine medicine = Medicine.getInstance();
-        medicine.setEndDate(date);
+        //Specifying the pattern of input date and time
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        try{
+            //formatting the dateString to convert it into a Date
+            Date date1 = sdf.parse(date);
+            System.out.println("Given Time in milliseconds : "+date1.getTime());
+
+            Calendar calendar = Calendar.getInstance();
+            //Setting the Calendar date and time to the given date and time
+            calendar.setTime(date1);
+            System.out.println("Given Time in milliseconds : "+calendar.getTimeInMillis());
+            medicine.setEndDateMillis(calendar.getTimeInMillis());
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
 
         NavDirections action = AddMedTreatmentDurationEndDateFragmentDirections.actionAddMedTreatmentDurationEndDateToAlmost();
         Navigation.findNavController(view).navigate(action);

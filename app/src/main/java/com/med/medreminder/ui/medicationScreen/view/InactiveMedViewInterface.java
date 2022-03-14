@@ -4,7 +4,7 @@ import com.med.medreminder.model.Medicine;
 
 import java.util.List;
 
-public interface ActiveMedViewInterface {
-    void getActiveMeds(List<Medicine> medicines);
+public interface InactiveMedViewInterface {
+    void getInactiveMeds(List<Medicine> medicines);
 
 }

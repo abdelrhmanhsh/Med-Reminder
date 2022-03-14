@@ -62,10 +62,10 @@ public class AddMedTreatmentHowLongFragment extends Fragment implements View.OnC
         Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionSetTreatmentEndDate(View view, String endDate){
+    private void actionSetTreatmentEndDate(View view, long endDate){
 
         Medicine medicine = Medicine.getInstance();
-        medicine.setEndDate(endDate);
+        medicine.setEndDateMillis(endDate);
 
         NavDirections action = AddMedTreatmentHowLongFragmentDirections.actionAddMedTreatmentHowLongToEndDate();
         Navigation.findNavController(view).navigate(action);
@@ -86,7 +86,7 @@ public class AddMedTreatmentHowLongFragment extends Fragment implements View.OnC
                 break;
 
             case R.id.selection_ongoing_treatment:
-                actionSetTreatmentEndDate(view, getString(R.string.selection_ongoing_treatment));
+                actionSetTreatmentEndDate(view, R.string.selection_ongoing_treatment);
                 break;
         }
     }

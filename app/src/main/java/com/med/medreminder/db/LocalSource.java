@@ -12,5 +12,8 @@ public interface LocalSource {
     void insert(Medicine medicine);
     LiveData<List<Medicine>> getAllStoredMedicines();
 
+    LiveData<List<Medicine>> getActiveMedications(long time);
+    LiveData<List<Medicine>> getInactiveMedications(long time);
+
 
 }

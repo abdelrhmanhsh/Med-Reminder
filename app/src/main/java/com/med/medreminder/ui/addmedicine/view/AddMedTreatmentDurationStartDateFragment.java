@@ -23,6 +23,11 @@ import com.med.medreminder.model.Medicine;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class AddMedTreatmentDurationStartDateFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "AddMedTreatmentDurationStartDateFragment";
@@ -62,13 +67,32 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
     private void actionNext(View view){
 
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
+        int month = datePicker.getMonth()+1;
         int year = datePicker.getYear();
 
         String date = day + "-" + month + "-" + year;
 
         Medicine medicine = Medicine.getInstance();
-        medicine.setStartDate(date);
+
+
+        //Specifying the pattern of input date and time
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        //String dateString = "22-03-2017 11:18:32";
+        try{
+            //formatting the dateString to convert it into a Date
+            Date date1 = sdf.parse(date);
+            System.out.println("Given Time in milliseconds : "+date1.getTime());
+
+            Calendar calendar = Calendar.getInstance();
+            //Setting the Calendar date and time to the given date and time
+            calendar.setTime(date1);
+            System.out.println("Given Time in milliseconds : "+calendar.getTimeInMillis());
+            medicine.setStartDateMillis(calendar.getTimeInMillis());
+        }catch(ParseException e){
+            e.printStackTrace();
+        }
+
+
 
         NavDirections action = AddMedTreatmentDurationStartDateFragmentDirections.actionAddMedTreatmentStartDateToTreatmentHowLong();
         Navigation.findNavController(view).navigate(action);

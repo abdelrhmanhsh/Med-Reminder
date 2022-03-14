@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.med.medreminder.model.Medicine;
 
-@Database(entities = {Medicine.class}, version = 1)
+@Database(entities = {Medicine.class}, version = 1,exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance = null;

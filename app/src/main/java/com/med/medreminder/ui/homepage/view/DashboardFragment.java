@@ -7,18 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentDashboardBinding;
-import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
-import com.med.medreminder.ui.homepage.presenter.HomeMedPresenter;
-import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
+import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenter;
+import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenterInterface;
+import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
+import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterface;
+import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedsAdapter;
+import com.med.medreminder.ui.medicationScreen.view.InactiveMedViewInterface;
 import com.med.medreminder.ui.medicationScreen.view.InactiveMedsAdapter;
 import com.med.medreminder.ui.medicationScreen.view.OnActiveMedClickListener;
 import com.med.medreminder.ui.medicationScreen.view.OnInactiveMedClickListener;
@@ -29,19 +31,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
-public class DashboardFragment extends Fragment implements OnInactiveMedClickListener, OnActiveMedClickListener, homeMedViewInterface {
+public class DashboardFragment extends Fragment implements OnInactiveMedClickListener, OnActiveMedClickListener, ActiveMedViewInterface, InactiveMedViewInterface {
 
     private RecyclerView activeMeds;
     private RecyclerView inactiveMeds;
     private ActiveMedsAdapter activeAdapter;
     private InactiveMedsAdapter inactiveAdapter;
     private Button medBtn;
-    homeMedPresenterInterface homeMedPresenterInterface;
-
-
+    ActivePresenterInterface activePresenterInterface;
+    InactivePresenterInterface inactivePresenterInterface;
     private FragmentDashboardBinding binding;
 
 
@@ -66,13 +71,26 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         activeAdapter = new ActiveMedsAdapter(this,getContext());
         activeMeds.setAdapter(activeAdapter);
 
-        homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
+
+        inactiveMeds.setHasFixedSize(true);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
+        layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
+        inactiveMeds.setLayoutManager(layoutManager2);
+        inactiveAdapter = new InactiveMedsAdapter(this,getContext());
+        inactiveMeds.setAdapter(inactiveAdapter);
+
+        activePresenterInterface = new ActivePresenter(this, Repository.getInstance(getContext(),
                 ConcreteLocalSource.getInstance(getContext())));
 
         Log.d("TAG", "Dashboard Fragment: " + getViewLifecycleOwner());
 
-        homeMedPresenterInterface.showAllStoredMedicines(getViewLifecycleOwner());
+        activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner());
+
         Log.d("TAG", "onViewCreated: " + 1);
+
+        inactivePresenterInterface = new InactivePresenter(this,Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext())));
+        inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner());
 
         medBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,16 +100,10 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         });
         Log.d("TAG", "onViewCreated: " + 2);
 
-
-//        inactiveAdapter = new InactiveMedsAdapter(MedicationsScreen.inactive_meds);
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
-        layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
-        inactiveMeds.setLayoutManager(layoutManager2);
-        inactiveMeds.setAdapter(inactiveAdapter);
-
     }
 
 
+    //onInactiveClick
     @Override
     public void onCLick(Medicine medicine) {
     }
@@ -101,14 +113,33 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     }
 
-    @Override
-    public void getAllStoredMedicines(List<Medicine> medicines) {
-        activeAdapter.setMedInfo(medicines);
-    }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+
+    @Override
+    public void getActiveMeds(List<Medicine> medicines) {
+
+        if(medicines.size()==0){
+            //binding.textView.setVisibility(View.GONE);
+            //binding.recyclerViewActiveMeds.setVisibility(View.GONE);
+        }else{
+           // binding.textView.setVisibility(View.VISIBLE);
+            //binding.recyclerViewActiveMeds.setVisibility(View.VISIBLE);
+           // activeAdapter = new ActiveMedsAdapter(this,getContext());
+           // binding.recyclerViewActiveMeds.setAdapter(activeAdapter);
+            activeAdapter.setMedInfo(medicines);
+        }
+    }
+
+    @Override
+    public void getInactiveMeds(List<Medicine> medicines) {
+        inactiveAdapter.setInactiveMedInfo(medicines);
+
     }
 }

@@ -97,7 +97,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         Medicine medicine = new Medicine(0, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
-                filledMed.getStartDate(), filledMed.getEndDate(), filledMed.getMedLeft(),
+                filledMed.getStartDateMillis(), filledMed.getEndDateMillis(), filledMed.getMedLeft(),
                 filledMed.getRefillLimit(), filledMed.getImage());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());

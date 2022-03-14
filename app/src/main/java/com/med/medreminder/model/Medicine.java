@@ -31,11 +31,11 @@ public class Medicine {
     @ColumnInfo(name = "time")
     String time;
 
-    @ColumnInfo(name = "startDate")
-    String startDate;
+    @ColumnInfo(name = "startDateMillis")
+    long startDateMillis;
 
-    @ColumnInfo(name = "endDate")
-    String endDate;
+    @ColumnInfo(name = "endDateMillis")
+    long endDateMillis;
 
     @ColumnInfo(name = "medLeft")
     int medLeft;
@@ -45,6 +45,8 @@ public class Medicine {
 
     @ColumnInfo(name = "image")
     int image;
+
+
 
 
     private static Medicine instance = null;
@@ -58,7 +60,7 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, int medLeft, int refillLimit, int image) {
+    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image) {
         this.id = id;
         this.name = name;
         this.form = form;
@@ -67,8 +69,8 @@ public class Medicine {
         this.isDaily = isDaily;
         this.often = often;
         this.time = time;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startDateMillis = startDateMillis;
+        this.endDateMillis = endDateMillis;
         this.medLeft = medLeft;
         this.refillLimit = refillLimit;
         this.image = image;
@@ -138,20 +140,20 @@ public class Medicine {
         this.time = time;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public long getStartDateMillis() {
+        return startDateMillis;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartDateMillis(long startDateMillis) {
+        this.startDateMillis = startDateMillis;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public long getEndDateMillis() {
+        return endDateMillis;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEndDateMillis(long endDateMillis) {
+        this.endDateMillis = endDateMillis;
     }
 
     public int getMedLeft() {
@@ -178,6 +180,7 @@ public class Medicine {
         this.image = image;
     }
 
+
     @Override
     public String toString() {
         return "Medicine{" +
@@ -189,8 +192,8 @@ public class Medicine {
                 ", isDaily='" + isDaily + '\'' +
                 ", often='" + often + '\'' +
                 ", time='" + time + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
+                ", startDateMillis='" + startDateMillis + '\'' +
+                ", endDateMillis='" + endDateMillis + '\'' +
                 ", medLeft=" + medLeft +
                 ", refillLimit=" + refillLimit +
                 ", image=" + image +
