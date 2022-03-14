@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey;
 public class Medicine {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    @ColumnInfo(name = "id")
+    public int id = 0;
 
     @ColumnInfo(name = "name")
     String name;
@@ -67,8 +68,7 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image) {
-        this.id = id;
+    public Medicine(String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image) {
         this.name = name;
         this.form = form;
         this.strength = strength;

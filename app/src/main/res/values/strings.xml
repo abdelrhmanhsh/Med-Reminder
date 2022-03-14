@@ -147,6 +147,9 @@
     <string name="days">Days</string>
     <string name="RESUME">RESUME</string>
 
+    <!-- dialog notification -->
+    <string name="reschedule">Reschedule</string>
+
 
 
     <string name="signup">SignUp</string>

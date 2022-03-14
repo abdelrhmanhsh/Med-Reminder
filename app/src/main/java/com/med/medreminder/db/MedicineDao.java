@@ -15,7 +15,7 @@ import java.util.List;
 public interface MedicineDao {
 
     @Insert
-    void insertMedicine(Medicine medicine);
+    long insertMedicine(Medicine medicine);
 
     @Query("Select * From medicines Where id =:id")
     LiveData<Medicine> getMedicineById(int id);

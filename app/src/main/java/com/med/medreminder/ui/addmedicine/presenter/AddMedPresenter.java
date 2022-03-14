@@ -16,4 +16,9 @@ public class AddMedPresenter implements AddMedPresenterInterface{
         repo.insertMedicine(medicine);
     }
 
+    @Override
+    public void addMedToFirestore(Medicine medicine, String email) {
+        repo.addMedToFirestore(medicine, email);
+    }
+
 }

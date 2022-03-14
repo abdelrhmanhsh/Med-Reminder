@@ -39,8 +39,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -68,7 +66,7 @@ public class LoginFragment extends Fragment{
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
-    FirebaseDatabase database;
+//    FirebaseDatabase database;
    // DatabaseReference myRef;
    private FirebaseFirestore db;
 
@@ -113,7 +111,7 @@ public class LoginFragment extends Fragment{
         email_edt = view.findViewById(R.id.email_edt);
         password_edt = view.findViewById(R.id.password_edt);
 
-        database = FirebaseDatabase.getInstance();
+//        database = FirebaseDatabase.getInstance();
         //myRef = database.getReference("users");
         progressbar = view.findViewById(R.id.progressbar);
         db = FirebaseFirestore.getInstance();

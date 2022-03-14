@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,7 @@ public class AddMedNameFragment extends Fragment implements View.OnClickListener
     Button btnNext;
     ProgressBar progressBar;
     EditText inputMedName;
+    YourPreference yourPreference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +52,20 @@ public class AddMedNameFragment extends Fragment implements View.OnClickListener
         progressBar.setProgress(10);
         btnNext.setOnClickListener(this);
 
+        isUserOnline();
+    }
+
+    private boolean isUserOnline(){
+        boolean isLogin = false;
+        yourPreference = YourPreference.getInstance(getContext());
+
+        String isLoginStr = yourPreference.getData(Constants.IS_LOGIN);
+        if(isLoginStr.equals("true"))
+            isLogin = true;
+
+        Log.i(TAG, "isUserOnline: " + isLogin + " str: " + isLoginStr);
+
+        return  isLogin;
     }
 
     private void actionNext(View view){

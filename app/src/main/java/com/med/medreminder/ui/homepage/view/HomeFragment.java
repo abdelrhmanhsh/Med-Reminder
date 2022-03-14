@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.homepage.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
@@ -112,7 +116,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv.setAdapter(medHomeAdapter);
 
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         Log.d("TAG", "HomeFragment: " + getViewLifecycleOwner());
 
@@ -152,11 +156,69 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         }
     }
 
+
+    // ------------------------------------
+
     @Override
     public void onCLick(Medicine medicine) {
         Log.d("TAG", "onCLick: " + medicine.getName());
         Toast.makeText(getContext(), "" + medicine.getName(), Toast.LENGTH_SHORT).show();
     }
+
+    private void showNotificationDialog(Medicine medicine){
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_notification);
+
+        ImageView imgEdit, medIcon;
+        TextView medName, medSchedule, medStrength, medAmountLeft;
+        Button btnSkip, btnTake, btnReschedule;
+
+        imgEdit = dialog.findViewById(R.id.dialog_img_edit);
+        medIcon = dialog.findViewById(R.id.med_icon);
+        medName = dialog.findViewById(R.id.med_name);
+        medSchedule = dialog.findViewById(R.id.scheduled_desc);
+        medStrength = dialog.findViewById(R.id.strength_desc);
+        medAmountLeft = dialog.findViewById(R.id.med_left_desc);
+        btnSkip = dialog.findViewById(R.id.dialog_btn_skip);
+        btnTake = dialog.findViewById(R.id.dialog_btn_take);
+        btnReschedule = dialog.findViewById(R.id.dialog_btn_reschedule);
+
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        btnTake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currMedLeft = medicine.getMedLeft();
+                if(currMedLeft > 0){
+                    medicine.setMedLeft(currMedLeft-1);
+                } else {
+                    Toast.makeText(getContext(), "You have no med left!", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        btnReschedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Reschedule", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+
+//        textMedRemaining.setText("You have " + med.getMedLeft() + " meds remaining");
+        dialog.show();
+
+    }
+
+    // ----------------------------------------------
+
 
     @Override
     public void getAllStoredMedicines(List<Medicine> medicines) {

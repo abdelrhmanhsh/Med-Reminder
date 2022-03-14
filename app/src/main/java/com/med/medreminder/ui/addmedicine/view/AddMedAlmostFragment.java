@@ -17,12 +17,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
+import com.med.medreminder.ui.signup.view.SignupFragment;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +49,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     ProgressBar progressBar;
     TextView textTitle;
 
+    FirebaseFirestore db;
     AddMedPresenterInterface presenterInterface;
 
     @Override
@@ -58,7 +71,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         textTitle = view.findViewById(R.id.description);
 
         presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         progressBar.setProgress(90);
 
@@ -67,6 +80,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 //        btnAddInstructions.setOnClickListener(this);
         btnChangeMedIcon.setOnClickListener(this);
         btnSave.setOnClickListener(this);
+
+        db = FirebaseFirestore.getInstance();
 
         setTitleText();
 
@@ -111,8 +126,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             long timeMillis = date.getTime();
 
             filledMed.setStartDateMillis(timeMillis);
-
         }
+
         if(filledMed.getEndDate()==null){
             filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         }
@@ -121,7 +136,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         }
 
 
-        Medicine medicine = new Medicine(0, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
+        Medicine medicine = new Medicine(filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
                 filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
@@ -129,6 +144,12 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
+
+        if(FirebaseHelper.isUserLoggedIn(getContext())){
+            String email = FirebaseHelper.getUserEmail(getContext());
+            addMedToFirestore(medicine, email);
+            Toast.makeText(getContext(), "firebase: " + filledMed.getId(), Toast.LENGTH_SHORT).show();
+        }
 
         // Set reminders HERE ------------------------------------------------------------
 
@@ -181,5 +202,10 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         presenterInterface.addMed(medicine);
         Toast.makeText(getContext(), "Medicine Added!", Toast.LENGTH_SHORT).show();
         getActivity().finish();
+    }
+
+    @Override
+    public void addMedToFirestore(Medicine medicine, String email) {
+        presenterInterface.addMedToFirestore(medicine, email);
     }
 }
