@@ -203,6 +203,12 @@
     <string name="Drug">Drug Name</string>
     <string name="left">left</string>
     <string name="title_medication_screen">Medication Screen</string>
+    <string name="pillsLeft">Pill(s) left</string>
+    <string name="userName">User Name</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="invitationTxt">invites you to help him</string>
+    <string name="requests">Requests</string>
 
 
 </resources>

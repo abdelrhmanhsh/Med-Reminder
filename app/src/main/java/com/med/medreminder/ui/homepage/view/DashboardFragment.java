@@ -28,6 +28,8 @@ import com.med.medreminder.ui.medicationScreen.view.OnInactiveMedClickListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -102,19 +104,6 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     }
 
-
-    //onInactiveClick
-    @Override
-    public void onCLick(Medicine medicine) {
-    }
-
-    @Override
-    public void onActiveCLick(Medicine medicine) {
-
-    }
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -141,5 +130,23 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     public void getInactiveMeds(List<Medicine> medicines) {
         inactiveAdapter.setInactiveMedInfo(medicines);
 
+    }
+
+    @Override
+    public void onActiveCLick(Medicine medicine) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", medicine.getId());
+        bundle.putBoolean("suspended", false);
+        NavController navController = Navigation.findNavController(getView());
+        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+    }
+
+    @Override
+    public void onInactiveClick(Medicine medicine) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", medicine.getId());
+        bundle.putBoolean("suspended", true);
+        NavController navController = Navigation.findNavController(getView());
+        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
     }
 }

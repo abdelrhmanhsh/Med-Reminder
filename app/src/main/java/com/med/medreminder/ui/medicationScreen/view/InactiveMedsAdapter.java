@@ -73,7 +73,7 @@ public class InactiveMedsAdapter extends RecyclerView.Adapter<InactiveMedsAdapte
         holder.med_card_inactive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onInactiveMedClickListener.onCLick(medicineList.get(position));
+                onInactiveMedClickListener.onInactiveClick(medicineList.get(position));
             }
         });
     }
