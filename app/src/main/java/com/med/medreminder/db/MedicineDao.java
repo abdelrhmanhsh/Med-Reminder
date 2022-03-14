@@ -29,4 +29,10 @@ public interface MedicineDao {
     @Query("SELECT * from medicines")
     LiveData<List<Medicine>> getAllMedicines();
 
+    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis)")
+    LiveData<List<Medicine>> getActiveMedications(long time);
+
+    @Query("SELECT * FROM medicines WHERE (:time > endDateMillis)")
+    LiveData<List<Medicine>> getInactiveMedications(long time);
+
 }

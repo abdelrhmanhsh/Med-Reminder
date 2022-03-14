@@ -12,5 +12,8 @@ public interface RepositoryInterface {
     LiveData<Medicine> getMedicineById(int id);
     LiveData<List<Medicine>> getStoredMedicines();
 
+    LiveData<List<Medicine>> getActiveMedications(long time);
+    LiveData<List<Medicine>> getInactiveMedications(long time);
+
 
 }

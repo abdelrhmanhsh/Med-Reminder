@@ -52,4 +52,14 @@ public class Repository implements RepositoryInterface {
     public LiveData<List<Medicine>> getStoredMedicines() {
         return localSource.getAllStoredMedicines();
     }
+
+    @Override
+    public LiveData<List<Medicine>> getActiveMedications(long time) {
+        return localSource.getActiveMedications(time);
+    }
+
+    @Override
+    public LiveData<List<Medicine>> getInactiveMedications(long time) {
+        return localSource.getInactiveMedications(time);
+    }
 }

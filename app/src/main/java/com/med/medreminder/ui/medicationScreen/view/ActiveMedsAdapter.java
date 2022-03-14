@@ -1,6 +1,7 @@
 package com.med.medreminder.ui.medicationScreen.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,12 @@ import com.bumptech.glide.Glide;
 import com.med.medreminder.R;
 import com.med.medreminder.model.Medicine;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.ViewHolder> {
@@ -26,7 +32,6 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
 
     public ActiveMedsAdapter(OnActiveMedClickListener onActiveMedClickListener, Context context) {
         this.onActiveMedClickListener = onActiveMedClickListener;
-      //  this.medicines = medicines;
         this.context = context;
     }
 
@@ -42,18 +47,19 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
         ImageView med_img;
         TextView medName_txt;
         TextView medStrength_txt;
-        TextView medForm_txt;
-        CardView med_card;
+        CardView med_card_active;
+        TextView medNum_txt;
 
 
         public ViewHolder(@NonNull View convertView) {
             super(convertView);
             medTime_txt = itemView.findViewById(R.id.medTime_txt);
-            med_card = itemView.findViewById(R.id.med_card);
+            med_card_active = itemView.findViewById(R.id.med_card_active);
             med_img = itemView.findViewById(R.id.med_img);
             medName_txt = itemView.findViewById(R.id.medName_txt);
             medStrength_txt = itemView.findViewById(R.id.medStrength_txt);
-            medForm_txt = itemView.findViewById(R.id.medForm_txt);
+            medNum_txt = itemView.findViewById(R.id.medNum_txt);
+        //    medForm_txt = itemView.findViewById(R.id.medForm_txt);
         }
 
     }
@@ -72,14 +78,15 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
             holder.medTime_txt.setText(medicines.get(position).getTime());
             holder.medName_txt.setText(medicines.get(position).getName());
             holder.medStrength_txt.setText(medicines.get(position).getStrength());
-            holder.medForm_txt.setText(medicines.get(position).getForm());
+            holder.medNum_txt.setText(medicines.get(position).getMedLeft()+"");
+          //  holder.medForm_txt.setText(medicines.get(position).getForm());
             Glide.with(context).load(medicines.get(position).getImage())
                     //.apply(new RequestOptions().override(200,200))
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .error(R.drawable.ic_launcher_foreground)
                     .into(holder.med_img);
 
-            holder.med_card.setOnClickListener(new View.OnClickListener() {
+            holder.med_card_active.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onActiveMedClickListener.onActiveCLick(medicines.get(position));
