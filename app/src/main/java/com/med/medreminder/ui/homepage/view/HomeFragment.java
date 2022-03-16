@@ -3,6 +3,7 @@ package com.med.medreminder.ui.homepage.view;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,16 @@ import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
 import com.med.medreminder.ui.homepage.presenter.HomeMedPresenter;
 import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
+import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
+import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterface;
+import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,21 +43,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.HorizontalCalendarView;
+import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 
-public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface, CalendarHomeAdapter.OnItemListener {
+public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface     {
 
     private FragmentHomeBinding binding;
     LinearLayoutManager linearLayoutManager;
     MedHomeAdapter medHomeAdapter;
     RecyclerView allMed_rv;
     FloatingActionButton addMed_floatBtn;
-    //ArrayList<Medicine> medicines;
 
-    ImageView back_ic;
-    ImageView next_ic;
-    RecyclerView days_rv;
-    TextView monthYearTV;
+    long curDate;
+
+    HorizontalCalendar horizontalCalendar;
+
+    ActivePresenterInterface activePresenterInterface;
 
     homeMedPresenterInterface homeMedPresenterInterface;
 
@@ -78,31 +89,61 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv = view.findViewById(R.id.allMed_rv);
         addMed_floatBtn = view.findViewById(R.id.addMed_floatBtn);
 
-        CalendarUtils.selectedDate = LocalDate.now();
-        monthYearTV = view.findViewById(R.id.monthYearTV);
-        days_rv = view.findViewById(R.id.days_rv);
-        back_ic = view.findViewById(R.id.back_ic);
-        next_ic = view.findViewById(R.id.next_ic);
+        /* starts before 1 month from now */
+        Calendar startDate = Calendar.getInstance();
+        startDate.add(Calendar.MONTH, -1);
 
-        back_ic.setOnClickListener(view1 -> {
-            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
-            setMonthView();
+        /* ends after 1 month from now */
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.MONTH, 5);
+
+        horizontalCalendar = new HorizontalCalendar.Builder(view, R.id.calendarView)
+                .range(startDate, endDate)
+                .datesNumberOnScreen(5)
+                .defaultSelectedDate(Calendar.getInstance())
+                .build();
+        Log.d("TAG", "onViewCreated: The current selected date: " + horizontalCalendar.getSelectedDate());
+
+        Log.d("TAG", "onViewCreated: " + startDate.getTime());
+
+        try {
+            String dateString = startDate.getTime().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+
+           // curDate = date.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        curDate = Calendar.getInstance().getTimeInMillis();
+
+                Log.d("TAG", "onViewCreated: " + curDate);
+        Log.d("TAG", "onViewCreated: " + Calendar.getInstance().getTimeInMillis());
+
+
+        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+            @Override
+            public void onDateSelected(Calendar date, int position) {
+                Log.d("TAG", "onDateSelected: " + date.getTimeInMillis());
+                String dateString = DateFormat.format("MM/dd/yyyy", new Date(String.valueOf(date.getTime()))).toString();
+                Log.d("TAG", "onDateSelected: Dateeeeeeeeeeeeeeeeeeeeeeeeee" + dateString);
+                //Log.d("TAG", "onDateSelected: " + date.get(position));
+                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis());
+            }
+
+            @Override
+            public void onCalendarScroll(HorizontalCalendarView calendarView,
+                                         int dx, int dy) {
+            }
+
+            @Override
+            public boolean onDateLongClicked(Calendar date, int position) {
+                return true;
+            }
         });
 
-        next_ic.setOnClickListener(view1 -> {
-            CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
-            setMonthView();
-        });
-
-        setMonthView();
-
-       // medicines = new ArrayList<>();
-
-//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
-//        medicines.add(new Medicine(R.drawable.pill_ic,"Vitamic C","Pill(s)","250","10:00","AM","gm","1"));
 
         allMed_rv.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -111,13 +152,13 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         medHomeAdapter = new MedHomeAdapter(getContext(), this);
         allMed_rv.setAdapter(medHomeAdapter);
 
+
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+                ConcreteLocalSource.getInstance(getContext())),curDate);
 
-        Log.d("TAG", "HomeFragment: " + getViewLifecycleOwner());
 
-        homeMedPresenterInterface.showAllStoredMedicines(getViewLifecycleOwner());
-        Log.d("TAG", "onViewCreated: " + 1);
+        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),curDate);
+
 
         addMed_floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,31 +166,10 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 startActivity(new Intent(getActivity(), AddMedActivity.class));
             }
         });
-        Log.d("TAG", "onViewCreated: " + 2);
-
-        oneTimeWork();
 
 
-    }
+       // oneTimeWork();
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setMonthView() {
-        monthYearTV.setText(CalendarUtils.monthYearFromDate(CalendarUtils.selectedDate));
-        ArrayList<LocalDate> daysInMonth = CalendarUtils.daysInMonthArray(CalendarUtils.selectedDate);
-        CalendarHomeAdapter calendarAdapter = new CalendarHomeAdapter(daysInMonth, (CalendarHomeAdapter.OnItemListener) this);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
-        days_rv.setLayoutManager(layoutManager);
-        days_rv.setAdapter(calendarAdapter);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onItemClick(int position, LocalDate date) {
-        if(date != null)
-        {
-            CalendarUtils.selectedDate = date;
-            setMonthView();
-        }
     }
 
     @Override
@@ -158,10 +178,6 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         Toast.makeText(getContext(), "" + medicine.getName(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void getAllStoredMedicines(List<Medicine> medicines) {
-        medHomeAdapter.setMedInfo(medicines);
-    }
 
     public void oneTimeWork() {
 //        WorkRequest locationUploadWorkRequest =
@@ -171,14 +187,25 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 //        WorkManager.getInstance(MainActivity.this).enqueue(locationUploadWorkRequest);
         //--------------------------------------------------------------------------
 
-        final PeriodicWorkRequest periodicWorkRequest1 = new PeriodicWorkRequest.Builder(WorkManMedRem.class,1, TimeUnit.MILLISECONDS)
-                .setInitialDelay(6000,TimeUnit.MILLISECONDS)
+        final PeriodicWorkRequest periodicWorkRequest1 = new PeriodicWorkRequest.Builder(WorkManMedRem.class, 1, TimeUnit.MILLISECONDS)
+                .setInitialDelay(6000, TimeUnit.MILLISECONDS)
                 .build();
-        WorkManager workManager =  WorkManager.getInstance(getContext());
+        WorkManager workManager = WorkManager.getInstance(getContext());
         workManager.enqueue(periodicWorkRequest1);
 
 
         // to cancel worker class
         // WorkManager.getInstance(MainActivity.this).cancelWorkById(locationUploadWorkRequest.getId());
+    }
+
+
+    @Override
+    public void getAllStoredMedicinesOnDate(List<Medicine> medicines) {
+        if (medicines.size() == 0) {
+             medHomeAdapter.removeMeds();
+            Toast.makeText(getContext(), "we don't have any medicines for this day", Toast.LENGTH_SHORT).show();
+        } else {
+            medHomeAdapter.setMedInfo(medicines);
+        }
     }
 }

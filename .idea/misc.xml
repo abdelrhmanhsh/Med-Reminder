@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.4" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/menu/bottom_nav_menu.xml" value="0.11388888888888889" />
         <entry key="app/src/main/res/drawable/button_blue_border.xml" value="0.2574074074074074" />
         <entry key="app/src/main/res/drawable/button_blue_fill.xml" value="0.2574074074074074" />
         <entry key="app/src/main/res/drawable/radius_view.xml" value="0.2638888888888889" />

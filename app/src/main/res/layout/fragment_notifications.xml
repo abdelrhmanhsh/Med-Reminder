@@ -4,19 +4,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.ui.notifications.NotificationsFragment">
+    tools:context=".ui.homepage.view.HomeActivity">
 
     <TextView
-        android:id="@+id/text_notifications"
+        android:id="@+id/profile_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/Profile"
+        android:textColor="@color/black"
+        android:padding="20dp"
+        android:drawableStart="@drawable/person_ic"
+        android:drawablePadding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/showMedFriends_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:text="@string/showMedFriends"
+        android:textColor="@color/black"
+        android:padding="20dp"
+        android:drawableStart="@drawable/list_friends"
+        android:drawablePadding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_txt" />
+
+    <TextView
+        android:id="@+id/sendMedFriend_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:text="@string/sendMedFriendRequest"
+        android:textColor="@color/black"
+        android:padding="20dp"
+        android:drawableStart="@drawable/add_friend_ic"
+        android:drawablePadding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showMedFriends_txt" />
+
+    <TextView
+        android:id="@+id/myMedFriendsRequests_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:text="@string/myMedFriendsRequests"
+        android:textColor="@color/black"
+        android:padding="20dp"
+        android:drawableStart="@drawable/friends_requests"
+        android:drawablePadding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendMedFriend_txt" />
+
+    <TextView
+        android:id="@+id/logout_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:text="@string/logout"
+        android:textColor="@color/black"
+        android:padding="20dp"
+        android:drawableStart="@drawable/logout_ic"
+        android:drawablePadding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myMedFriendsRequests_txt" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
