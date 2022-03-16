@@ -66,4 +66,28 @@ public class FirebaseWork implements FirebaseSource{
             }
         });
     }
+
+
+    public void updateStatusInFirestore(String helperEmail,String patientEmail,String status) {
+        Log.d("TAG","Helper Email: "+helperEmail);
+        Log.d("TAG","Patient Email:"+patientEmail);
+        Log.d("TAG","Status: "+status);
+      //  db = FirebaseFirestore.getInstance();
+
+        CollectionReference dbRequests = db.collection("Users");
+        dbRequests.document(helperEmail).collection("Requests").document(patientEmail).update("status",status)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "onSuccess: ");
+                        }
+                        else {
+                            Log.d("TAG", "onFailure: ");
+                        }
+                    }
+                });
+    }
+
+
 }

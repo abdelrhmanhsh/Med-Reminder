@@ -47,6 +47,9 @@ public class MedFriendActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     String currUserEmail;
+    String currUser;
+    String helper_email;
+    String helper_name;
 
 
 
@@ -74,10 +77,8 @@ public class MedFriendActivity extends AppCompatActivity {
         send_txt.setOnClickListener(view1 -> {
             YourPreference yourPrefrence = YourPreference.getInstance(getApplicationContext());
             String isLogin = yourPrefrence.getData(Constants.IS_LOGIN);
-            String currUser = yourPrefrence.getData(Constants.FIRST_NAME);
+            currUser = yourPrefrence.getData(Constants.FIRST_NAME);
             currUserEmail = yourPrefrence.getData(Constants.EMAIL);
-            Log.d("TAG", "onCreate: ???????????????????????" + currUser);
-            Log.d("TAG", "onCreate: ???????????????????????" + currUserEmail);
             if (isLogin.equals("true")){
                 checkHelperEmail();
             }
@@ -93,30 +94,32 @@ public class MedFriendActivity extends AppCompatActivity {
     private void checkHelperEmail() {
         isAllFieldsChecked = CheckAllFields();
         if (isAllFieldsChecked) {
-            name = firstName_edt.getText().toString();
-            email = email_edt.getText().toString();
+            helper_name = firstName_edt.getText().toString();
+            helper_email = email_edt.getText().toString();
             phoneNumber = phone_edt.getText().toString();
 
+            if(!helper_email.equals(currUserEmail)){
+                mAuth.fetchSignInMethodsForEmail(helper_email)
+                        .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
 
-            mAuth.fetchSignInMethodsForEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
 
-                            boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-
-                            if (isNewUser) {
-                                Log.d("TAG", "User not found!");
-                                Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
-                            } else {
-                                Log.d("TAG", "User found!");
-//                                YourPreference yourPrefrence = YourPreference.getInstance(getApplicationContext());
-//                                String email = yourPrefrence.getData(Constants.EMAIL);
-//                                String name = yourPrefrence.getData(Constants.FIRST_NAME);
-                                addDataToFirestore(email,name,"pending");
+                                if (isNewUser) {
+                                    Log.d("TAG", "User not found!");
+                                    Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Log.d("TAG", "User found!");
+                                    addDataToFirestore(currUserEmail,currUser,"PENDING");
+                                }
                             }
-                        }
-                    });
+                        });
+            }else{
+                Toast.makeText(getApplicationContext(), "" + "You can't choose your email!", Toast.LENGTH_LONG).show();
+            }
+
+
         }
     }
 
@@ -127,46 +130,21 @@ public class MedFriendActivity extends AppCompatActivity {
         data.put("email",email);
         data.put("status",status);
 
-        // creating a collection reference
-        // for our Firebase Firetore database.
-        CollectionReference dbRequests = db.collection("Users");
-        // below method is use to add data to Firebase Firestore.
-        //yourPreference.saveData(YOUR_KEY,YOUR_VALUE);
 
-        dbRequests.document(currUserEmail).collection("Requests")
-                .add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        CollectionReference dbRequests = db.collection("Users");
+        dbRequests.document(helper_email).collection("Requests").document(email)
+                .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
+            public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(), "Request sent successfully", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                   Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
             }
         });
-
-//        dbRequests.document(email).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(getApplicationContext(), "Request sent successfully", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Log.d("TAG", "onFailure: ");
-//                    Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
     }
-
-   /* public FirebaseUser getCurrentUser() {
-        // check if null or not
-        if (mAuth == null) {
-            // check
-            mAuth = FirebaseAuth.getInstance();
-        }
-        return mAuth.getCurrentUser();
-    }*/
 
     private boolean CheckAllFields() {
         if (firstName_edt.length() == 0) {
@@ -182,12 +160,12 @@ public class MedFriendActivity extends AppCompatActivity {
             email_edt.setError("Please enter email address");
             return false;
         }
+
         return true;
     }
 
 
     public static NavController findNavController(@NonNull Activity activity) {
-        //check getCurrentFocus
         View view = activity.getCurrentFocus();
         return Navigation.findNavController(view);
 

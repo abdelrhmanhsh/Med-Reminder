@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp">
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/request_view_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="5dp"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    android:id="@+id/request_cardView"
+    app:cardElevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/request_card"
@@ -43,16 +33,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:background="@color/common_google_signin_btn_text_dark_disabled"/>
 
             <TextView
-                android:id="@+id/userName_txt"
+                android:id="@+id/senderEmail_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/userName"
+                android:text="@string/email"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/vertical_line"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -61,22 +51,20 @@
                 android:id="@+id/accept_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/accept"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userName_txt"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.428" />
+                app:layout_constraintStart_toEndOf="@+id/senderEmail_txt"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/decline_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/decline"
                 app:layout_constraintStart_toEndOf="@+id/accept_btn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/accept_btn" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -86,4 +74,3 @@
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.med.medreminder.R;
-import com.med.medreminder.workmanager.MyWorker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        oneTimeWork();
+     /*   oneTimeWork();
 
         if(getIntent().hasExtra("Refill")){
             Log.d("Refill","Refill");
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 */
     }
 
-
+/*
     public void oneTimeWork() {
         WorkRequest locationUploadWorkRequest =
                 new OneTimeWorkRequest.Builder(MyWorker.class)
@@ -65,6 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         // to cancel worker class
         //WorkManager.getInstance(MainActivity.this).cancelWorkById(locationUploadWorkRequest.getId());
-    }
+    }*/
 
 }

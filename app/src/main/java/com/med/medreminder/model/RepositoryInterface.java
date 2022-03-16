@@ -22,4 +22,12 @@ public interface RepositoryInterface {
     void addMedToFirestore(Medicine medicine, String email);
 
 
+    void addUserToFirestore(User user);
+    void addMedToFirestore(Medicine medicine, String email);
+
+
+    void updateStatusInFirestore(String helperEmail,String patientEmail,String status);
+
+
+
 }
