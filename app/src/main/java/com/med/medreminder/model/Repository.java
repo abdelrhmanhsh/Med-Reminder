@@ -3,7 +3,6 @@ package com.med.medreminder.model;
 import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
-import com.med.medreminder.firebase.FirebaseSource;
 
 import java.util.List;
 
@@ -14,18 +13,16 @@ public class Repository implements RepositoryInterface {
 
     private Context context;
     LocalSource localSource;
-    FirebaseSource firebaseSource;
     private static Repository repository = null;
 
-    public Repository(Context context, LocalSource localSource, FirebaseSource firebaseSource) {
+    public Repository(Context context, LocalSource localSource) {
         this.context = context;
         this.localSource = localSource;
-        this.firebaseSource = firebaseSource;
     }
 
-    public static Repository getInstance(Context context, LocalSource localSource, FirebaseSource firebaseSource) {
+    public static Repository getInstance(Context context, LocalSource localSource) {
         if(repository == null){
-            repository = new Repository(context, localSource, firebaseSource);
+            repository = new Repository(context, localSource);
         }
         return repository;
     }
@@ -67,17 +64,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void addUserToFirestore(User user) {
-
+    public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time) {
+        return localSource.getActiveMedsOnDateSelected(time);
     }
-
-    @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
-        firebaseSource.addMedToFirestore(medicine, email);
-    }
-
-//    @Override
-//    public void addUserToFirestore(User user) {
-//        firebaseSource.addUserToFirestore(user);
-//    }
 }

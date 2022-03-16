@@ -40,6 +40,11 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public void removeMeds(){
+        medicines.clear();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,6 +60,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
           holder.medName_txt.setText(medicines.get(position).getName());
           holder.medStrength_txt.setText(medicines.get(position).getStrength());
           holder.medForm_txt.setText(medicines.get(position).getForm());
+          holder.medStatus_txt.setText(medicines.get(position).getStatus());
         Glide.with(context).load(medicines.get(position).getImage())
                 //.apply(new RequestOptions().override(200,200))
                 .placeholder(R.drawable.ic_launcher_foreground)
@@ -78,6 +84,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
         TextView medName_txt;
         TextView medStrength_txt;
         TextView medForm_txt;
+        TextView medStatus_txt;
         ConstraintLayout constraint_layout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -88,6 +95,7 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
             medName_txt = itemView.findViewById(R.id.medName_txt);
             medStrength_txt = itemView.findViewById(R.id.medStrength_txt);
             medForm_txt = itemView.findViewById(R.id.medForm_txt);
+            medStatus_txt = itemView.findViewById(R.id.medStatus_txt);
             constraint_layout = itemView.findViewById(R.id.constraint_layout);
         }
     }

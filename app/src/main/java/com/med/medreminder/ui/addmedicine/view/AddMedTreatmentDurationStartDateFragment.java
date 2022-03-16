@@ -62,7 +62,7 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
     private void actionNext(View view){
 
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
+        int month = datePicker.getMonth()+1;
         int year = datePicker.getYear();
 
         String dateStr = day + "-" + month + "-" + year;

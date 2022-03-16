@@ -140,7 +140,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
                 filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
-                filledMed.getImage());
+                filledMed.getImage(),filledMed.getStatus());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);

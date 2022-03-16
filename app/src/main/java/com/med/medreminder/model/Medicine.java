@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey;
 public class Medicine {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    public int id = 0;
+    public int id;
 
     @ColumnInfo(name = "name")
     String name;
@@ -53,8 +52,8 @@ public class Medicine {
     @ColumnInfo(name = "image")
     int image;
 
-//    @ColumnInfo(name = "suspend")
-//    boolean suspend;
+    @ColumnInfo(name = "status")
+    String status;
 
 
     private static Medicine instance = null;
@@ -68,7 +67,8 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image) {
+    public Medicine(int id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image, String status) {
+        this.id = id;
         this.name = name;
         this.form = form;
         this.strength = strength;
@@ -83,6 +83,8 @@ public class Medicine {
         this.medLeft = medLeft;
         this.refillLimit = refillLimit;
         this.image = image;
+        this.status = status;
+
     }
 
     public int getId() {
@@ -205,6 +207,14 @@ public class Medicine {
         this.image = image;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Medicine{" +
@@ -223,6 +233,7 @@ public class Medicine {
                 ", medLeft=" + medLeft +
                 ", refillLimit=" + refillLimit +
                 ", image=" + image +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

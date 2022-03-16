@@ -15,6 +15,8 @@ public interface RepositoryInterface {
     LiveData<List<Medicine>> getActiveMedications(long time);
     LiveData<List<Medicine>> getInactiveMedications(long time);
 
+    LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time);
+
 
     void addUserToFirestore(User user);
     void addMedToFirestore(Medicine medicine, String email);

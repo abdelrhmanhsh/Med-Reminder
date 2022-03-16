@@ -15,6 +15,7 @@ import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
+import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenter;
 import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenterInterface;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
@@ -98,7 +99,8 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         medBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), AddMedActivity.class));
+               // startActivity(new Intent(getActivity(), AddMedActivity.class));
+                startActivity(new Intent(getActivity(), MedFriendActivity.class));
             }
         });
         Log.d("TAG", "onViewCreated: " + 2);
@@ -130,7 +132,6 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     @Override
     public void getInactiveMeds(List<Medicine> medicines) {
         inactiveAdapter.setInactiveMedInfo(medicines);
-
     }
 
     @Override

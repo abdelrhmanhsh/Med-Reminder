@@ -10,8 +10,6 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,23 +33,17 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.model.User;
-import com.med.medreminder.ui.homepage.view.CalendarHomeAdapter;
-import com.med.medreminder.ui.homepage.view.CalendarUtils;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
-import com.med.medreminder.ui.signup.view.SignupFragment;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 
 public class LoginFragment extends Fragment{
@@ -66,7 +57,7 @@ public class LoginFragment extends Fragment{
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
-//    FirebaseDatabase database;
+    FirebaseDatabase database;
    // DatabaseReference myRef;
    private FirebaseFirestore db;
 
@@ -111,7 +102,7 @@ public class LoginFragment extends Fragment{
         email_edt = view.findViewById(R.id.email_edt);
         password_edt = view.findViewById(R.id.password_edt);
 
-//        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         //myRef = database.getReference("users");
         progressbar = view.findViewById(R.id.progressbar);
         db = FirebaseFirestore.getInstance();
@@ -171,9 +162,6 @@ public class LoginFragment extends Fragment{
                                         getContext().startActivity(intent);
                                     }
                                 });
-
-
-
 
                             } else {
                                 // If sign in fails, display a message to the user.
