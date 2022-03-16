@@ -9,7 +9,22 @@
         android:id="@+id/navigation_home"
         android:name="com.med.medreminder.ui.homepage.view.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/actionNavigationHomeToEditNav"
+            app:destination="@id/edit_nav"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_down">
+
+            <argument
+                android:name="med_id"
+                app:argType="integer"
+                android:defaultValue="0" />
+
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -36,4 +51,5 @@
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
     <include app:graph="@navigation/display_edit_medication_graph" />
+    <include app:graph="@navigation/edit_nav" />
 </navigation>

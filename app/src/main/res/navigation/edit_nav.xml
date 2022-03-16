@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_nav"
+    app:startDestination="@id/medicationDrugScreenEditFragment2">
+
+    <fragment
+        android:id="@+id/medicationDrugScreenEditFragment2"
+        android:name="com.med.medreminder.ui.meddisplayedit.view.MedicationDrugScreenEditFragment"
+        android:label="MedicationDrugScreenEditFragment"
+        tools:layout="@layout/fragment_medication_drug_screen_edit">
+
+        <!--        <argument-->
+        <!--            android:name="med_id"-->
+        <!--            app:argType="integer"-->
+        <!--            android:defaultValue="0"/>-->
+
+    </fragment>
+
+</navigation>

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface homeMedViewInterface {
     void getAllStoredMedicinesOnDate(List<Medicine> medicines);
-
+    void getAllStoredMedicines(List<Medicine> medicines);
+    void updateMed(Medicine medicine);
 }

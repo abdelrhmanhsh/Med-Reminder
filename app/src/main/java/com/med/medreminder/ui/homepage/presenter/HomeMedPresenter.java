@@ -38,4 +38,23 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
            }
        });
     }
+
+    @Override
+    public void showAllStoredMedicines(LifecycleOwner owner) {
+        Log.d("TAG", "showAllStoredMedicines: " + owner);
+        Log.d("TAG", "showAllStoredMedicines: " + repositoryInterface);
+        Log.d("TAG", "showAllStoredMedicines: " + repositoryInterface);
+        repositoryInterface.getStoredMedicines().observe(owner, new Observer<List<Medicine>>() {
+            @Override
+            public void onChanged(List<Medicine> medicines) {
+                homeMedViewInterface.getAllStoredMedicines(medicines);
+            }
+        });
+    }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        repositoryInterface.updateMedicine(medicine);
+    }
+
 }

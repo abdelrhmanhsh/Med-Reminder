@@ -58,15 +58,15 @@ public class LoginFragment extends Fragment{
     private FirebaseAuth mAuth;
 
     FirebaseDatabase database;
-   // DatabaseReference myRef;
-   private FirebaseFirestore db;
+    // DatabaseReference myRef;
+    private FirebaseFirestore db;
 
 
     ProgressBar progressbar;
-  TextInputEditText email_edt;
-  TextInputEditText password_edt;
-  boolean isAllFieldsChecked;
-  String email,password;
+    TextInputEditText email_edt;
+    TextInputEditText password_edt;
+    boolean isAllFieldsChecked;
+    String email,password;
 
 
     public LoginFragment() {
@@ -113,12 +113,12 @@ public class LoginFragment extends Fragment{
         });
 
         login_btn.setOnClickListener(view1 -> {
-             login();
+            login();
         });
 
 
         cancel_ic.setOnClickListener(view1 -> {
-           findNavController(this).popBackStack();
+            findNavController(this).popBackStack();
 
         });
     }
@@ -145,7 +145,7 @@ public class LoginFragment extends Fragment{
                                 db.collection("Users").document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                       User user = documentSnapshot.toObject(User.class);
+                                        User user = documentSnapshot.toObject(User.class);
                                         Log.d("TAG", "onSuccess: " + documentSnapshot);
                                         Log.d("TAG", "onSuccess: " + user.getFirstName());
                                         YourPreference yourPrefrence = YourPreference.getInstance(getContext());
