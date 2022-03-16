@@ -33,4 +33,9 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
            }
        });
     }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        repositoryInterface.updateMedicine(medicine);
+    }
 }

@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.homepage.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
@@ -30,6 +35,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +45,8 @@ import androidx.work.WorkManager;
 
 
 public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface, CalendarHomeAdapter.OnItemListener {
+
+    public static final String TAG = "HomeFragment";
 
     private FragmentHomeBinding binding;
     LinearLayoutManager linearLayoutManager;
@@ -112,7 +121,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv.setAdapter(medHomeAdapter);
 
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         Log.d("TAG", "HomeFragment: " + getViewLifecycleOwner());
 
@@ -152,15 +161,123 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         }
     }
 
+
+    // ------------------------------------
+
     @Override
     public void onCLick(Medicine medicine) {
-        Log.d("TAG", "onCLick: " + medicine.getName());
-        Toast.makeText(getContext(), "" + medicine.getName(), Toast.LENGTH_SHORT).show();
+        showNotificationDialog(medicine);
     }
+
+    private void showNotificationDialog(Medicine medicine){
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_notification);
+
+        ImageView imgEdit, medIcon;
+        TextView medName, medSchedule, medStrength, medAmountLeft;
+        Button btnSkip, btnTake, btnReschedule;
+
+        imgEdit = dialog.findViewById(R.id.dialog_img_edit);
+        medIcon = dialog.findViewById(R.id.med_icon);
+        medName = dialog.findViewById(R.id.med_name);
+        medSchedule = dialog.findViewById(R.id.scheduled_desc);
+        medStrength = dialog.findViewById(R.id.strength_desc);
+        medAmountLeft = dialog.findViewById(R.id.med_left_desc);
+        btnSkip = dialog.findViewById(R.id.dialog_btn_skip);
+        btnTake = dialog.findViewById(R.id.dialog_btn_take);
+        btnReschedule = dialog.findViewById(R.id.dialog_btn_reschedule);
+        Log.i(TAG, "showNotificationDialog: med id " + medicine.getId());
+
+        imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("med_id", medicine.getId());
+                NavController navController = Navigation.findNavController(getView());
+                navController.navigate(R.id.actionNavigationHomeToEditNav, bundle);
+                dialog.dismiss();
+            }
+        });
+
+        medIcon.setImageResource(medicine.getImage());
+        medName.setText(medicine.getName());
+        medSchedule.setText("Scheduled for " + medicine.getTime());
+        medStrength.setText(medicine.getStrength());
+        medAmountLeft.setText(medicine.getMedLeft() + " Pills/med left");
+
+        String medStatus = medicine.getStatus(); // status are ("", skipped, taken, snoozed)
+        switch (medStatus){
+            case "Skipped":
+                btnSkip.setText(getString(R.string.unskip));
+                break;
+            case "Taken":
+                btnTake.setText(getString(R.string.untake));
+                break;
+            default:
+                // do nothing
+                break;
+        }
+
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (medicine.getStatus().equals(getString(R.string.skipped))) // perform un-skip
+                    medicine.setStatus("");
+                else {
+                    medicine.setStatus(getString(R.string.skipped));
+                }
+                updateMed(medicine);
+                dialog.dismiss();
+            }
+        });
+
+        btnTake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (medicine.getStatus().equals(getString(R.string.taken))) // perform un-take
+                    medicine.setStatus("");
+                else {
+                    int currMedLeft = medicine.getMedLeft();
+                    if(currMedLeft <= 0)
+                        Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
+                    else
+                        medicine.setMedLeft(currMedLeft-1);
+
+                    medicine.setStatus(getString(R.string.taken));
+                }
+                updateMed(medicine);
+                dialog.dismiss();
+            }
+        });
+        
+        btnReschedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Reschedule", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+
+//        textMedRemaining.setText("You have " + med.getMedLeft() + " meds remaining");
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    // ----------------------------------------------
+
 
     @Override
     public void getAllStoredMedicines(List<Medicine> medicines) {
         medHomeAdapter.setMedInfo(medicines);
+    }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        homeMedPresenterInterface.updateMed(medicine);
     }
 
     public void oneTimeWork() {

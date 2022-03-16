@@ -30,10 +30,11 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
-import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
+import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenterInterface;
 
 import java.util.Calendar;
 
@@ -52,7 +53,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     ImageView imgCurrent, imgPill, imgInjection, imgDrops, imgOther;
     Button btnDone;
     SwitchMultiButton switchMultiButton;
-    DisplayPresenterInterface presenterInterface;
+    DisplayEditPresenterInterface presenterInterface;
 
     String strengthType;
     String[] often = { "Once Daily", "Twice Daily", "3 times a day" };
@@ -103,8 +104,8 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         imgOther.setOnClickListener(this);
         btnDone.setOnClickListener(this);
 
-        presenterInterface = new DisplayEditPresenter(this,
-                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+        presenterInterface = new DisplayEditPresenter(this, Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         strengthType = "";
 
@@ -152,6 +153,10 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
 
         MedicationDrugScreenEditFragmentArgs args = MedicationDrugScreenEditFragmentArgs.fromBundle(getArguments());
         int id = args.getMedId();
+        Log.i(TAG, "onViewCreated: id from medication screen: " + id);
+
+//        int med_id = getArguments().getInt("med_id");
+//        Log.i(TAG, "onViewCreated: id from home screen: " + med_id);
 
         getMedicine(id);
 

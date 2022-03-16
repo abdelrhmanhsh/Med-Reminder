@@ -24,10 +24,11 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
-import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
+import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenterInterface;
 
 public class MedicationDrugScreenDisplayFragment extends Fragment implements View.OnClickListener, DisplayEditViewInterface {
 
@@ -42,7 +43,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     boolean isSuspended;
     Medicine med;
 
-    DisplayPresenterInterface presenterInterface;
+    DisplayEditPresenterInterface presenterInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,8 +66,8 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
         resumeDesc = view.findViewById(R.id.text_resume_description);
         resumeView = view.findViewById(R.id.resume_med_view);
 
-        presenterInterface = new DisplayEditPresenter(this,
-                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+        presenterInterface = new DisplayEditPresenter(this, Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         imgEdit.setOnClickListener(this);
         imgDelete.setOnClickListener(this);

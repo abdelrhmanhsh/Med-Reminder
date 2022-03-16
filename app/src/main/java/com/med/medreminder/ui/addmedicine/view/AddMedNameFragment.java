@@ -19,7 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.med.medreminder.R;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +34,7 @@ public class AddMedNameFragment extends Fragment implements View.OnClickListener
     Button btnNext;
     ProgressBar progressBar;
     EditText inputMedName;
+    YourPreference yourPreference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +53,11 @@ public class AddMedNameFragment extends Fragment implements View.OnClickListener
         progressBar.setProgress(10);
         btnNext.setOnClickListener(this);
 
+//        boolean isConnected = FirebaseHelper.isInternetAvailable(getContext());
+//        if(isConnected)
+//            Log.i(TAG, "onViewCreated: CONNECTED");
+//        else
+//            Log.i(TAG, "onViewCreated: NOT CONNECTED");
     }
 
     private void actionNext(View view){

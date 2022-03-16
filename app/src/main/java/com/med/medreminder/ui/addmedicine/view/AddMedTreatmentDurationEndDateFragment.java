@@ -58,7 +58,7 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
     private void actionSetEndDate(View view){
 
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
+        int month = datePicker.getMonth()+1;
         int year = datePicker.getYear();
 
         String dateStr = day + "-" + month + "-" + year;

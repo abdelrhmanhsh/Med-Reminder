@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
@@ -58,7 +60,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         textTitle = view.findViewById(R.id.description);
 
         presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         progressBar.setProgress(90);
 
@@ -121,11 +123,11 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         }
 
 
-        Medicine medicine = new Medicine(0, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
+        Medicine medicine = new Medicine(filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
                 filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
-                filledMed.getImage());
+                filledMed.getImage(), "");
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
@@ -158,6 +160,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             case R.id.btn_set_treatment_duration:
                 actionSetTreatmentDuration(view);
                 break;
+
             case R.id.btn_get_refill_reminder:
                 actionGetRefillReminder(view);
                 break;

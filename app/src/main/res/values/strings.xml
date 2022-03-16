@@ -147,6 +147,14 @@
     <string name="days">Days</string>
     <string name="RESUME">RESUME</string>
 
+    <!-- dialog notification -->
+    <string name="reschedule">Reschedule</string>
+    <string name="skipped">Skipped</string>
+    <string name="taken">Taken</string>
+    <string name="snoozed">Snoozed</string>
+    <string name="unskip">Un-skip</string>
+    <string name="untake">Un-take</string>
+
 
 
     <string name="signup">SignUp</string>
