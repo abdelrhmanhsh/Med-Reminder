@@ -189,6 +189,7 @@
     <string name="thursday">Thu</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
+    <string name="missed">Missed</string>
 
 
     <string name="ActiveMeds">Active Meds</string>
@@ -217,12 +218,11 @@
     <string name="decline">Decline</string>
     <string name="invitationTxt">invites you to help him</string>
     <string name="requests">Requests</string>
-    <string name="Profile">My Profile</string>
-    <string name="showMedFriends">Show my Med Friends</string>
-    <string name="sendMedFriendRequest">Send a request to a Med Friend</string>
-    <string name="myMedFriendsRequests">My Med Friends requests</string>
     <string name="logout">Logout</string>
-    <string name="missed">missed</string>
+    <string name="myMedFriendsRequests">My Med Friends requests</string>
+    <string name="sendMedFriendRequest">Send a request to a Med Friend</string>
+    <string name="showMedFriends">Show my Med Friends</string>
+    <string name="Profile">My Profile</string>
 
 
 </resources>

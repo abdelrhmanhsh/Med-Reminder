@@ -81,4 +81,10 @@ public class Repository implements RepositoryInterface {
     public void addMedToFirestore(Medicine medicine, String email) {
         firebaseSource.addMedToFirestore(medicine, email);
     }
+
+
+    @Override
+    public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
+        firebaseSource.updateStatusInFirestore(helperEmail,patientEmail,status);
+    }
 }
