@@ -16,4 +16,12 @@ public interface RepositoryInterface {
     LiveData<List<Medicine>> getInactiveMedications(long time);
 
 
+    void addUserToFirestore(User user);
+    void addMedToFirestore(Medicine medicine, String email);
+
+
+    void updateStatusInFirestore(String helperEmail,String patientEmail,String status);
+
+
+
 }

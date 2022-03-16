@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
@@ -57,8 +58,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.description);
 
-        presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+        presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
 
         progressBar.setProgress(90);
 

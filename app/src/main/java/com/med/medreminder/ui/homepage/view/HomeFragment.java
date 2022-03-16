@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
@@ -111,8 +112,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         medHomeAdapter = new MedHomeAdapter(getContext(), this);
         allMed_rv.setAdapter(medHomeAdapter);
 
-        homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext())));
+        homeMedPresenterInterface = new HomeMedPresenter(this, (Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance())));
 
         Log.d("TAG", "HomeFragment: " + getViewLifecycleOwner());
 

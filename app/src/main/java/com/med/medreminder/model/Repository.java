@@ -1,8 +1,8 @@
 package com.med.medreminder.model;
-
 import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
+import com.med.medreminder.firebase.FirebaseSource;
 
 import java.util.List;
 
@@ -13,16 +13,18 @@ public class Repository implements RepositoryInterface {
 
     private Context context;
     LocalSource localSource;
+    FirebaseSource firebaseSource;
     private static Repository repository = null;
 
-    public Repository(Context context, LocalSource localSource) {
+    public Repository(Context context, LocalSource localSource, FirebaseSource firebaseSource) {
         this.context = context;
         this.localSource = localSource;
+        this.firebaseSource = firebaseSource;
     }
 
-    public static Repository getInstance(Context context, LocalSource localSource) {
+    public static Repository getInstance(Context context, LocalSource localSource, FirebaseSource firebaseSource) {
         if(repository == null){
-            repository = new Repository(context, localSource);
+            repository = new Repository(context, localSource, firebaseSource);
         }
         return repository;
     }
@@ -61,5 +63,26 @@ public class Repository implements RepositoryInterface {
     @Override
     public LiveData<List<Medicine>> getInactiveMedications(long time) {
         return localSource.getInactiveMedications(time);
+    }
+
+    @Override
+    public void addUserToFirestore(User user) {
+
+    }
+
+    @Override
+    public void addMedToFirestore(Medicine medicine, String email) {
+        firebaseSource.addMedToFirestore(medicine, email);
+    }
+
+//    @Override
+//    public void addUserToFirestore(User user) {
+//        firebaseSource.addUserToFirestore(user);
+//    }
+
+
+    @Override
+    public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
+        firebaseSource.updateStatusInFirestore(helperEmail,patientEmail,status);
     }
 }

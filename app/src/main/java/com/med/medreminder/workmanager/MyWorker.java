@@ -22,7 +22,7 @@ import android.util.Log;
 import com.med.medreminder.R;
 import com.med.medreminder.ui.MainActivity;
 import com.med.medreminder.ui.homepage.view.DashboardFragment;
-
+/*
 public class MyWorker extends Worker {
 
     private NotificationManager notificationManager;
@@ -115,4 +115,4 @@ public class MyWorker extends Worker {
         // or other notification behaviors after this
         notificationManager.createNotificationChannel(channel);
     }
-}
+}*/

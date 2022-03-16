@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
@@ -66,7 +67,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
         resumeView = view.findViewById(R.id.resume_med_view);
 
         presenterInterface = new DisplayEditPresenter(this,
-                Repository.getInstance(getContext(),  ConcreteLocalSource.getInstance(getContext())));
+                (Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance())));
 
         imgEdit.setOnClickListener(this);
         imgDelete.setOnClickListener(this);

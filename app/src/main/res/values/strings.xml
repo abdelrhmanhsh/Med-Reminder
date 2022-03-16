@@ -148,7 +148,6 @@
     <string name="RESUME">RESUME</string>
 
 
-
     <string name="signup">SignUp</string>
     <string name="have_account">Already have an account? <b>Log in</b></string>
     <string name="login">Log in</string>
@@ -209,6 +208,11 @@
     <string name="decline">Decline</string>
     <string name="invitationTxt">invites you to help him</string>
     <string name="requests">Requests</string>
+    <string name="logout">Logout</string>
+    <string name="myMedFriendsRequests">My Med Friends requests</string>
+    <string name="sendMedFriendRequest">Send a request to a Med Friend</string>
+    <string name="showMedFriends">Show my Med Friends</string>
+    <string name="Profile">My Profile</string>
 
 
 </resources>
