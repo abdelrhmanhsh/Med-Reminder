@@ -1,6 +1,12 @@
 package com.med.medreminder.ui.homepage.view;
 
+import static com.med.medreminder.BaseApplication.RESCHEDULE_CHANNEL;
+
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,8 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +36,7 @@ import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterface;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
+import com.med.medreminder.workmanager.MyWorkManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,12 +50,16 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -59,12 +72,15 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
     public static final String TAG = "HomeFragment";
 
+    private static NotificationManagerCompat notificationManagerCompat;
+
     private FragmentHomeBinding binding;
     LinearLayoutManager linearLayoutManager;
     MedHomeAdapter medHomeAdapter;
     RecyclerView allMed_rv;
     FloatingActionButton addMed_floatBtn;
 
+    int schedYear, schedMonth, schedDay, schedHour, schedMinute;
     long curDate;
 
     HorizontalCalendar horizontalCalendar;
@@ -133,6 +149,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
 
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+
             @Override
             public void onDateSelected(Calendar date, int position) {
                 Log.d("TAG", "onDateSelected: " + date.getTimeInMillis());
@@ -143,8 +160,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             }
 
             @Override
-            public void onCalendarScroll(HorizontalCalendarView calendarView,
-                                         int dx, int dy) {
+            public void onCalendarScroll(HorizontalCalendarView calendarView, int dx, int dy) {
             }
 
             @Override
@@ -271,7 +287,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Reschedule", Toast.LENGTH_SHORT).show();
+                datePicker(medicine.getImage(), medicine.getName(), medicine);
                 dialog.dismiss();
             }
         });
@@ -282,6 +298,96 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
         Window window = dialog.getWindow();
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void datePicker(int imageResource, String medName, Medicine medicine){
+
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                        Log.i(TAG, "onDateSet: " + dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        schedYear = year;
+                        schedMonth = monthOfYear+1;
+                        schedDay = dayOfMonth;
+                        timePicker(imageResource, medName, medicine);
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void timePicker(int imageResource, String medName, Medicine medicine){
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        Log.i(TAG, "onTimeSet: " + hourOfDay + ":" + minute);
+                        schedHour = hourOfDay;
+                        schedMinute = minute;
+
+                        String dateStr = schedDay + "-" + schedMonth + "-" + schedYear + "/" + schedHour + ":" + schedMinute;
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy/HH:mm");
+
+                        try{
+
+                            Date date = sdf.parse(dateStr);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date);
+                            Log.i(TAG, "onTimeSet: millis: " + calendar.getTimeInMillis());
+                            long schedMillis = calendar.getTimeInMillis();
+
+                            Date currDate = new Date();
+                            long currMillis = currDate.getTime();
+
+                            long delayInMillis = schedMillis - currMillis;
+                            if(delayInMillis <= 0)
+                                Toast.makeText(getContext(), "You need to provide time in future", Toast.LENGTH_SHORT).show();
+                            else{
+                                sendRescheduleNotification(delayInMillis, imageResource, medName);
+                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
+                                updateMed(medicine);
+                            }
+
+                        } catch(ParseException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, hour, minute, false);
+        timePickerDialog.show();
+    }
+
+    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName){
+        Data data = new Data.Builder()
+                .putInt(MyWorkManager.IMAGE_SOURCE, imageResource)
+                .putString(MyWorkManager.MED_NAME, medName)
+                .build();
+
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MyWorkManager.class)
+                .setInputData(data)
+//                .setConstraints(constraints)
+                .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
+                .addTag("Download")
+                .build();
+
+        androidx.work.WorkManager.getInstance(getContext()).enqueue(request);
     }
 
     @Override

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 public class Medicine {
 
     @PrimaryKey(autoGenerate = true)
-    public int id = 0;
+    public int id;
 
     @ColumnInfo(name = "name")
     String name;

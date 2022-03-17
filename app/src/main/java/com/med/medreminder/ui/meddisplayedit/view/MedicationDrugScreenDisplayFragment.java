@@ -30,6 +30,12 @@ import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class MedicationDrugScreenDisplayFragment extends Fragment implements View.OnClickListener, DisplayEditViewInterface {
 
     public static final String TAG = "MedicationDrugScreenDisplayFragment";
@@ -178,10 +184,30 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     }
 
     private void actionResume(){
-        med.setEndDate(getString(R.string.selection_ongoing_treatment));
-        med.setStartDate("set current date"); // update this
-        med.setStartDateMillis(0); // update this
-        updateMed(med);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Resume your medication")
+                .setMessage("Are you sure you want to resume this medication?")
+                .setPositiveButton(getString(R.string.resume), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Date currentDate = Calendar.getInstance().getTime();
+                        SimpleDateFormat df = new SimpleDateFormat("dd-M-yyyy", Locale.getDefault());
+                        String formattedDate = df.format(currentDate);
+
+                        Date currDate = new Date();
+                        long currMillis = currDate.getTime();
+
+                        med.setEndDate(getString(R.string.selection_ongoing_treatment));
+                        med.setStartDate(formattedDate); // update this
+                        med.setStartDateMillis(currMillis); // update this
+                        updateMed(med);
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+
     }
 
     private void actionEdit(View view, int id){
@@ -191,7 +217,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
         Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionDelete(View view, Medicine medicine){
+    private void actionDelete(Medicine medicine){
 
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete " + medicine.getName())
@@ -222,7 +248,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
                 actionEdit(view, id);
                 break;
             case R.id.icon_delete:
-                actionDelete(view, med);
+                actionDelete(med);
                 break;
         }
     }
