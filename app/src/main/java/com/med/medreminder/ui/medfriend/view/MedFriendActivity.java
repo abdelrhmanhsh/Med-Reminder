@@ -2,13 +2,9 @@ package com.med.medreminder.ui.medfriend.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -16,25 +12,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
-import com.med.medreminder.model.User;
-import com.med.medreminder.ui.signup.view.SignupFragment;
+import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.ui.medfriend.presenter.MedFriendPresenter;
+import com.med.medreminder.ui.medfriend.presenter.MedFriendPresenterInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class MedFriendActivity extends AppCompatActivity {
+
+public class MedFriendActivity extends AppCompatActivity implements MedFriendViewInterface{
 
     EditText firstName_edt;
     EditText phone_edt;
@@ -43,14 +37,14 @@ public class MedFriendActivity extends AppCompatActivity {
     ImageView exit_img;
     Switch shareSwitch;
     Boolean isAllFieldsChecked;
-    String email, phoneNumber, name;
+    String phoneNumber;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     String currUserEmail;
     String currUser;
     String helper_email;
     String helper_name;
-
+    MedFriendPresenterInterface medFriendPresenterInterface;
 
 
     @Override
@@ -69,21 +63,21 @@ public class MedFriendActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        exit_img.setOnClickListener(view1 -> {
+       /* exit_img.setOnClickListener(view1 -> {
             findNavController(this).popBackStack();
 
-        });
+        });*/
 
         send_txt.setOnClickListener(view1 -> {
             YourPreference yourPrefrence = YourPreference.getInstance(getApplicationContext());
             String isLogin = yourPrefrence.getData(Constants.IS_LOGIN);
             currUser = yourPrefrence.getData(Constants.FIRST_NAME);
             currUserEmail = yourPrefrence.getData(Constants.EMAIL);
-            if (isLogin.equals("true")){
+            if (isLogin.equals("true") && FirebaseHelper.isInternetAvailable(getApplicationContext())){
                 checkHelperEmail();
             }
             else {
-                Toast.makeText(this, "you must login first !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "You must login first and be connected to the internet!", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -111,39 +105,21 @@ public class MedFriendActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
                                 } else {
                                     Log.d("TAG", "User found!");
-                                    addDataToFirestore(currUserEmail,currUser,"PENDING");
+                                    addRequestsToFirestore(currUserEmail,currUser,"PENDING",helper_email);
                                 }
                             }
                         });
             }else{
                 Toast.makeText(getApplicationContext(), "" + "You can't choose your email!", Toast.LENGTH_LONG).show();
             }
-
-
         }
     }
 
     //send my email and name
-    private void addDataToFirestore(String email,String name,String status) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name",name);
-        data.put("email",email);
-        data.put("status",status);
-
-
-        CollectionReference dbRequests = db.collection("Users");
-        dbRequests.document(helper_email).collection("Requests").document(email)
-                .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getApplicationContext(), "Request sent successfully", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
-            }
-        });
+    @Override
+    public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
+        medFriendPresenterInterface = new MedFriendPresenter(Repository.getInstance(this, ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
+        medFriendPresenterInterface.addRequestsToFirestore(email,name,status,helper_email);
     }
 
     private boolean CheckAllFields() {
@@ -165,9 +141,9 @@ public class MedFriendActivity extends AppCompatActivity {
     }
 
 
-    public static NavController findNavController(@NonNull Activity activity) {
+   /* public static NavController findNavController(@NonNull Activity activity) {
         View view = activity.getCurrentFocus();
         return Navigation.findNavController(view);
 
-    }
+    }*/
 }

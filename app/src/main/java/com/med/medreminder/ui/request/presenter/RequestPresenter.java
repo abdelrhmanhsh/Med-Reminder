@@ -14,4 +14,10 @@ public class RequestPresenter implements RequestPresenterInterface{
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
         repo.updateStatusInFirestore(helperEmail,patientEmail,status);
     }
+
+    @Override
+    public void addHelperToFirestore(String helperEmail, String patientEmail) {
+        repo.addHelperToFirestore(helperEmail,patientEmail);
+    }
+
 }

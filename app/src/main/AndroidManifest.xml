@@ -15,10 +15,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
         <activity
+            android:name=".ui.displayHelpers.DisplayHelpersActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.displayMedFriends.DisplayMedFriendsActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.meddisplayedit.view.MedDisplayEditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.medfriend.view.MedFriendActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.request.view.RequestsActivity"
             android:exported="true" />
         <activity
             android:name=".ui.dependency.view.DependentActivity"

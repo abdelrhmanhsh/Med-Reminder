@@ -7,13 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentDashboardBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
+import com.med.medreminder.model.User;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
 import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenter;
 import com.med.medreminder.ui.medicationScreen.presenter.InactivePresenterInterface;
@@ -26,6 +34,8 @@ import com.med.medreminder.ui.medicationScreen.view.InactiveMedsAdapter;
 import com.med.medreminder.ui.medicationScreen.view.OnActiveMedClickListener;
 import com.med.medreminder.ui.medicationScreen.view.OnInactiveMedClickListener;
 import com.med.medreminder.ui.request.view.RequestsActivity;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +45,10 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class DashboardFragment extends Fragment implements OnInactiveMedClickListener, OnActiveMedClickListener, ActiveMedViewInterface, InactiveMedViewInterface {
@@ -48,6 +61,9 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     ActivePresenterInterface activePresenterInterface;
     InactivePresenterInterface inactivePresenterInterface;
     private FragmentDashboardBinding binding;
+
+    private FirebaseFirestore db;
+
 
 
     @Override
@@ -94,12 +110,17 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), AddMedActivity.class));
-                //startActivity(new Intent(getActivity(), MedFriendActivity.class));
-//                 startActivity(new Intent(getActivity(), RequestsActivity.class));
-
             }
         });
         Log.d("TAG", "onViewCreated: " + 2);
+
+    /*    if(FirebaseHelper.isUserLoggedIn(getContext())){
+            String email = FirebaseHelper.getUserEmail(getContext());
+            showActiveMedFirestore(email);
+            Log.d("TAG","FIREBASEEEEEEEEE"+email);
+            Toast.makeText(getContext(), "firebase: " , Toast.LENGTH_SHORT).show();
+        }*/
+
 
     }
 
@@ -148,4 +169,12 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         NavController navController = Navigation.findNavController(getView());
         navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
     }
+
+    @Override
+    public void showActiveMedFirestore(String email){
+       activePresenterInterface.showActiveMedFirestore(email);
 }
+
+
+        }
+

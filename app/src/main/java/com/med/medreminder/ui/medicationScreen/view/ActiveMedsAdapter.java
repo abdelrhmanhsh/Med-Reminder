@@ -59,7 +59,6 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
             medName_txt = itemView.findViewById(R.id.medName_txt);
             medStrength_txt = itemView.findViewById(R.id.medStrength_txt);
             medNum_txt = itemView.findViewById(R.id.medNum_txt);
-        //    medForm_txt = itemView.findViewById(R.id.medForm_txt);
         }
 
     }
@@ -79,9 +78,7 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
             holder.medName_txt.setText(medicines.get(position).getName());
             holder.medStrength_txt.setText(medicines.get(position).getStrength());
             holder.medNum_txt.setText(medicines.get(position).getMedLeft()+"");
-          //  holder.medForm_txt.setText(medicines.get(position).getForm());
             Glide.with(context).load(medicines.get(position).getImage())
-                    //.apply(new RequestOptions().override(200,200))
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .error(R.drawable.ic_launcher_foreground)
                     .into(holder.med_img);

@@ -87,4 +87,22 @@ public class Repository implements RepositoryInterface {
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
         firebaseSource.updateStatusInFirestore(helperEmail,patientEmail,status);
     }
+
+    @Override
+    public void addHelperToFirestore(String helperEmail, String patientEmail) {
+        firebaseSource.addHelperToFirestore(helperEmail,patientEmail);
+    }
+
+    @Override
+    public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
+        firebaseSource.addRequestsToFirestore(email,name,status,helper_email);
+    }
+
+
+    @Override
+    public void showActiveMedFirestore(String email) {
+        firebaseSource.showActiveMedFirestore(email);
+    }
+
+
 }

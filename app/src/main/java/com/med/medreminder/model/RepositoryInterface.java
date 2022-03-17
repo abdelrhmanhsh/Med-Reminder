@@ -23,6 +23,11 @@ public interface RepositoryInterface {
 
 
     void updateStatusInFirestore(String helperEmail,String patientEmail,String status);
+    void addHelperToFirestore(String helperEmail,String patientEmail);
+    void addRequestsToFirestore(String email,String name,String status,String helper_email);
+
+
+    void showActiveMedFirestore(String email);
 
 
 
