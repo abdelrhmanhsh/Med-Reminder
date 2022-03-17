@@ -17,7 +17,7 @@ import com.med.medreminder.R;
 public class MyWorkManager extends Worker {
 
     public static final String TAG = "WorkManager";
-    public static final String IMAGE_SOURCE = "IMAGE_SOURCE";
+    public static final String IMAGE_RESOURCE = "IMAGE_RESOURCE";
     public static final String MED_NAME = "MED_NAME";
 
     private static NotificationManagerCompat notificationManagerCompat;
@@ -33,20 +33,20 @@ public class MyWorkManager extends Worker {
     public Result doWork() {
 
         Data inputData = getInputData();
-        int imageSource = inputData.getInt(IMAGE_SOURCE, -1);
+        int imageSource = inputData.getInt(IMAGE_RESOURCE, -1);
         String medName = inputData.getString(MED_NAME);
 
-        sendOnChannel1(context, imageSource, medName);
+        sendOnReschedule(context, imageSource, medName);
         return Result.success();
     }
 
-    public static void sendOnChannel1(Context context, int imageSource, String medName){
+    public static void sendOnReschedule(Context context, int imageSource, String medName){
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
                 .setSmallIcon(imageSource)
-                .setContentTitle("Time to take your mid")
-                .setContentText("It's time to take your " + medName)
+                .setContentTitle(context.getString(R.string.resched_notification_title))
+                .setContentText(context.getString(R.string.resched_notification_desc) + medName)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 //                .setVibrate()

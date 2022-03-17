@@ -155,6 +155,10 @@
     <string name="unskip">Un-skip</string>
     <string name="untake">Un-take</string>
 
+    <!-- notification (reschedule) -->
+    <string name="resched_notification_title">Time to take your mid</string>
+    <string name="resched_notification_desc">It\'s time to take your </string>
+
 
 
     <string name="signup">SignUp</string>

@@ -376,7 +376,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
     private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName){
         Data data = new Data.Builder()
-                .putInt(MyWorkManager.IMAGE_SOURCE, imageResource)
+                .putInt(MyWorkManager.IMAGE_RESOURCE, imageResource)
                 .putString(MyWorkManager.MED_NAME, medName)
                 .build();
 
