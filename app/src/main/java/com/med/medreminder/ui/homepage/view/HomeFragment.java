@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             e.printStackTrace();
         }
 
-        curDate = Calendar.getInstance().getTimeInMillis();
+        curDate  = Calendar.getInstance().getTimeInMillis();
 
         Log.d("TAG", "onViewCreated: " + curDate);
         Log.d("TAG", "onViewCreated: " + Calendar.getInstance().getTimeInMillis());

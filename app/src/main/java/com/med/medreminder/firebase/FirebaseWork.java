@@ -12,6 +12,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,9 +35,13 @@ public class FirebaseWork implements FirebaseSource{
     private static FirebaseWork localSource = null;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+
 
     public FirebaseWork() {
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
     }
 
     public static FirebaseWork getInstance(){
@@ -45,8 +52,47 @@ public class FirebaseWork implements FirebaseSource{
     }
 
     @Override
-    public void addUserToFirestore(User user) {
+    public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
+        CollectionReference dbUsers = db.collection("Users");
+        //db.document(user.getEmail());
+        // below method is use to add data to Firebase Firestore.
+        //yourPreference.saveData(YOUR_KEY,YOUR_VALUE);
+        dbUsers.document(user.getEmail()).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    firebaseDelegate.userAddedToFirestore("Account created successfully");
+//                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+//                    progressbar.setVisibility(View.GONE);
+//                    findNavController(SignupFragment.this).navigate(R.id.signupToLogin);
+                }
+                else {
+                    firebaseDelegate.userFailToFirestore("Fail to create account");
+//                    Log.d("TAG", "onFailure: ");
+//                    progressbar.setVisibility(View.GONE);
+//
+//                    Toast.makeText(getContext(), "Fail to create account \n" , Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 
+
+    @Override
+    public void isUserExist(String email, firebaseDelegate firebaseDelegate) {
+
+        mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                         if (task.getResult().getSignInMethods().isEmpty()){
+                                firebaseDelegate.newUser();
+                         }
+                         else {
+                             firebaseDelegate.userExist("This email already exist");
+                         }
+                    }
+                });
     }
 
     @Override
@@ -84,6 +130,23 @@ public class FirebaseWork implements FirebaseSource{
                         }
                         else {
                             Log.d("TAG", "onFailure: ");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void signup(String email, String password, firebaseDelegate firebaseDelegate, User user) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                          //  addUserToFirestore(user);
+                            firebaseDelegate.signupSuccess(user);
+
+                        } else {
+                          firebaseDelegate.signupFail("Fail to create the account");
                         }
                     }
                 });

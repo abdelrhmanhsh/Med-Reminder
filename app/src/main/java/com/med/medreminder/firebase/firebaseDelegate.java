@@ -1,0 +1,12 @@
+package com.med.medreminder.firebase;
+
+import com.med.medreminder.model.User;
+
+public interface firebaseDelegate {
+     void userExist(String msg);
+     void newUser();
+     void signupSuccess(User user);
+     void signupFail(String msg);
+     void userAddedToFirestore(String msg);
+     void userFailToFirestore(String msg);
+}

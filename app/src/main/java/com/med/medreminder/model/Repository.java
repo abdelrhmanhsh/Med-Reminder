@@ -5,6 +5,7 @@ import android.content.Context;
 import com.med.medreminder.db.LocalSource;
 import com.med.medreminder.firebase.FirebaseSource;
 import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.firebase.firebaseDelegate;
 
 import java.util.List;
 
@@ -73,13 +74,23 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void addUserToFirestore(User user) {
+    public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
+      firebaseSource.addUserToFirestore(user,firebaseDelegate);
+    }
 
+    @Override
+    public void isUserExist(String email, firebaseDelegate firebaseDelegate) {
+        firebaseSource.isUserExist(email,firebaseDelegate);
     }
 
     @Override
     public void addMedToFirestore(Medicine medicine, String email) {
         firebaseSource.addMedToFirestore(medicine, email);
+    }
+
+    @Override
+    public void signup(String email, String password, firebaseDelegate firebaseDelegate, User user) {
+        firebaseSource.signup(email,password,firebaseDelegate, user);
     }
 
 

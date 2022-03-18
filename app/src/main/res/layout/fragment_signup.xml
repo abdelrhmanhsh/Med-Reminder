@@ -140,6 +140,27 @@
             app:layout_constraintTop_toBottomOf="@+id/dob_txt"
            />
 
+        <ImageView
+            android:id="@+id/email_ic"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/email_ic"
+            app:tint="@color/blue_background"
+            android:layout_marginTop="25dp"
+            app:layout_constraintStart_toStartOf="@+id/person_ic"
+            app:layout_constraintTop_toBottomOf="@+id/dob_edt"/>
+
+        <EditText
+            android:id="@+id/email_edt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/email"
+            android:layout_marginStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/email_ic"
+            app:layout_constraintTop_toTopOf="@+id/email_ic"
+            app:layout_constraintBottom_toBottomOf="@+id/email_ic"/>
 
         <ImageView
             android:id="@+id/password_ic"
@@ -149,7 +170,7 @@
             app:tint="@color/blue_background"
             android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="@id/person_ic"
-            app:layout_constraintTop_toBottomOf="@+id/dob_edt"/>
+            app:layout_constraintTop_toBottomOf="@+id/email_edt"/>
 
         <EditText
             android:id="@+id/password_edt"
@@ -165,35 +186,11 @@
             app:layout_constraintBottom_toBottomOf="@+id/password_ic"/>
 
 
-        <ImageView
-            android:id="@+id/email_ic"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/email_ic"
-            app:tint="@color/blue_background"
-            android:layout_marginTop="25dp"
-            app:layout_constraintStart_toStartOf="@+id/person_ic"
-            app:layout_constraintTop_toBottomOf="@+id/password_edt"/>
-
-        <EditText
-            android:id="@+id/email_edt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/email"
-            android:layout_marginStart="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/email_ic"
-            app:layout_constraintTop_toTopOf="@+id/email_ic"
-            app:layout_constraintBottom_toBottomOf="@+id/email_ic"/>
-
-
-
         <Button
             android:id="@+id/signup_btn"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            app:layout_constraintTop_toBottomOf="@+id/email_edt"
+            app:layout_constraintTop_toBottomOf="@+id/password_edt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/blue_background"

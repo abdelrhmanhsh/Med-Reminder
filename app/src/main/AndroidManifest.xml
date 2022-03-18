@@ -30,6 +30,8 @@
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
+        <activity android:name=".ui.request.view.RequestsActivity"
+            android:exported="true"/>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

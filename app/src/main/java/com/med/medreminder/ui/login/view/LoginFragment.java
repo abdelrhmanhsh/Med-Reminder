@@ -220,7 +220,7 @@ public class LoginFragment extends Fragment{
 
                                 if (isNewUser) {
                                     Log.d("TAG", "Is New User!");
-                                    addDataToFirestore(new User(account.getGivenName(),account.getFamilyName(),"", "",account.getEmail(),"",""),account.getIdToken());
+                                    addDataToFirestore(new User(account.getGivenName(),account.getFamilyName(),"", "",account.getEmail(),""),account.getIdToken());
                                 } else {
                                     firebaseAuthWithGoogle(account.getIdToken(),account.getEmail());
 
