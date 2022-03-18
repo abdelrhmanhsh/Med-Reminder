@@ -17,7 +17,7 @@ public class DisplayEditPresenter implements DisplayPresenterInterface{
     }
 
     @Override
-    public LiveData<Medicine> getMedDetails(int id) {
+    public LiveData<Medicine> getMedDetails(long id) {
         return repo.getMedicineById(id);
     }
 
@@ -29,6 +29,16 @@ public class DisplayEditPresenter implements DisplayPresenterInterface{
     @Override
     public void deleteMed(Medicine medicine) {
         repo.deleteMedicine(medicine);
+    }
+
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        repo.updateMedFirestore(medicine, email, id);
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
+        repo.deleteMedFirestore(email, id);
     }
 
 }

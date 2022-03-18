@@ -6,8 +6,10 @@ import com.med.medreminder.model.Medicine;
 
 public interface DisplayPresenterInterface {
 
-    LiveData<Medicine> getMedDetails(int id);
+    LiveData<Medicine> getMedDetails(long id);
     void updateMed(Medicine medicine);
     void deleteMed(Medicine medicine);
+    void updateMedFirestore(Medicine medicine, String email, long id);
+    void deleteMedFirestore(String email, long id);
 
 }

@@ -29,8 +29,8 @@
 
         <argument
             android:name="med_id"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            app:argType="long"
+            android:defaultValue="0L"/>
 
         <argument
             android:name="suspended"

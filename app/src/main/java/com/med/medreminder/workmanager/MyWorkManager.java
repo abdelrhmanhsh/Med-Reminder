@@ -46,7 +46,7 @@ public class MyWorkManager extends Worker {
         Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
                 .setSmallIcon(imageSource)
                 .setContentTitle(context.getString(R.string.resched_notification_title))
-                .setContentText(context.getString(R.string.resched_notification_desc) + medName)
+                .setContentText(context.getString(R.string.resched_notification_desc) + " " + medName)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
 //                .setVibrate()

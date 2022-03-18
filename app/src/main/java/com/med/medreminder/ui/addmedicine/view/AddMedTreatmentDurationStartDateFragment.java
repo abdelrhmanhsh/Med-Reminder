@@ -69,7 +69,7 @@ public class AddMedTreatmentDurationStartDateFragment extends Fragment implement
 
         Medicine medicine = Medicine.getInstance();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         try{
 

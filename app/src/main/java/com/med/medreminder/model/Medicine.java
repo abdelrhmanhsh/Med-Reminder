@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "medicines")
 public class Medicine {
 
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
+    long id;
 
     @ColumnInfo(name = "name")
     String name;
@@ -55,6 +55,12 @@ public class Medicine {
     @ColumnInfo(name = "status")
     String status;
 
+    @ColumnInfo(name = "userEmail")
+    String userEmail;
+
+    @ColumnInfo(name = "refillReminder")
+    boolean refillReminder;
+
 
     private static Medicine instance = null;
 
@@ -67,7 +73,8 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image, String status) {
+    public Medicine(long id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image, String status, String userEmail, boolean refillReminder) {
+        this.id = id;
         this.name = name;
         this.form = form;
         this.strength = strength;
@@ -83,14 +90,15 @@ public class Medicine {
         this.refillLimit = refillLimit;
         this.image = image;
         this.status = status;
-
+        this.userEmail = userEmail;
+        this.refillReminder = refillReminder;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -214,6 +222,22 @@ public class Medicine {
         this.status = status;
     }
 
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public boolean isRefillReminder() {
+        return refillReminder;
+    }
+
+    public void setRefillReminder(boolean refillReminder) {
+        this.refillReminder = refillReminder;
+    }
+
     @Override
     public String toString() {
         return "Medicine{" +
@@ -233,6 +257,8 @@ public class Medicine {
                 ", refillLimit=" + refillLimit +
                 ", image=" + image +
                 ", status='" + status + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", refillReminder=" + refillReminder +
                 '}';
     }
 }

@@ -15,10 +15,10 @@ import java.util.List;
 public interface MedicineDao {
 
     @Insert
-    long insertMedicine(Medicine medicine);
+    void insertMedicine(Medicine medicine);
 
     @Query("Select * From medicines Where id =:id")
-    LiveData<Medicine> getMedicineById(int id);
+    LiveData<Medicine> getMedicineById(long id);
 
     @Update
     void updateMedicine(Medicine medicine);
@@ -37,8 +37,9 @@ public interface MedicineDao {
             ":time < startDateMillis)")
     LiveData<List<Medicine>> getInactiveMedications(long time);
 
-    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis)")
-    LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time);
+    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis AND :email = userEmail) OR (" +
+            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail) AND (endDate!='Suspended' AND :email = userEmail)")
+    LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
 
     //time = startDate || time <= endDate
 

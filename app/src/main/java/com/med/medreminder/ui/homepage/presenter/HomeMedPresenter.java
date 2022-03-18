@@ -25,11 +25,11 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
     }
 
     @Override
-    public void showMedsOnDate(LifecycleOwner owner, Long date) {
+    public void showMedsOnDate(LifecycleOwner owner, Long date, String email) {
         Log.d("TAG", "showAllStoredMedicines: " + owner);
         Log.d("TAG", "showAllStoredMedicines: " + repositoryInterface);
         Log.d("TAG", "showAllStoredMedicines: " + repositoryInterface);
-       repositoryInterface.getActiveMedsOnDateSelected(date).observe(owner, new Observer<List<Medicine>>() {
+       repositoryInterface.getActiveMedsOnDateSelected(date, email).observe(owner, new Observer<List<Medicine>>() {
            @Override
            public void onChanged(List<Medicine> medicines) {
                Log.d("TAG", "showAllStoredMedicines: On Change-> " +date );

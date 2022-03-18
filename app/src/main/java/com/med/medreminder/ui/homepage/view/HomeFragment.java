@@ -27,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
@@ -156,7 +157,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 String dateString = DateFormat.format("MM/dd/yyyy", new Date(String.valueOf(date.getTime()))).toString();
                 Log.d("TAG", "onDateSelected: Dateeeeeeeeeeeeeeeeeeeeeeeeee" + dateString);
                 //Log.d("TAG", "onDateSelected: " + date.get(position));
-                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis());
+                String email = FirebaseHelper.getUserEmail(getContext());
+                Log.i(TAG, "onViewCreated: email: " + email);
+                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis(), email);
             }
 
             @Override
@@ -181,8 +184,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
                 ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()), curDate);
 
-
-        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate);
+        String email = FirebaseHelper.getUserEmail(getContext());
+        Log.i(TAG, "onViewCreated: email: " + email);
+        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, email);
 
 
         addMed_floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +229,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("med_id", medicine.getId());
+                bundle.putLong("med_id", medicine.getId());
                 NavController navController = Navigation.findNavController(getView());
                 navController.navigate(R.id.actionNavigationHomeToEditNav, bundle);
                 dialog.dismiss();
@@ -268,19 +272,27 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             @Override
             public void onClick(View view) {
 
-                if (medicine.getStatus().equals(getString(R.string.taken))) // perform un-take
+                // For refill reminder (check if isRefillReminder==true)
+                int currMedLeft = medicine.getMedLeft();
+                if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
                     medicine.setStatus("");
-                else {
-                    int currMedLeft = medicine.getMedLeft();
-                    if(currMedLeft <= 0)
-                        Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
-                    else
+                    medicine.setMedLeft(currMedLeft+1);
+
+                } else {
+                    if(currMedLeft <= 0){
+                        if(medicine.isRefillReminder())
+                            Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
+                    } else{
+                        //check for med amount here to set refill reminder!
                         medicine.setMedLeft(currMedLeft-1);
+                    }
 
                     medicine.setStatus(getString(R.string.taken));
                 }
                 updateMed(medicine);
                 dialog.dismiss();
+
+//                WorkManager.getInstance().cancelAllWorkByTag("reschedule");
             }
         });
 
@@ -292,8 +304,6 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             }
         });
 
-
-//        textMedRemaining.setText("You have " + med.getMedLeft() + " meds remaining");
         dialog.show();
 
         Window window = dialog.getWindow();
@@ -384,7 +394,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 .setInputData(data)
 //                .setConstraints(constraints)
                 .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
-                .addTag("Download")
+                .addTag("reschedule")
                 .build();
 
         androidx.work.WorkManager.getInstance(getContext()).enqueue(request);

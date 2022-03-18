@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
@@ -36,6 +37,7 @@ import com.med.medreminder.ui.signup.view.SignupFragment;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -122,10 +124,18 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
             filledMed.setStartDate(todayDate);
 
-            Date date = new Date();
-            long timeMillis = date.getTime();
+            try {
 
-            filledMed.setStartDateMillis(timeMillis);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = sdf.parse(todayDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                filledMed.setStartDateMillis(calendar.getTimeInMillis());
+
+            } catch(ParseException e){
+                e.printStackTrace();
+            }
+
         }
 
         if(filledMed.getEndDate()==null){
@@ -134,22 +144,27 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         if(filledMed.getImage()==0){
             filledMed.setImage(R.drawable.ic_medicine_other);
         }
+        if(filledMed.getRefillLimit()>0){
+            filledMed.setRefillReminder(true);
+        }
 
+        long id = System.currentTimeMillis();
+        String email = FirebaseHelper.getUserEmail(getContext());
 
-        Medicine medicine = new Medicine(filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
+        Medicine medicine = new Medicine(id, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
                 filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
-                filledMed.getImage(), "");
+                filledMed.getImage(), "", email, filledMed.isRefillReminder());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
 
-        if(FirebaseHelper.isUserLoggedIn(getContext())){
-            String email = FirebaseHelper.getUserEmail(getContext());
-            addMedToFirestore(medicine, email);
-            Toast.makeText(getContext(), "firebase: " + filledMed.getId(), Toast.LENGTH_SHORT).show();
-        }
+
+        if(FirebaseHelper.isInternetAvailable(getContext()))
+            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                addMedToFirestore(medicine, email, id);
+            }
 
         // Set reminders HERE ------------------------------------------------------------
 
@@ -205,7 +220,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
-        presenterInterface.addMedToFirestore(medicine, email);
+    public void addMedToFirestore(Medicine medicine, String email, long id) {
+        presenterInterface.addMedToFirestore(medicine, email, id);
     }
+
 }

@@ -30,13 +30,17 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import lib.kingja.switchbutton.SwitchMultiButton;
 
@@ -59,6 +63,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     String[] often = { "Once Daily", "Twice Daily", "3 times a day" };
     String endDate;
     int imgRes;
+    long id;
 
     Medicine updateMed;
 
@@ -130,19 +135,16 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                     reminderTimesOftenSpinner.setVisibility(View.VISIBLE);
                     int itemNum = reminderTimesOftenSpinner.getSelectedItemPosition();
                     actionOftenReminder(itemNum);
-                }
-                else
+                } else{
                     actionHideAllReminders();
+                }
             }
         });
 
         refillReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
-                    Toast.makeText(getContext(), "Refill Reminder ON", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getContext(), "Refill Reminder OFF", Toast.LENGTH_SHORT).show();
+                updateMed.setRefillReminder(isChecked);
             }
         });
 
@@ -153,13 +155,13 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         reminderTimesOftenSpinner.setAdapter(adapter);
 
         MedicationDrugScreenEditFragmentArgs args = MedicationDrugScreenEditFragmentArgs.fromBundle(getArguments());
-        int id = args.getMedId();
+        id = args.getMedId();
 
         getMedicine(id);
 
     }
 
-    private void getMedicine(int id){
+    private void getMedicine(long id){
         LiveData<Medicine> medicine = getMedDetails(id);
         medicine.observe(this, new Observer<Medicine>() {
             @Override
@@ -278,10 +280,14 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         switchMultiButton.setSelectedTab(switchSelection);
         inputEditStrength.setText(type[0]);
 
+        //refill reminder
+        boolean isRefillReminder = medicine.isRefillReminder();
+        refillReminderSwitch.setChecked(isRefillReminder);
+
     }
 
     @Override
-    public LiveData<Medicine> getMedDetails(int id) {
+    public LiveData<Medicine> getMedDetails(long id) {
         return presenterInterface.getMedDetails(id);
     }
 
@@ -331,6 +337,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         }
 
         thirdReminder.setVisibility(View.GONE);
+        textRemindersRestrictions();
     }
 
     private void actionThreeTimesDaily(){
@@ -347,7 +354,22 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         if(thirdReminder.getText().toString().equals("")){
             thirdReminder.setText(getString(R.string.click_to_add_reminder));
         }
+        textRemindersRestrictions();
 
+    }
+
+    private void textRemindersRestrictions(){
+        if(firstReminder.getText().equals(getString(R.string.click_to_add_reminder))){
+            secondReminder.setEnabled(false);
+            thirdReminder.setEnabled(false);
+        } else if(secondReminder.getText().equals(getString(R.string.click_to_add_reminder))){
+            secondReminder.setEnabled(true);
+            thirdReminder.setEnabled(false);
+        } else {
+            firstReminder.setEnabled(true);
+            secondReminder.setEnabled(true);
+            thirdReminder.setEnabled(true);
+        }
     }
 
     @Override
@@ -403,6 +425,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                             thirdReminder.setText(hourOfDay + ":" + minute);
                             break;
                     }
+                    textRemindersRestrictions();
                 }
             }
         };
@@ -444,25 +467,25 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                     if(!firstReminder.getText().equals(getString(R.string.click_to_add_reminder)))
                         time = firstReminder.getText().toString();
                     if(!secondReminder.getText().equals(getString(R.string.click_to_add_reminder)))
-                        time += "," + secondReminder.getText().toString();
+                        time += ", " + secondReminder.getText().toString();
                     break;
 
                 case 2:
                     if(!firstReminder.getText().equals(getString(R.string.click_to_add_reminder)))
                         time = firstReminder.getText().toString();
                     if(!secondReminder.getText().equals(getString(R.string.click_to_add_reminder)))
-                        time += "," + secondReminder.getText().toString();
+                        time += ", " + secondReminder.getText().toString();
                     if(!thirdReminder.getText().equals(getString(R.string.click_to_add_reminder)))
-                        time += "," + thirdReminder.getText().toString();
+                        time += ", " + thirdReminder.getText().toString();
                     break;
             }
             updateMed.setTime(time);
 
             String editOften;
             String[] times;
-            if(time.contains(",")){
+            if(time.contains(", ")){
 
-                times = time.split(",");
+                times = time.split(", ");
 
                 // two times
                 if (times.length==2){
@@ -487,6 +510,20 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         else
             updateMed.setEndDate(endDate);
 
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+
+        try {
+
+            Date date = sdf.parse(endDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            medicine.setEndDateMillis(calendar.getTimeInMillis());
+
+        } catch(ParseException e){
+            e.printStackTrace();
+        }
+
         //update med icon
         updateMed.setImage(imgRes);
 
@@ -501,7 +538,16 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         updateMed.setMedLeft(Integer.parseInt(inputEditMedAmount.getText().toString()));
         updateMed.setRefillLimit(Integer.parseInt(inputEditRefillLimit.getText().toString()));
 
+        // update med locally
         updateMed(medicine);
+
+        // update med firestore
+        if(FirebaseHelper.isInternetAvailable(getContext()))
+            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                String email = FirebaseHelper.getUserEmail(getContext());
+                updateMedFirestore(medicine, email, id);
+            }
+
     }
 
     @Override
@@ -512,6 +558,17 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
 
     @Override
     public void deleteMed(Medicine medicine) {
+
+    }
+
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        presenterInterface.updateMedFirestore(medicine, email, id);
+        Log.i(TAG, "updateMedFirestore: firestore updated with id: " + id);
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
 
     }
 

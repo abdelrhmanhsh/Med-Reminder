@@ -64,7 +64,7 @@ public class AddMedTreatmentDurationEndDateFragment extends Fragment implements 
         String dateStr = day + "-" + month + "-" + year;
 
         Medicine medicine = Medicine.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         try {
 

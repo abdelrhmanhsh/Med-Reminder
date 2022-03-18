@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.med.medreminder.R;
 
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
      /*   oneTimeWork();
 

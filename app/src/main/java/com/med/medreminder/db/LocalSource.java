@@ -12,13 +12,13 @@ public interface LocalSource {
     void insert(Medicine medicine);
     void update(Medicine medicine);
     void delete(Medicine medicine);
-    LiveData<Medicine> getMedicineById(int id);
+    LiveData<Medicine> getMedicineById(long id);
     LiveData<List<Medicine>> getAllStoredMedicines();
 
     LiveData<List<Medicine>> getActiveMedications(long time);
     LiveData<List<Medicine>> getInactiveMedications(long time);
 
-    LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time);
+    LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email);
 
 
 }

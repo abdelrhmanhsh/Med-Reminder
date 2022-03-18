@@ -20,8 +20,8 @@
 
             <argument
                 android:name="med_id"
-                app:argType="integer"
-                android:defaultValue="0" />
+                app:argType="long"
+                android:defaultValue="0L" />
 
         </action>
     </fragment>
@@ -40,8 +40,8 @@
             app:popExitAnim="@anim/slide_down">
             <argument
                 android:name="id"
-                app:argType="integer"
-                android:defaultValue="0" />
+                app:argType="long"
+                android:defaultValue="0L" />
         </action>
     </fragment>
 

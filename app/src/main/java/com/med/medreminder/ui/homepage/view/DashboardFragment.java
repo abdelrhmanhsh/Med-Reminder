@@ -134,7 +134,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     @Override
     public void onActiveCLick(Medicine medicine) {
         Bundle bundle = new Bundle();
-        bundle.putInt("id", medicine.getId());
+        bundle.putLong("id", medicine.getId());
         bundle.putBoolean("suspended", false);
         NavController navController = Navigation.findNavController(getView());
         navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
@@ -143,7 +143,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     @Override
     public void onInactiveClick(Medicine medicine) {
         Bundle bundle = new Bundle();
-        bundle.putInt("id", medicine.getId());
+        bundle.putLong("id", medicine.getId());
         bundle.putBoolean("suspended", true);
         NavController navController = Navigation.findNavController(getView());
         navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);

@@ -3,6 +3,7 @@ package com.med.medreminder.model;
 import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
+import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.FirebaseSource;
 import com.med.medreminder.firebase.FirebaseWork;
 
@@ -31,7 +32,6 @@ public class Repository implements RepositoryInterface {
         return repository;
     }
 
-
     @Override
     public void insertMedicine(Medicine medicine) {
         localSource.insert(medicine);
@@ -48,7 +48,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<Medicine> getMedicineById(int id) {
+    public LiveData<Medicine> getMedicineById(long id) {
         return localSource.getMedicineById(id);
     }
 
@@ -68,8 +68,8 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time) {
-        return localSource.getActiveMedsOnDateSelected(time);
+    public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email) {
+        return localSource.getActiveMedsOnDateSelected(time, email);
     }
 
     @Override
@@ -78,10 +78,19 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
-        firebaseSource.addMedToFirestore(medicine, email);
+    public void addMedToFirestore(Medicine medicine, String email, long id) {
+        firebaseSource.addMedToFirestore(medicine, email, id);
     }
 
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        firebaseSource.updateMedFirestore(medicine, email, id);
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
+        firebaseSource.deleteMedFirestore(email, id);
+    }
 
     @Override
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {

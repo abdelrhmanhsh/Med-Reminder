@@ -105,7 +105,7 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
                 String time = hour + ":" + minute;
 
-                doseTimes += time + ",";
+                doseTimes += time + ", ";
             }
         }
         oftenDec--;

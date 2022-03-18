@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
@@ -45,7 +46,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     TextView remindersDesc, conditionsDesc, prescriptionDesc, resumeDesc;
     View resumeView;
 
-    int id;
+    long id;
     boolean isSuspended;
     Medicine med;
 
@@ -82,19 +83,23 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
         btnRefill.setOnClickListener(this);
         btnResume.setOnClickListener(this);
 
-        id = getArguments().getInt("id");
+        id = getArguments().getLong("id");
         isSuspended = getArguments().getBoolean("suspended");
         getMedicine(id);
 
     }
 
-    public void getMedicine(int id){
+    public void getMedicine(long id){
         LiveData<Medicine> medicine = getMedDetails(id);
         medicine.observe(this, new Observer<Medicine>() {
             @Override
             public void onChanged(Medicine medicine) {
-                Log.i(TAG, "getMedicine: DISPLAY " + medicine.getName());
-                updateUI(medicine);
+                if(medicine != null){
+                    Log.i(TAG, "getMedicine: DISPLAY " + medicine.getName());
+                    Log.i(TAG, "getMedicine: REMINDER " + medicine.isRefillReminder());
+                    updateUI(medicine);
+                }
+
             }
         });
     }
@@ -139,6 +144,12 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
                         med.setEndDate("Suspended");
                         med.setEndDateMillis(0);
                         updateMed(med);
+
+                        if(FirebaseHelper.isInternetAvailable(getContext()))
+                            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                                String email = FirebaseHelper.getUserEmail(getContext());
+                                updateMedFirestore(med, email, id);
+                            }
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)
@@ -163,6 +174,13 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
                 int medIncreased = Integer.parseInt(inputAddMeds.getText().toString());
                 med.setMedLeft(currentMed+medIncreased);
                 updateMed(med);
+
+                if(FirebaseHelper.isInternetAvailable(getContext()))
+                    if(FirebaseHelper.isUserLoggedIn(getContext())){
+                        String email = FirebaseHelper.getUserEmail(getContext());
+                        updateMedFirestore(med, email, id);
+                    }
+
                 dialog.dismiss();
             }
         });
@@ -202,6 +220,11 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
                         med.setStartDate(formattedDate); // update this
                         med.setStartDateMillis(currMillis); // update this
                         updateMed(med);
+                        if(FirebaseHelper.isInternetAvailable(getContext()))
+                            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                                String email = FirebaseHelper.getUserEmail(getContext());
+                                updateMedFirestore(med, email, id);
+                            }
 
                     }
                 })
@@ -210,7 +233,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
     }
 
-    private void actionEdit(View view, int id){
+    private void actionEdit(View view, long id){
         MedicationDrugScreenDisplayFragmentDirections.ActionMedicationDrugScreenDisplayToEdit
                 action = MedicationDrugScreenDisplayFragmentDirections.actionMedicationDrugScreenDisplayToEdit();
         action.setMedId(id);
@@ -225,6 +248,11 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
                 .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         deleteMed(medicine);
+                        if(FirebaseHelper.isInternetAvailable(getContext()))
+                            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                                String email = FirebaseHelper.getUserEmail(getContext());
+                                deleteMedFirestore(email, id);
+                            }
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)
@@ -254,7 +282,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     }
 
     @Override
-    public LiveData<Medicine> getMedDetails(int id) {
+    public LiveData<Medicine> getMedDetails(long id) {
         return presenterInterface.getMedDetails(id);
     }
 
@@ -267,6 +295,17 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     public void deleteMed(Medicine medicine) {
         presenterInterface.deleteMed(medicine);
         Toast.makeText(getContext(), "Med Deleted!", Toast.LENGTH_SHORT).show();
+//        getActivity().finish();
+    }
+
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        presenterInterface.updateMedFirestore(medicine, email, id);
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
+        presenterInterface.deleteMedFirestore(email, id);
     }
 
 }
