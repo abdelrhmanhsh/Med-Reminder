@@ -71,13 +71,13 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedications(long time) {
-        return dao.getActiveMedications(time);
+    public LiveData<List<Medicine>> getActiveMedications(long time, String email) {
+        return dao.getActiveMedications(time, email);
     }
 
     @Override
-    public LiveData<List<Medicine>> getInactiveMedications(long time) {
-        return dao.getInactiveMedications(time);
+    public LiveData<List<Medicine>> getInactiveMedications(long time, String email) {
+        return dao.getInactiveMedications(time, email);
     }
 
     @Override

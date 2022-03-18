@@ -95,10 +95,10 @@
         android:layout_marginTop="20dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_set_refill_limit"
+        android:id="@+id/btn_next_refill_limit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/set"
+        android:text="@string/next"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:textColor="@color/white"

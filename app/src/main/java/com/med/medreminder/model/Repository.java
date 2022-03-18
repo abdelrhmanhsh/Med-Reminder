@@ -58,13 +58,13 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedications(long time) {
-        return localSource.getActiveMedications(time);
+    public LiveData<List<Medicine>> getActiveMedications(long time, String email) {
+        return localSource.getActiveMedications(time, email);
     }
 
     @Override
-    public LiveData<List<Medicine>> getInactiveMedications(long time) {
-        return localSource.getInactiveMedications(time);
+    public LiveData<List<Medicine>> getInactiveMedications(long time, String email) {
+        return localSource.getInactiveMedications(time, email);
     }
 
     @Override

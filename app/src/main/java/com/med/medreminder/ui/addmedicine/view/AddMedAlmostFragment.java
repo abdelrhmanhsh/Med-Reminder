@@ -144,7 +144,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         if(filledMed.getImage()==0){
             filledMed.setImage(R.drawable.ic_medicine_other);
         }
-        if(filledMed.getRefillLimit()>0){
+        if(!filledMed.getRefillReminderTime().equals("")){
             filledMed.setRefillReminder(true);
         }
 
@@ -155,7 +155,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
                 filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
-                filledMed.getImage(), "", email, filledMed.isRefillReminder());
+                filledMed.getImage(), "", email, filledMed.isRefillReminder(), filledMed.getRefillReminderTime());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
@@ -174,10 +174,17 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         filledMed.setStartDate(todayDate);
 
-        Date date = new Date();
-        long timeMillis = date.getTime();
+        try {
 
-        filledMed.setStartDateMillis(timeMillis);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = sdf.parse(todayDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            filledMed.setStartDateMillis(calendar.getTimeInMillis());
+
+        } catch(ParseException e){
+            e.printStackTrace();
+        }
 
         filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         filledMed.setEndDateMillis(0);
@@ -185,6 +192,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         filledMed.setMedLeft(0);
         filledMed.setRefillLimit(0);
+        filledMed.setRefillReminder(false);
+        filledMed.setRefillReminderTime("");
 
     }
 

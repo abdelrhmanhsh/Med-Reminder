@@ -24,8 +24,8 @@ public class ActivePresenter implements ActivePresenterInterface {
     }
 
     @Override
-    public void showActiveStoredMedicines(LifecycleOwner owner) {
-        repositoryInterface.getActiveMedications(timeNow).observe(owner, new Observer<List<Medicine>>() {
+    public void showActiveStoredMedicines(LifecycleOwner owner, String email) {
+        repositoryInterface.getActiveMedications(timeNow, email).observe(owner, new Observer<List<Medicine>>() {
             @Override
             public void onChanged(List<Medicine> medicines) {
                 activeMedViewInterface.getActiveMeds(medicines);

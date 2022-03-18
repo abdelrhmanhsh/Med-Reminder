@@ -22,8 +22,8 @@ public class InactivePresenter implements InactivePresenterInterface {
     }
 
     @Override
-    public void showInactiveStoredMedicines(LifecycleOwner owner) {
-        repositoryInterface.getInactiveMedications(timeNow).observe(owner, new Observer<List<Medicine>>() {
+    public void showInactiveStoredMedicines(LifecycleOwner owner, String email) {
+        repositoryInterface.getInactiveMedications(timeNow, email).observe(owner, new Observer<List<Medicine>>() {
             @Override
             public void onChanged(List<Medicine> medicines) {
                 inactiveMedViewInterface.getInactiveMeds(medicines);

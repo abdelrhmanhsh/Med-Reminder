@@ -30,7 +30,7 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
 
     TextView textTitle;
     ProgressBar progressBar;
-    Button btnSet;
+    Button btnNext;
     EditText inputRefillLimit;
 
     @Override
@@ -45,17 +45,17 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
 
         textTitle = view.findViewById(R.id.title);
         progressBar = view.findViewById(R.id.progress_bar);
-        btnSet = view.findViewById(R.id.btn_set_refill_limit);
+        btnNext = view.findViewById(R.id.btn_next_refill_limit);
         inputRefillLimit = view.findViewById(R.id.input_refill_limit);
 
         progressBar.setProgress(90);
-        btnSet.setOnClickListener(this);
+        btnNext.setOnClickListener(this);
 
         setTitleText();
 
     }
 
-    private void actionSet(View view){
+    private void actionNext(View view){
 
         if(!inputRefillLimit.getText().toString().equals("")){
 
@@ -64,7 +64,7 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
             Medicine medicine = Medicine.getInstance();
             medicine.setRefillLimit(refillLimit);
 
-            NavDirections action = AddMedRefillLimitFragmentDirections.actionAddMedRefillLimitToAlmost();
+            NavDirections action = AddMedRefillLimitFragmentDirections.actionAddMedRefillLimitToRefillRemindTime();
             Navigation.findNavController(view).navigate(action);
 
         } else {
@@ -80,7 +80,7 @@ public class AddMedRefillLimitFragment extends Fragment implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.btn_set_refill_limit)
-            actionSet(view);
+        if(view.getId() == R.id.btn_next_refill_limit)
+            actionNext(view);
     }
 }

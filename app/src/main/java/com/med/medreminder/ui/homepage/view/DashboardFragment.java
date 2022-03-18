@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentDashboardBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
@@ -83,12 +84,13 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
         Log.d("TAG", "Dashboard Fragment: " + getViewLifecycleOwner());
 
-        activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner());
+        String email = FirebaseHelper.getUserEmail(getContext());
+        activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner(), email);
 
         Log.d("TAG", "onViewCreated: " + 1);
 
         inactivePresenterInterface = new InactivePresenter(this,(Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance())));
-        inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner());
+        inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
 
         medBtn.setOnClickListener(new View.OnClickListener() {
             @Override

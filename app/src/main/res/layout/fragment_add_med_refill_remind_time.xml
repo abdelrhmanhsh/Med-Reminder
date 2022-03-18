@@ -67,10 +67,10 @@
         android:layout_marginTop="50dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_next_time"
+        android:id="@+id/btn_set_refill_reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set"
+        android:text="@string/set"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:textColor="@color/white"

@@ -61,6 +61,9 @@ public class Medicine {
     @ColumnInfo(name = "refillReminder")
     boolean refillReminder;
 
+    @ColumnInfo(name = "refillReminderTime")
+    String refillReminderTime;
+
 
     private static Medicine instance = null;
 
@@ -73,7 +76,7 @@ public class Medicine {
         return instance;
     }
 
-    public Medicine(long id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image, String status, String userEmail, boolean refillReminder) {
+    public Medicine(long id, String name, String form, String strength, String reason, String isDaily, String often, String time, String startDate, String endDate, long startDateMillis, long endDateMillis, int medLeft, int refillLimit, int image, String status, String userEmail, boolean refillReminder, String refillReminderTime) {
         this.id = id;
         this.name = name;
         this.form = form;
@@ -92,6 +95,7 @@ public class Medicine {
         this.status = status;
         this.userEmail = userEmail;
         this.refillReminder = refillReminder;
+        this.refillReminderTime = refillReminderTime;
     }
 
     public long getId() {
@@ -238,6 +242,14 @@ public class Medicine {
         this.refillReminder = refillReminder;
     }
 
+    public String getRefillReminderTime() {
+        return refillReminderTime;
+    }
+
+    public void setRefillReminderTime(String refillReminderTime) {
+        this.refillReminderTime = refillReminderTime;
+    }
+
     @Override
     public String toString() {
         return "Medicine{" +
@@ -259,6 +271,7 @@ public class Medicine {
                 ", status='" + status + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", refillReminder=" + refillReminder +
+                ", refillReminderTime='" + refillReminderTime + '\'' +
                 '}';
     }
 }

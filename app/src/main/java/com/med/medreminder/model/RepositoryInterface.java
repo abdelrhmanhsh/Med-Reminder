@@ -14,8 +14,8 @@ public interface RepositoryInterface {
     LiveData<Medicine> getMedicineById(long id);
     LiveData<List<Medicine>> getStoredMedicines();
 
-    LiveData<List<Medicine>> getActiveMedications(long time);
-    LiveData<List<Medicine>> getInactiveMedications(long time);
+    LiveData<List<Medicine>> getActiveMedications(long time, String email);
+    LiveData<List<Medicine>> getInactiveMedications(long time, String email);
 
     LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email);
 
