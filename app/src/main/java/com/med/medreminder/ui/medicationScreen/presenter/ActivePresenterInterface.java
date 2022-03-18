@@ -4,4 +4,5 @@ import androidx.lifecycle.LifecycleOwner;
 
 public interface ActivePresenterInterface {
     void showActiveStoredMedicines(LifecycleOwner owner, String email);
+    void showActiveMedFirestore(String email);
 }
