@@ -10,5 +10,8 @@ public interface FirebaseSource {
     void updateMedFirestore(Medicine medicine, String email, long id);
     void deleteMedFirestore(String email, long id);
     void updateStatusInFirestore(String helperEmail,String patientEmail,String status);
+    void showActiveMedFirestore(String email);
+    void addHelperToFirestore(String helperEmail,String patientEmail);
+    void addRequestsToFirestore(String email,String name,String status,String helper_email);
 
 }

@@ -20,5 +20,4 @@ public interface LocalSource {
 
     LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email);
 
-
 }

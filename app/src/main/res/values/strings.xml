@@ -160,7 +160,6 @@
     <string name="resched_notification_desc">It\'s time to take your </string>
 
 
-
     <string name="signup">SignUp</string>
     <string name="have_account">Already have an account? <b>Log in</b></string>
     <string name="login">Log in</string>
@@ -227,6 +226,8 @@
     <string name="sendMedFriendRequest">Send a request to a Med Friend</string>
     <string name="showMedFriends">Show my Med Friends</string>
     <string name="Profile">My Profile</string>
+    <string name="Med_Friend">Med Friends</string>
+    <string name="my_helpers">My Helpers</string>
 
 
 </resources>

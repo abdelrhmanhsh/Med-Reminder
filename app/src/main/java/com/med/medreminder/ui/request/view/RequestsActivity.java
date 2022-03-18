@@ -5,9 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,12 +18,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.med.medreminder.R;
 
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.request.presenter.RequestPresenter;
 import com.med.medreminder.ui.request.presenter.RequestPresenterInterface;
-import com.med.medreminder.ui.request.view.RequestAdapter;
-import com.med.medreminder.ui.request.view.RequestViewInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -61,7 +58,13 @@ public class RequestsActivity extends AppCompatActivity implements RequestViewIn
         yourPrefrence = YourPreference.getInstance(getApplicationContext());
         currUser = yourPrefrence.getData(Constants.FIRST_NAME);
         currUserEmail = yourPrefrence.getData(Constants.EMAIL);
-        loadRequests(currUserEmail);
+
+        if(FirebaseHelper.isUserLoggedIn(getApplicationContext()) && FirebaseHelper.isInternetAvailable(getApplicationContext())){
+           loadRequests(currUserEmail);
+        }else{
+            Toast.makeText(this, "You must login first and be connected to the internet!", Toast.LENGTH_SHORT).show();
+        }
+
 
         request_recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -79,10 +82,8 @@ public class RequestsActivity extends AppCompatActivity implements RequestViewIn
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<String> emails = new ArrayList<>();
-
                 Map<String, Object> data = new HashMap<>();
                 List<DocumentSnapshot> documentSnapshot = queryDocumentSnapshots.getDocuments();
-                YourPreference yourPrefrence = YourPreference.getInstance(getApplicationContext());
                 for(int i=0; i<documentSnapshot.size(); i++){
                      data = documentSnapshot.get(i).getData();
                      String status = data.get("status").toString();
@@ -98,11 +99,14 @@ public class RequestsActivity extends AppCompatActivity implements RequestViewIn
 
     @Override
     public void updateStatusInFirestore(String helperEmail,String patientEmail,String status) {
-        Log.d("TAG","Helper Email: "+helperEmail);
-        Log.d("TAG","Patient Email:"+patientEmail);
-        Log.d("TAG","Status: "+status);
         requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
         requestPresenterInterface.updateStatusInFirestore(helperEmail,patientEmail,status);
+    }
+
+    @Override
+    public void addHelperToFirestore(String helperEmail,String patientEmail) {
+        requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
+        requestPresenterInterface.addHelperToFirestore(helperEmail,patientEmail);
     }
 
 }

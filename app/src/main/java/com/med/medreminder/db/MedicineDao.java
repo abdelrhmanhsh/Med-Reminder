@@ -41,7 +41,10 @@ public interface MedicineDao {
             "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail) AND (endDate!='Suspended' AND :email = userEmail)")
     LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
 
+
     //time = startDate || time <= endDate
 
     //OR :time <= endDateMillis
+
+
 }

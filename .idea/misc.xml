@@ -4,6 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_display_helpers.xml" value="0.17447916666666666" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_display_med_friends.xml" value="0.24048913043478262" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_requests.xml" value="0.14945652173913043" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.14945652173913043" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/helpers_row.xml" value="0.17447916666666666" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/medfriend_row.xml" value="0.18070652173913043" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/request_row.xml" value="0.24048913043478262" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.4" />
