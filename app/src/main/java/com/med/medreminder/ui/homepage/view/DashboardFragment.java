@@ -114,14 +114,6 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         });
         Log.d("TAG", "onViewCreated: " + 2);
 
-    /*    if(FirebaseHelper.isUserLoggedIn(getContext())){
-            String email = FirebaseHelper.getUserEmail(getContext());
-            showActiveMedFirestore(email);
-            Log.d("TAG","FIREBASEEEEEEEEE"+email);
-            Toast.makeText(getContext(), "firebase: " , Toast.LENGTH_SHORT).show();
-        }*/
-
-
     }
 
     @Override

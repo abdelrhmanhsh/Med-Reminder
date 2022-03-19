@@ -38,7 +38,10 @@ public interface MedicineDao {
     @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis)")
     LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time);
 
+
     //time = startDate || time <= endDate
 
     //OR :time <= endDateMillis
+
+
 }

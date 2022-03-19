@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
@@ -208,4 +210,6 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     public void addMedToFirestore(Medicine medicine, String email) {
         presenterInterface.addMedToFirestore(medicine, email);
     }
+
+
 }
