@@ -40,15 +40,23 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
+import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.firebaseLoginDelegate;
+import com.med.medreminder.model.Repository;
 import com.med.medreminder.model.User;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
+import com.med.medreminder.ui.login.presenter.LoginPresenter;
+import com.med.medreminder.ui.login.presenter.loginPresenterInterface;
+import com.med.medreminder.ui.signup.presenter.SignupPresenter;
+import com.med.medreminder.ui.signup.presenter.signupPresenterInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
 
-public class LoginFragment extends Fragment{
+public class LoginFragment extends Fragment implements loginViewInterface {
 
-    private static final int RC_SIGN_IN = 10;
     SignInButton sign_in_google_btn;
 
     ImageView cancel_ic;
@@ -61,6 +69,7 @@ public class LoginFragment extends Fragment{
     // DatabaseReference myRef;
     private FirebaseFirestore db;
 
+    loginPresenterInterface loginPresenterInterface;
 
     ProgressBar progressbar;
     TextInputEditText email_edt;
@@ -107,13 +116,29 @@ public class LoginFragment extends Fragment{
         progressbar = view.findViewById(R.id.progressbar);
         db = FirebaseFirestore.getInstance();
 
+        loginPresenterInterface = new LoginPresenter(Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()),this);
+
 
         sign_in_google_btn.setOnClickListener(view1 -> {
-            loginWithGoogle();
+           // loginWithGoogle();
+            progressbar.setVisibility(View.VISIBLE);
+            loginPresenterInterface.loginWithGoogle(getContext());
         });
 
         login_btn.setOnClickListener(view1 -> {
-            login();
+            //login();
+            progressbar.setVisibility(View.VISIBLE);
+
+            isAllFieldsChecked = CheckAllFields();
+
+            if (isAllFieldsChecked){
+                email = email_edt.getText().toString();
+                password = password_edt.getText().toString();
+
+                loginPresenterInterface.login(email,password,getContext());
+
+            }
         });
 
 
@@ -185,49 +210,55 @@ public class LoginFragment extends Fragment{
 
     }
 
-    public void loginWithGoogle(){
-        // Configure Google Sign In
-        progressbar.setVisibility(View.VISIBLE);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("350185735188-l93uh9iporegenf9avndd82k80mj5515.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+//    public void loginWithGoogle(){
+//        // Configure Google Sign In
+//        progressbar.setVisibility(View.VISIBLE);
+//
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken(Constants.GOOGLE_REQUEST_ID_TOKEN)
+//                .requestEmail()
+//                .build();
+//
+//        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+//
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Constants.RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
-                mAuth.fetchSignInMethodsForEmail(account.getEmail())
-                        .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
 
-                                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                //call method and pass email
+                loginPresenterInterface.isUserExistInGoogleLogin(account.getEmail(),new User(account.getGivenName(),account.getFamilyName()
+                ,"","", account.getEmail(),""),account.getIdToken());
 
-                                if (isNewUser) {
-                                    Log.d("TAG", "Is New User!");
-                                    addDataToFirestore(new User(account.getGivenName(),account.getFamilyName(),"", "",account.getEmail(),""),account.getIdToken());
-                                } else {
-                                    firebaseAuthWithGoogle(account.getIdToken(),account.getEmail());
 
-                                }
-
-                            }
-                        });
+//                mAuth.fetchSignInMethodsForEmail(account.getEmail())
+//                        .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+//
+//                                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+//
+//                                if (isNewUser) {
+//                                    Log.d("TAG", "Is New User!");
+//                                    addDataToFirestore(new User(account.getGivenName(),account.getFamilyName(),"", "",account.getEmail(),""),account.getIdToken());
+//                                } else {
+//                                    firebaseAuthWithGoogle(account.getIdToken(),account.getEmail());
+//
+//                                }
+//
+//                            }
+//                        });
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("TAG", "Google sign in failed", e);
@@ -321,5 +352,60 @@ public class LoginFragment extends Fragment{
         return true;
     }
 
+
+    @Override
+    public void loginWithGoogle() {
+    }
+
+    @Override
+    public void intentResultForGoogleLogin(Intent loginIntent) {
+        startActivityForResult(loginIntent, Constants.RC_SIGN_IN);
+
+    }
+
+    @Override
+    public void userExist(String email, String idToken) {
+        //call authenticate with google
+        loginPresenterInterface.authWithGoogle(email,idToken,getContext());
+
+    }
+
+    @Override
+    public void newUser(User user, String idToken) {
+        loginPresenterInterface.addUserToFirestore(user,idToken,getContext());
+    }
+
+    @Override
+    public void failedToCreateAccount(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void authWithGoogleSuccess(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        getContext().startActivity(new Intent(getContext(),HomeActivity.class));
+    }
+
+    @Override
+    public void authWithGoogleFailed(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void loginSuccessfully(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), HomeActivity.class);
+        getContext().startActivity(intent);
+    }
+
+    @Override
+    public void loginFailed(String msg) {
+        Toast.makeText(getContext(), "Authentication failed",Toast.LENGTH_SHORT).show();
+        progressbar.setVisibility(View.GONE);
+    }
 
 }

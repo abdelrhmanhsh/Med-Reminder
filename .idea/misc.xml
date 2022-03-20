@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/drawable/ic_pill.xml" value="0.1815" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_add_med_almost.xml" value="0.16111111111111112" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_add_med_time.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_signup.xml" value="0.25416666666666665" />

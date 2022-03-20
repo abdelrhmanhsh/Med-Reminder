@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
@@ -28,6 +29,8 @@ import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterface;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -98,6 +101,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv = view.findViewById(R.id.allMed_rv);
         addMed_floatBtn = view.findViewById(R.id.addMed_floatBtn);
 
+        YourPreference yourPrefrence = YourPreference.getInstance(getContext());
+
+
         /* starts before 1 month from now */
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.MONTH, -1);
@@ -139,7 +145,21 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 String dateString = DateFormat.format("MM/dd/yyyy", new Date(String.valueOf(date.getTime()))).toString();
                 Log.d("TAG", "onDateSelected: Dateeeeeeeeeeeeeeeeeeeeeeeeee" + dateString);
                 //Log.d("TAG", "onDateSelected: " + date.get(position));
-                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis());
+                //homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis());
+                if (FirebaseHelper.isInternetAvailable(getContext())){
+
+//                    Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
+//                    Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
+
+
+                    homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+                }
+                else {
+                    Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
+
+                    homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate);
+
+                }
             }
 
             @Override
@@ -166,7 +186,21 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()), curDate);
 
 
-        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate);
+
+        if (FirebaseHelper.isInternetAvailable(getContext())){
+
+            Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
+            Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
+
+            homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+        }
+        else {
+            Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
+
+            homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate);
+
+        }
+
 
 
         addMed_floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +322,29 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
     public void updateMed(Medicine medicine) {
         homeMedPresenterInterface.updateMed(medicine);
     }
+
+    @Override
+    public void failedToFetchMeds(String msg) {
+        Log.d(TAG, "failedToFetchMeds: " + "FAILED TO FETCH MEDICINES");
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void successToFetchMeds(List<Medicine> medicines) {
+        Log.d(TAG, "successToFetchMeds: "+ "INSIDE SUCCESS");
+        if (medicines.size() == 0) {
+            Log.d(TAG, "successToFetchMeds: " + "NO MEDICINES");
+            medHomeAdapter.removeMeds();
+            Toast.makeText(getContext(), "we don't have any medicines for this day", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d(TAG, "successToFetchMeds: "+ medicines.get(0).getName());
+            Log.d(TAG, "successToFetchMeds: "+ medicines.size());
+            medHomeAdapter.setMedInfo(medicines);
+        }
+    }
+
+
+
 
     public void oneTimeWork() {
 //        WorkRequest locationUploadWorkRequest =

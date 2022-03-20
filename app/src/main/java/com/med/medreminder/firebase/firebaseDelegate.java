@@ -1,5 +1,7 @@
 package com.med.medreminder.firebase;
 
+import android.content.Intent;
+
 import com.med.medreminder.model.User;
 
 public interface firebaseDelegate {

@@ -6,6 +6,8 @@ import com.med.medreminder.db.LocalSource;
 import com.med.medreminder.firebase.FirebaseSource;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
+import com.med.medreminder.firebase.firebaseLoginDelegate;
 
 import java.util.List;
 
@@ -73,6 +75,7 @@ public class Repository implements RepositoryInterface {
         return localSource.getActiveMedsOnDateSelected(time);
     }
 
+    //in signup step
     @Override
     public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
       firebaseSource.addUserToFirestore(user,firebaseDelegate);
@@ -93,9 +96,40 @@ public class Repository implements RepositoryInterface {
         firebaseSource.signup(email,password,firebaseDelegate, user);
     }
 
+    @Override
+    public void loginWithGoogle(Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.loginWithGoogle(context, firebaseLoginDelegate);
+    }
+
+    @Override
+    public void isUserExistFromGoogle(String email, firebaseLoginDelegate firebaseLoginDelegate, User user, String idToken) {
+        firebaseSource.isUserExistFromGoogleLogin(email,firebaseLoginDelegate,user,idToken);
+    }
+
+    //in login via google step
+    @Override
+    public void addUserToFirestore(User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
+        firebaseSource.addUserToFirestoreGoogleLogin(user,firebaseLoginDelegate,idToken, context);
+    }
+
+    @Override
+    public void authWithGoogle(String idToken, String email, Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.authWithGoogle(idToken, email, context, firebaseLoginDelegate);
+    }
+
+    @Override
+    public void login(String email, String password, Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.login(email,password,context,firebaseLoginDelegate);
+    }
+
 
     @Override
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
         firebaseSource.updateStatusInFirestore(helperEmail,patientEmail,status);
+    }
+
+    @Override
+    public void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate) {
+        firebaseSource.getMedicinesOnDateFromFirebase(email,time,firebaseHomeMedsDelegate);
     }
 }
