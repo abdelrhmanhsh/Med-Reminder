@@ -154,6 +154,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         Log.d("TAG", "onViewCreated: " + curDate);
         Log.d("TAG", "onViewCreated: " + Calendar.getInstance().getTimeInMillis());
 
+        Log.i(TAG, "onViewCreated: email: " + userEmail);
+
 
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
@@ -250,6 +252,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnTake = dialog.findViewById(R.id.dialog_btn_take);
         btnReschedule = dialog.findViewById(R.id.dialog_btn_reschedule);
         Log.i(TAG, "showNotificationDialog: med id " + medicine.getId());
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList.get(0));
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList);
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList.size());
 
         imgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,12 +289,23 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (medicine.getStatus().equals(getString(R.string.skipped))) // perform un-skip
-                    medicine.setStatus("");
-                else {
-                    medicine.setStatus(getString(R.string.skipped));
+
+//                MedStatus medStatus;
+
+                if (medicine.getStatus().equals(getString(R.string.skipped))) {
+//                    medicine.setStatus("");
+
+//                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
+//                    addMedStatus(medStatus);
                 }
-                updateMed(medicine);
+
+                else {
+//                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.skipped), medicine.getUserEmail());
+//                    addMedStatus(medStatus);
+//                    medicine.setStatus(getString(R.string.skipped));
+                }
+//                addMedStatus(medStatus);
+//                updateMed(medicine);
                 dialog.dismiss();
             }
         });
@@ -299,41 +315,41 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             public void onClick(View view) {
 
                 // For refill reminder (check if isRefillReminder==true)
-                if(medicine.isRefillReminder()){
-                    int currMedLeft = medicine.getMedLeft();
-                    if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
-                        medicine.setStatus("");
-                        medicine.setMedLeft(currMedLeft+1);
+                int currMedLeft = medicine.getMedLeft();
 
-                    } else {
-                        if(currMedLeft <= 0){
-                            if(medicine.isRefillReminder())
-                                Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
-                        } else{
-                            //check for med amount here to set refill reminder!
-                            if(currMedLeft <= medicine.getRefillLimit()){
-                                Log.d("TAG","REFILL REMINDER"+currMedLeft);
-                                //sendRefillNotification(10,medicine.getImage(), medicine.getName());
-                                refillReminderTime(medicine.getRefillReminderTime(),medicine.getImage(),medicine.getName());
-                            }
-                            medicine.setMedLeft(currMedLeft-1);
-                        }
+//                MedStatus medStatus;
 
-                        medicine.setStatus(getString(R.string.taken));
+//                if(medicine.getId())
+
+                if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
+//                    medicine.setStatus("");
+//                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
+                    medicine.setMedLeft(currMedLeft+1);
+
+                } else {
+                    if(currMedLeft <= 0){
+                        if(medicine.isRefillReminder())
+                            Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
+                    } else{
+                        //check for med amount here to set refill reminder!
+                        medicine.setMedLeft(currMedLeft-1);
                     }
-                    updateMed(medicine);
-                    dialog.dismiss();
+
+//                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.taken), medicine.getUserEmail());
+//                    medicine.setStatus(getString(R.string.taken));
+                }
+//                addMedStatus(medStatus);
+                updateMed(medicine);
+                dialog.dismiss();
 
 //                WorkManager.getInstance().cancelAllWorkByTag("reschedule");
-                }
-
             }
         });
 
         btnReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker(medicine.getImage(), medicine.getName(), medicine);
+                datePicker(medicine.getImage(), medicine.getName(), medicine.getId());
                 dialog.dismiss();
             }
         });
@@ -344,7 +360,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    private void datePicker(int imageResource, String medName, Medicine medicine){
+    private void datePicker(int imageResource, String medName, long id){
 
         // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -362,13 +378,13 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                         schedYear = year;
                         schedMonth = monthOfYear+1;
                         schedDay = dayOfMonth;
-                        timePicker(imageResource, medName, medicine);
+                        timePicker(imageResource, medName, id);
                     }
                 }, year, month, day);
         datePickerDialog.show();
     }
 
-    private void timePicker(int imageResource, String medName, Medicine medicine){
+    private void timePicker(int imageResource, String medName, long id){
         // Get Current Time
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -404,9 +420,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                             if(delayInMillis <= 0)
                                 Toast.makeText(getContext(), "You need to provide time in future", Toast.LENGTH_SHORT).show();
                             else{
-                                sendRescheduleNotification(delayInMillis, imageResource, medName);
-                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
-                                updateMed(medicine);
+                                sendRescheduleNotification(delayInMillis, imageResource, medName, id);
+//                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
+//                                updateMed(medicine);
                             }
 
                         } catch(ParseException e){
@@ -418,10 +434,11 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         timePickerDialog.show();
     }
 
-    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName){
+    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName, long id){
         Data data = new Data.Builder()
                 .putInt(MyWorkManager.IMAGE_RESOURCE, imageResource)
                 .putString(MyWorkManager.MED_NAME, medName)
+                .putLong(MyWorkManager.MED_ID, id)
                 .build();
 
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MyWorkManager.class)

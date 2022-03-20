@@ -1,5 +1,7 @@
 package com.med.medreminder.workmanager;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.med.medreminder.ui.BaseApplication.MEDREMINDER_CHANNEL;
 import static com.med.medreminder.ui.BaseApplication.RESCHEDULE_CHANNEL;
 
@@ -29,6 +31,7 @@ public class MyWorkManager extends Worker {
     public static final String TAG = "WorkManager";
     public static final String IMAGE_RESOURCE = "IMAGE_RESOURCE";
     public static final String MED_NAME = "MED_NAME";
+    public static final String MED_ID = "MED_ID";
 
     private static NotificationManagerCompat notificationManagerCompat;
     Context context;
@@ -42,30 +45,51 @@ public class MyWorkManager extends Worker {
     @Override
     public Result doWork() {
 
-          Log.d(TAG, "doWork: 41");
+//          Log.d(TAG, "doWork: 41");
+//        Data inputData = getInputData();
+//        int imageSource = inputData.getInt(IMAGE_RESOURCE, -1);
+//        String medName = inputData.getString(MED_NAME);
+//        Log.d(TAG, "doWork: 45"+medName);
+//        Log.d(TAG, "doWork: 45"+imageSource);
+//
+//
+//        //sendOnReschedule(context, imageSource, medName);
+//        //sendOnMedicalReminder(context);
+//        notification(context);
+//        return Result.success();
+
         Data inputData = getInputData();
         int imageSource = inputData.getInt(IMAGE_RESOURCE, -1);
         String medName = inputData.getString(MED_NAME);
-        Log.d(TAG, "doWork: 45"+medName);
-        Log.d(TAG, "doWork: 45"+imageSource);
+        long id = inputData.getLong(MED_ID, -1);
 
-
-        //sendOnReschedule(context, imageSource, medName);
-        //sendOnMedicalReminder(context);
-        notification(context);
+//        sendOnReschedule(context, imageSource, medName);
+//        showDialog();
+//        showNotificationDialog(context);
+        sendOnReschedule(context, imageSource, medName, id);
+//        sendOnReschedule(context, medicine);
+//        showDialog();
+        Log.i(TAG, "doWork: DO WOooooooork");
         return Result.success();
+
     }
 
-    public static void sendOnReschedule(Context context, int imageSource, String medName){
+    public void sendOnReschedule(Context context, int imageSource, String medName, long id){
+
+        Intent intent = new Intent(context, HomeActivity.class);
+//        Medicine medicine = null;
+//        MedStatus medStatus = new MedStatus(123456, "20-03-2022", "Taken", "abdelrahman@gmail.com");
+        intent.putExtra("med", id);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
                 .setSmallIcon(imageSource)
                 .setContentTitle(context.getString(R.string.resched_notification_title))
                 .setContentText(context.getString(R.string.resched_notification_desc) + " " + medName)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-//                .setVibrate()
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .build();
 
         notificationManagerCompat.notify(1, notification);

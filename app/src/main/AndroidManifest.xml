@@ -34,6 +34,8 @@
             android:label="@string/title_activity_home" />
         <activity android:name=".ui.request.view.RequestsActivity"
             android:exported="true"/>
+        <activity android:name=".ui.displayHelpers.DisplayHelpersActivity" />
+        <activity android:name=".ui.displayMedFriends.DisplayMedFriendsActivity" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

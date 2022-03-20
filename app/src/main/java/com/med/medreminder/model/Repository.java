@@ -46,8 +46,18 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void updateAllMedicines(String email) {
+        localSource.updateAllMedicines(email);
+    }
+
+    @Override
     public void deleteMedicine(Medicine medicine) {
         localSource.delete(medicine);
+    }
+
+    @Override
+    public void deleteAllMedicines() {
+        localSource.deleteAllMedicines();
     }
 
     @Override
