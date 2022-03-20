@@ -51,7 +51,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<Medicine> getMedicineById(int id) {
+    public LiveData<Medicine> getMedicineById(long id) {
         return localSource.getMedicineById(id);
     }
 
@@ -61,24 +61,35 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedications(long time) {
-        return localSource.getActiveMedications(time);
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        firebaseSource.updateMedFirestore(medicine, email, id);
     }
 
     @Override
-    public LiveData<List<Medicine>> getInactiveMedications(long time) {
-        return localSource.getInactiveMedications(time);
+    public void deleteMedFirestore(String email, long id) {
+        firebaseSource.deleteMedFirestore(email, id);
+    }
+
+
+    @Override
+    public LiveData<List<Medicine>> getActiveMedications(long time,String email) {
+        return localSource.getActiveMedications(time,email);
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time) {
-        return localSource.getActiveMedsOnDateSelected(time);
+    public LiveData<List<Medicine>> getInactiveMedications(long time, String email) {
+        return localSource.getInactiveMedications(time, email);
+    }
+
+    @Override
+    public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email) {
+        return localSource.getActiveMedsOnDateSelected(time, email);
     }
 
     //in signup step
     @Override
     public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
-      firebaseSource.addUserToFirestore(user,firebaseDelegate);
+        firebaseSource.addUserToFirestore(user,firebaseDelegate);
     }
 
     @Override
@@ -87,8 +98,8 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
-        firebaseSource.addMedToFirestore(medicine, email);
+    public void addMedToFirestore(Medicine medicine, String email,long id) {
+        firebaseSource.addMedToFirestore(medicine, email, id);
     }
 
     @Override
@@ -131,5 +142,15 @@ public class Repository implements RepositoryInterface {
     @Override
     public void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate) {
         firebaseSource.getMedicinesOnDateFromFirebase(email,time,firebaseHomeMedsDelegate);
+    }
+
+    @Override
+    public void addHelperToFirestore(String helperEmail, String patientEmail) {
+        firebaseSource.addHelperToFirestore(helperEmail,patientEmail);
+    }
+
+    @Override
+    public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
+        firebaseSource.addRequestsToFirestore(email,name,status,helper_email);
     }
 }

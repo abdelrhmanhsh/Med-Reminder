@@ -44,14 +44,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-public class FirebaseWork implements FirebaseSource{
+public class FirebaseWork implements FirebaseSource {
 
     private static FirebaseWork localSource = null;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
+    public static final String TAG = "FirebaseWork";
 
 
     public FirebaseWork() {
@@ -60,12 +60,49 @@ public class FirebaseWork implements FirebaseSource{
 
     }
 
-    public static FirebaseWork getInstance(){
-        if (localSource == null){
+    public static FirebaseWork getInstance() {
+        if (localSource == null) {
             localSource = new FirebaseWork();
         }
         return localSource;
     }
+
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        CollectionReference dbUsers = db.collection("Users");
+
+        dbUsers.document(email).collection("Meds").document(String.valueOf(id))
+                .set(medicine).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "onSuccess: med updated to firestore with id: " + id);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e.fillInStackTrace());
+            }
+        });
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
+        CollectionReference dbUsers = db.collection("Users");
+
+        dbUsers.document(email).collection("Meds").document(String.valueOf(id))
+                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "onSuccess: delete from firestore successfully: " + id);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e.fillInStackTrace());
+            }
+        });
+    }
+
 
     @Override
     public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
@@ -81,8 +118,7 @@ public class FirebaseWork implements FirebaseSource{
 //                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
 //                    progressbar.setVisibility(View.GONE);
 //                    findNavController(SignupFragment.this).navigate(R.id.signupToLogin);
-                }
-                else {
+                } else {
                     firebaseDelegate.userFailToFirestore("Fail to create account");
 //                    Log.d("TAG", "onFailure: ");
 //                    progressbar.setVisibility(View.GONE);
@@ -101,52 +137,47 @@ public class FirebaseWork implements FirebaseSource{
                 .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                     @Override
                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                         if (task.getResult().getSignInMethods().isEmpty()){
-                                firebaseDelegate.newUser();
-                         }
-                         else {
-                             firebaseDelegate.userExist("This email already exist");
-                         }
+                        if (task.getResult().getSignInMethods().isEmpty()) {
+                            firebaseDelegate.newUser();
+                        } else {
+                            firebaseDelegate.userExist("This email already exist");
+                        }
                     }
                 });
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
+    public void addMedToFirestore(Medicine medicine, String email, long id) {
         CollectionReference dbUsers = db.collection("Users");
-
-        dbUsers.document(email).collection("Meds")
-                .add(medicine).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        dbUsers.document(email).collection("Meds").document(String.valueOf(id))
+                .set(medicine).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-//                Toast.makeText(getContext(), "Med added successfully!", Toast.LENGTH_SHORT).show();
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "onSuccess: med added to firestore with id: " + id);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(getContext(), "Med added failed!", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "onFailure: ", e.fillInStackTrace());
             }
         });
     }
 
 
-
-
-    public void updateStatusInFirestore(String helperEmail,String patientEmail,String status) {
-        Log.d("TAG","Helper Email: "+helperEmail);
-        Log.d("TAG","Patient Email:"+patientEmail);
-        Log.d("TAG","Status: "+status);
-      //  db = FirebaseFirestore.getInstance();
+    public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
+        Log.d("TAG", "Helper Email: " + helperEmail);
+        Log.d("TAG", "Patient Email:" + patientEmail);
+        Log.d("TAG", "Status: " + status);
+        //  db = FirebaseFirestore.getInstance();
 
         CollectionReference dbRequests = db.collection("Users");
-        dbRequests.document(helperEmail).collection("Requests").document(patientEmail).update("status",status)
+        dbRequests.document(helperEmail).collection("Requests").document(patientEmail).update("status", status)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "onSuccess: ");
-                        }
-                        else {
+                        } else {
                             Log.d("TAG", "onFailure: ");
                         }
                     }
@@ -160,11 +191,11 @@ public class FirebaseWork implements FirebaseSource{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                          //  addUserToFirestore(user);
+                            //  addUserToFirestore(user);
                             firebaseDelegate.signupSuccess(user);
 
                         } else {
-                          firebaseDelegate.signupFail("Fail to create the account");
+                            firebaseDelegate.signupFail("Fail to create the account");
                         }
                     }
                 });
@@ -192,11 +223,10 @@ public class FirebaseWork implements FirebaseSource{
                 .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                     @Override
                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                        if (task.getResult().getSignInMethods().isEmpty()){
-                            firebaseLoginDelegate.newUser(user,idToken);
-                        }
-                        else {
-                            firebaseLoginDelegate.userExist(email,idToken);
+                        if (task.getResult().getSignInMethods().isEmpty()) {
+                            firebaseLoginDelegate.newUser(user, idToken);
+                        } else {
+                            firebaseLoginDelegate.userExist(email, idToken);
                         }
                     }
                 });
@@ -214,9 +244,8 @@ public class FirebaseWork implements FirebaseSource{
                 if (task.isSuccessful()) {
 //                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
 //                    firebaseAuthWithGoogle(idToken,user.getEmail());
-                    firebaseLoginDelegate.firebaseAuthWithGoogle(idToken,user.getEmail(),context);
-                }
-                else {
+                    firebaseLoginDelegate.firebaseAuthWithGoogle(idToken, user.getEmail(), context);
+                } else {
 //                    Log.d("TAG", "onFailure: ");
 //                    progressbar.setVisibility(View.GONE);
 //
@@ -236,7 +265,7 @@ public class FirebaseWork implements FirebaseSource{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                           // Log.d("TAG", "signInWithCredential:success");
+                            // Log.d("TAG", "signInWithCredential:success");
 //                            FirebaseUser user = mAuth.getCurrentUser();
 //                            Log.d("TAG", "onComplete: " + user.getEmail());
 //
@@ -248,12 +277,12 @@ public class FirebaseWork implements FirebaseSource{
 //                                    Log.d("TAG", "onSuccess: " + documentSnapshot);
 //                                    Log.d("TAG", "onSuccess: " + user.getFirstName());
                                     YourPreference yourPrefrence = YourPreference.getInstance(context);
-                                    yourPrefrence.saveData(Constants.IS_LOGIN,"true");
-                                    yourPrefrence.saveData(Constants.FIRST_NAME,user.getFirstName());
-                                  //  Log.d("TAG", "onSuccess:-------------------- " + yourPrefrence.getData(Constants.FIRST_NAME));
+                                    yourPrefrence.saveData(Constants.IS_LOGIN, "true");
+                                    yourPrefrence.saveData(Constants.FIRST_NAME, user.getFirstName());
+                                    //  Log.d("TAG", "onSuccess:-------------------- " + yourPrefrence.getData(Constants.FIRST_NAME));
 
-                                    yourPrefrence.saveData(Constants.SECOND_NAME,user.getSecondName());
-                                    yourPrefrence.saveData(Constants.EMAIL,user.getEmail());
+                                    yourPrefrence.saveData(Constants.SECOND_NAME, user.getSecondName());
+                                    yourPrefrence.saveData(Constants.EMAIL, user.getEmail());
 
                                     firebaseLoginDelegate.authWithGoogleSuccess("Login Successfully");
                                     //progressbar.setVisibility(View.GONE);
@@ -264,9 +293,7 @@ public class FirebaseWork implements FirebaseSource{
                             });
 
 
-
-                        }
-                        else {
+                        } else {
 
                             firebaseLoginDelegate.authWithGoogleFailed("Login Failed");
 
@@ -288,7 +315,7 @@ public class FirebaseWork implements FirebaseSource{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                           // Log.d("TAG", "signInWithEmail:success");
+                            // Log.d("TAG", "signInWithEmail:success");
 
                             //FirebaseUser user = mAuth.getCurrentUser();
 
@@ -299,10 +326,10 @@ public class FirebaseWork implements FirebaseSource{
 //                                    Log.d("TAG", "onSuccess: " + documentSnapshot);
 //                                    Log.d("TAG", "onSuccess: " + user.getFirstName());
                                     YourPreference yourPrefrence = YourPreference.getInstance(context);
-                                    yourPrefrence.saveData(Constants.IS_LOGIN,"true");
-                                    yourPrefrence.saveData(Constants.FIRST_NAME,user.getFirstName());
-                                    yourPrefrence.saveData(Constants.SECOND_NAME,user.getSecondName());
-                                    yourPrefrence.saveData(Constants.EMAIL,user.getEmail());
+                                    yourPrefrence.saveData(Constants.IS_LOGIN, "true");
+                                    yourPrefrence.saveData(Constants.FIRST_NAME, user.getFirstName());
+                                    yourPrefrence.saveData(Constants.SECOND_NAME, user.getSecondName());
+                                    yourPrefrence.saveData(Constants.EMAIL, user.getEmail());
 
                                     firebaseLoginDelegate.loginSuccessfully("Login successfully");
 //                                    progressbar.setVisibility(View.GONE);
@@ -334,13 +361,13 @@ public class FirebaseWork implements FirebaseSource{
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<Medicine> allMeds = new ArrayList<>();
                 List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
-                for (int i = 0; i < meds.size(); i++){
+                for (int i = 0; i < meds.size(); i++) {
 
-                    if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()){
+                    if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()) {
                         allMeds.add(meds.get(i));
                     }
                 }
-                     firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
+                firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
 
 //                Map<String, Object> data = new HashMap<>();
 //                List<DocumentSnapshot> documentSnapshot = queryDocumentSnapshots.getDocuments();
@@ -354,7 +381,7 @@ public class FirebaseWork implements FirebaseSource{
 //                    }
 //                    requestAdapter.setRequests(emails);
 //                    requestAdapter.notifyDataSetChanged();
-                }
+            }
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -365,4 +392,50 @@ public class FirebaseWork implements FirebaseSource{
     }
 
 
+    @Override
+    public void addHelperToFirestore(String helperEmail, String patientEmail) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("helper_email", helperEmail);
+
+        CollectionReference dbRequests = db.collection("Users");
+        dbRequests.document(patientEmail).collection("Helpers").document(helperEmail)
+                .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
+    @Override
+    public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("email", email);
+        data.put("status", status);
+
+
+        CollectionReference dbRequests = db.collection("Users");
+        dbRequests.document(helper_email).collection("Requests").document(email)
+                .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // Toast.makeText((), "Request sent successfully", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }
+
+
+
+

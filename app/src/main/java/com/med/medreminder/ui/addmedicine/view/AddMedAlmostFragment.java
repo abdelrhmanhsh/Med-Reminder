@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
@@ -41,6 +42,7 @@ import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 import com.med.medreminder.workmanager.MyWorkManager;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -96,22 +98,22 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
     }
 
-    private void setTitleText() {
+    private void setTitleText(){
         Medicine medicine = Medicine.getInstance();
         textTitle.setText(medicine.getName());
     }
 
-    private void actionSetTreatmentDuration(View view) {
+    private void actionSetTreatmentDuration(View view){
         NavDirections action = AddMedAlmostFragmentDirections.actionAddMedAlmostToTreatmentStartDate();
         Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionGetRefillReminder(View view) {
+    private void actionGetRefillReminder(View view){
         NavDirections action = AddMedAlmostFragmentDirections.actionAddMedAlmostToRefillLeft();
         Navigation.findNavController(view).navigate(action);
     }
 
-    private void actionChangeMedIcon(View view) {
+    private void actionChangeMedIcon(View view){
         NavDirections action = AddMedAlmostFragmentDirections.actionAddMedAlmostToChangeIcon();
         Navigation.findNavController(view).navigate(action);
     }
@@ -132,51 +134,69 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         WorkManager.getInstance().enqueue(workBuilder);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void actionSave() {
+    private void actionSave(){
 
         Medicine filledMed = Medicine.getInstance();
 
         //check for nullables
-        if (filledMed.getOften() == null) {
+        if(filledMed.getOften()==null){
             filledMed.setOften(getString(R.string.selection_only_as_needed));
         }
-        if (filledMed.getTime() == null) {
+        if(filledMed.getTime()==null){
             filledMed.setTime("");
         }
-        if (filledMed.getStartDate() == null) {
+        if(filledMed.getStartDate()==null){
             String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
             filledMed.setStartDate(todayDate);
 
-            Date date = new Date();
-            long timeMillis = date.getTime();
+            try {
 
-            filledMed.setStartDateMillis(timeMillis);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = sdf.parse(todayDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                filledMed.setStartDateMillis(calendar.getTimeInMillis());
+
+            } catch(ParseException e){
+                e.printStackTrace();
+            }
+
         }
 
-        if (filledMed.getEndDate() == null) {
+        if(filledMed.getEndDate()==null){
             filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         }
-        if (filledMed.getImage() == 0) {
+        if(filledMed.getImage()==0){
             filledMed.setImage(R.drawable.ic_medicine_other);
         }
+        if(filledMed.getRefillReminderTime()==null){
+            filledMed.setRefillReminderTime("");
+        }
+        if(!filledMed.getRefillReminderTime().equals("")){
+            filledMed.setRefillReminder(true);
+        }
 
+        long id = System.currentTimeMillis();
+        String email = FirebaseHelper.getUserEmail(getContext());
 
-        Medicine medicine = new Medicine(filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
+        Medicine medicine = new Medicine(id, filledMed.getName(), filledMed.getForm(), filledMed.getStrength(),
                 filledMed.getReason(), filledMed.getIsDaily(), filledMed.getOften(), filledMed.getTime(),
-                filledMed.getStartDate(), filledMed.getEndDate(), filledMed.getStartDateMillis(),
+                filledMed.getStartDate(), filledMed.getEndDate(),filledMed.getStartDateMillis(),
                 filledMed.getEndDateMillis(), filledMed.getMedLeft(), filledMed.getRefillLimit(),
-                filledMed.getImage(), "");
+                filledMed.getImage(), "", email, filledMed.isRefillReminder(), filledMed.getRefillReminderTime());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
         addMed(medicine);
 
-        if (FirebaseHelper.isUserLoggedIn(getContext())) {
-            String email = FirebaseHelper.getUserEmail(getContext());
-            addMedToFirestore(medicine, email);
-            Toast.makeText(getContext(), "firebase: " + filledMed.getId(), Toast.LENGTH_SHORT).show();
-        }
 
+        if(FirebaseHelper.isInternetAvailable(getContext()))
+            if(FirebaseHelper.isUserLoggedIn(getContext())){
+                addMedToFirestore(medicine, email, id);
+            }
+
+        // Set reminders HERE ------------------------------------------------------------
         // Set reminders HERE ------------------------------------------------------------
         //String[] time = medicine.getTime().split(":");
 //        int hour = Integer.parseInt(time[0]);
@@ -200,7 +220,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 setAlarm(hour, min);
                 break;
             case "Twice Daily":
-               // often = 12;
+                // often = 12;
                 twiceDaily = medicine.getTime().split(",");            //12:30,1:30
                 time = twiceDaily[0].split(":");
                 hour = Integer.parseInt(time[0]);
@@ -212,7 +232,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 setAlarm(dose2hour,dose2min);
                 break;
             case "3 times a day":
-               // often = 8;
+                // often = 8;
                 threeDaily = medicine.getTime().split(",");            //12:30,1:30,3:30
                 time = threeDaily[0].split(":");
                 hour = Integer.parseInt(time[0]);
@@ -229,7 +249,9 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 break;
         }
 
-      //  setAlarm(hour, min);
+        //  setAlarm(hour, min);
+
+
 
 
         filledMed.setOften(getString(R.string.selection_only_as_needed));
@@ -237,10 +259,17 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         String todayDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         filledMed.setStartDate(todayDate);
 
-        Date date = new Date();
-        long timeMillis = date.getTime();
+        try {
 
-        filledMed.setStartDateMillis(timeMillis);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = sdf.parse(todayDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            filledMed.setStartDateMillis(calendar.getTimeInMillis());
+
+        } catch(ParseException e){
+            e.printStackTrace();
+        }
 
         filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         filledMed.setEndDateMillis(0);
@@ -248,13 +277,15 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         filledMed.setMedLeft(0);
         filledMed.setRefillLimit(0);
+        filledMed.setRefillReminder(false);
+        filledMed.setRefillReminderTime("");
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.btn_set_treatment_duration:
                 actionSetTreatmentDuration(view);
                 break;
@@ -284,7 +315,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email) {
-        presenterInterface.addMedToFirestore(medicine, email);
+    public void addMedToFirestore(Medicine medicine, String email, long id) {
+        presenterInterface.addMedToFirestore(medicine, email, id);
     }
+
 }

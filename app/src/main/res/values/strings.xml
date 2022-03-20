@@ -225,6 +225,8 @@
     <string name="Profile">My Profile</string>
     <string name="resched_notification_title">Reschedule</string>
     <string name="resched_notification_desc">Medicine Reschedule</string>
+    <string name="medfriend">Med Friend</string>
+    <string name="my_helpers">My Helpers</string>
 
 
 </resources>
