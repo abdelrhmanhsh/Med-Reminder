@@ -8,6 +8,8 @@ import android.os.Build;
 public class BaseApplication extends Application {
 
     public static final String RESCHEDULE_CHANNEL = "reschedule";
+    public static final String REFILL_CHANNEL = "refill";
+
 
     @Override
     public void onCreate() {
@@ -28,8 +30,16 @@ public class BaseApplication extends Application {
             );
             rescheduleChannel.setDescription("Notification for reschedule medication time");
 
+            NotificationChannel refillChannel = new NotificationChannel(
+                    REFILL_CHANNEL,
+                    "refill",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            refillChannel.setDescription("Notification for reschedule medication time");
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(rescheduleChannel);
+            manager.createNotificationChannel(refillChannel);
 
         }
     }

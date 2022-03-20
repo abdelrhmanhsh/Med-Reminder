@@ -38,6 +38,7 @@ import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterface;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
 import com.med.medreminder.workmanager.MyWorkManager;
+import com.med.medreminder.workmanager.RefillReminder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -273,26 +274,34 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             public void onClick(View view) {
 
                 // For refill reminder (check if isRefillReminder==true)
-                int currMedLeft = medicine.getMedLeft();
-                if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
-                    medicine.setStatus("");
-                    medicine.setMedLeft(currMedLeft+1);
+                if(medicine.isRefillReminder()){
+                    int currMedLeft = medicine.getMedLeft();
+                    if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
+                        medicine.setStatus("");
+                        medicine.setMedLeft(currMedLeft+1);
 
-                } else {
-                    if(currMedLeft <= 0){
-                        if(medicine.isRefillReminder())
-                            Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
-                    } else{
-                        //check for med amount here to set refill reminder!
-                        medicine.setMedLeft(currMedLeft-1);
+                    } else {
+                        if(currMedLeft <= 0){
+                            if(medicine.isRefillReminder())
+                                Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
+                        } else{
+                            //check for med amount here to set refill reminder!
+                            if(currMedLeft <= medicine.getRefillLimit()){
+                                Log.d("TAG","REFILL REMINDER"+currMedLeft);
+                                //sendRefillNotification(10,medicine.getImage(), medicine.getName());
+                                refillReminderTime(medicine.getRefillReminderTime(),medicine.getImage(),medicine.getName());
+                            }
+                            medicine.setMedLeft(currMedLeft-1);
+                        }
+
+                        medicine.setStatus(getString(R.string.taken));
                     }
-
-                    medicine.setStatus(getString(R.string.taken));
-                }
-                updateMed(medicine);
-                dialog.dismiss();
+                    updateMed(medicine);
+                    dialog.dismiss();
 
 //                WorkManager.getInstance().cancelAllWorkByTag("reschedule");
+                }
+
             }
         });
 
@@ -424,6 +433,49 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         // WorkManager.getInstance(MainActivity.this).cancelWorkById(locationUploadWorkRequest.getId());
     }
 
+
+
+    private void refillReminderTime(String refillReminderTime, int imageResource, String medName){
+
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH)+1;
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String dateStop = year +"/" +month+"/" + day+" "+refillReminderTime+":00";
+        Date currentTime = new Date();
+
+        // Custom date format
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+        Date refillTime = null;
+        try {
+            refillTime = format.parse(dateStop);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Get msec from each, and subtract.
+        long diff = refillTime.getTime() - currentTime.getTime();
+        Log.d("TAG","Time: Delay"+diff);
+        sendRefillNotification(diff,imageResource,medName);
+
+    }
+
+    private void sendRefillNotification(long delayInMillis, int imageResource, String medName){
+        Data data = new Data.Builder()
+                .putInt(RefillReminder.IMAGE_RESOURCE, imageResource)
+                .putString(RefillReminder.MED_NAME, medName)
+                .build();
+
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(RefillReminder.class)
+                .setInputData(data)
+//                .setConstraints(constraints)
+                .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
+                .addTag("refill")
+                .build();
+
+        androidx.work.WorkManager.getInstance(getContext()).enqueue(request);
+    }
 
     @Override
     public void getAllStoredMedicinesOnDate(List<Medicine> medicines) {
