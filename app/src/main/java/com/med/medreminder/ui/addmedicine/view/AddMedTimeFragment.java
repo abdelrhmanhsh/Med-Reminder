@@ -90,6 +90,9 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
                 doseTimes += time;
 
+                Log.d(TAG, "actionNext: hour -> "+hour);
+                Log.d(TAG, "actionNext: min -> "+minute);
+                Log.d(TAG, "actionNext: dose time -> "+doseTimes);
                 Medicine medicine = Medicine.getInstance();
                 medicine.setTime(doseTimes);
 

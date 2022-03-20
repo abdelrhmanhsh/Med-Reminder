@@ -1,52 +1,34 @@
 package com.med.medreminder.workmanager;
 
-import static android.app.PendingIntent.FLAG_IMMUTABLE;
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static com.med.medreminder.BaseApplication.RESCHEDULE_CHANNEL;
+import static com.med.medreminder.ui.BaseApplication.MEDREMINDER_CHANNEL;
+import static com.med.medreminder.ui.BaseApplication.RESCHEDULE_CHANNEL;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.med.medreminder.R;
-import com.med.medreminder.model.MedStatus;
-import com.med.medreminder.model.Medicine;
+import com.med.medreminder.ui.MainActivity;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
-import com.med.medreminder.ui.homepage.view.HomeFragment;
-import com.med.medreminder.ui.homepage.view.NotificationDialogActivity;
 
 public class MyWorkManager extends Worker {
 
     public static final String TAG = "WorkManager";
     public static final String IMAGE_RESOURCE = "IMAGE_RESOURCE";
     public static final String MED_NAME = "MED_NAME";
-    public static final String MED_ID = "MED_ID";
 
     private static NotificationManagerCompat notificationManagerCompat;
     Context context;
@@ -60,133 +42,92 @@ public class MyWorkManager extends Worker {
     @Override
     public Result doWork() {
 
+          Log.d(TAG, "doWork: 41");
         Data inputData = getInputData();
         int imageSource = inputData.getInt(IMAGE_RESOURCE, -1);
         String medName = inputData.getString(MED_NAME);
-        long id = inputData.getLong(MED_ID, -1);
+        Log.d(TAG, "doWork: 45"+medName);
+        Log.d(TAG, "doWork: 45"+imageSource);
 
-//        sendOnReschedule(context, imageSource, medName);
-//        showDialog();
-//        showNotificationDialog(context);
-        sendOnReschedule(context, imageSource, medName, id);
-//        sendOnReschedule(context, medicine);
-//        showDialog();
-        Log.i(TAG, "doWork: DO WOooooooork");
+
+        //sendOnReschedule(context, imageSource, medName);
+        //sendOnMedicalReminder(context);
+        notification(context);
         return Result.success();
     }
 
-    public void sendOnReschedule(Context context, int imageSource, String medName, long id){
-
-        Intent intent = new Intent(context, HomeActivity.class);
-//        Medicine medicine = null;
-//        MedStatus medStatus = new MedStatus(123456, "20-03-2022", "Taken", "abdelrahman@gmail.com");
-        intent.putExtra("med", id);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
+    public static void sendOnReschedule(Context context, int imageSource, String medName){
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
                 .setSmallIcon(imageSource)
                 .setContentTitle(context.getString(R.string.resched_notification_title))
                 .setContentText(context.getString(R.string.resched_notification_desc) + " " + medName)
-                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+//                .setVibrate()
                 .build();
 
         notificationManagerCompat.notify(1, notification);
     }
 
-//    public void sendOnReschedule(Context context, int imageSource, String medName){
-//
-//        Intent intent = new Intent(context, HomeActivity.class);
-////        Medicine medicine = null;
-//        MedStatus medStatus = new MedStatus(123456, "20-03-2022", "Taken", "abdelrahman@gmail.com");
-//        intent.putExtra("med", medStatus);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
-//
-//        notificationManagerCompat = NotificationManagerCompat.from(context);
-//        Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
-//                .setSmallIcon(imageSource)
-//                .setContentTitle(context.getString(R.string.resched_notification_title))
-//                .setContentText(context.getString(R.string.resched_notification_desc) + " " + medName)
-//                .setContentIntent(pendingIntent)
-//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                .setCategory(NotificationCompat.CATEGORY_REMINDER)
-//                .build();
-//
-//        notificationManagerCompat.notify(1, notification);
-//    }
+    public static void sendOnMedicalReminder(Context context) {
+        Log.d(TAG, "sendOnMedicalReminder: "+ "70");
+        notificationManagerCompat = NotificationManagerCompat.from(context);
+        Intent activityIntent = new Intent(context, HomeActivity.class);  //but we cannot pass an intent to notification, pending intent instead to execute our intent
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, activityIntent, 0);                             //request code related to cancel or update this pending intent
+        //flags: if we create another pending intent it should update this value
 
-//    private void showNotificationDialog(Context context){
-//
-////        HomeFragment.
-////        HomeFragment.showNotificationDialog(context);
-//
-////        ContextCompat.getMainExecutor(context).execute(()  -> {
-////            // This is where your UI code goes.
-////            Dialog dialog = new Dialog(context);
-////            dialog.setContentView(R.layout.dialog_notification);
-////
-////            dialog.show();
-//////        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
-//////            Window window = dialog.getWindow();
-//////            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-////        });
-////
-////        new Thread(){
-////
-////            @Override
-////            public void run() {
-////
-////                Dialog dialog = new Dialog(context);
-////                dialog.setContentView(R.layout.dialog_notification);
-////
-////                dialog.show();
-//////        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
-////                Window window = dialog.getWindow();
-////                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-////
-////            }
-////        }.start();
-//
-//    }
+        Notification notification = new NotificationCompat.Builder(context, MEDREMINDER_CHANNEL)
+                .setSmallIcon(R.drawable.ic_pill)
+                .setContentTitle("Medication Reminder")
+                .setContentText("It's time to take your medicine")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                // .setColor(getResources().getColor(R.color.black))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)   //if we tap on notification it disappear
+                .setOnlyAlertOnce(true)  //it makes sound and popup for the first time only but when updated will not
+                .addAction(R.mipmap.ic_launcher, "Take", pendingIntent)  //we can add up to 3 action buttons
+                .build();
 
-//    private void showDialog(){
-//        Intent intent = new Intent(context, NotificationDialogActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
-//
-//        notificationManagerCompat = NotificationManagerCompat.from(context);
-//        Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
-//                .setSmallIcon(R.drawable.ic_drops)
-//                .setContentTitle(context.getString(R.string.resched_notification_title))
-//                .setContentText(context.getString(R.string.resched_notification_desc))
-//                .setContentIntent(pendingIntent)
-//                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-////                .setVibrate()
-//                .build();
-//
-//        notificationManagerCompat.notify(1, notification);
-//
-//    }
+        notificationManagerCompat.notify(1, notification);    //1 means this notification if i want to cancel or repeat it will use this id
 
-//    public void showDialog() {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-//
-//        alertDialog.setTitle("REMINDER!");
-//        alertDialog.setMessage("Turn off alarm by pressing off");
-//
-//        alertDialog.setNegativeButton("Off", new DialogInterface.OnClickListener(){
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Toast.makeText(getApplicationContext(), "OFF", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-////        alertDialog.show();
-//        alertDialog.show().getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
-//        // line you have to add
-////        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
-//    }
+        Log.d(TAG, "sendOnMedicalReminder: "+ "92");
 
-}
+    }
+
+    public static void notification(Context context){
+        Log.d(TAG, "sendOnMedicalReminder: "+ "103");
+
+        int reqCode = 1;
+        Intent intent = new Intent(context, HomeActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, intent, PendingIntent.FLAG_ONE_SHOT);
+        String CHANNEL_ID = "channel_name";// The id of the channel.
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("title")
+                .setContentText("message")
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .addAction(R.mipmap.ic_launcher, "Take", pendingIntent)  //we can add up to 3 action buttons
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel Name";// The user-visible name of the channel.
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        notificationManager.notify(reqCode, notificationBuilder.build()); // 0 is the request code, it should be unique id
+        Log.d(TAG, "sendOnMedicalReminder: "+ "124");
+
+        Log.d("showNotification", "showNotification: " + reqCode);
+
+    }
+    }
+
+

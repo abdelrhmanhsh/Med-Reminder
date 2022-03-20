@@ -2,7 +2,8 @@ package com.med.medreminder.ui.homepage.presenter;
 
 import android.util.Log;
 
-import com.med.medreminder.model.MedStatus;
+import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.homepage.view.homeMedViewInterface;
@@ -13,7 +14,7 @@ import java.util.List;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-public class HomeMedPresenter implements homeMedPresenterInterface {
+public class HomeMedPresenter implements homeMedPresenterInterface, firebaseHomeMedsDelegate {
 
     homeMedViewInterface homeMedViewInterface;
     RepositoryInterface repositoryInterface;
@@ -58,26 +59,19 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
         repositoryInterface.updateMedicine(medicine);
     }
 
-//    @Override
-//    public void addMedStatus(MedStatus medStatus) {
-//        repositoryInterface.insertMedStatus(medStatus);
-//    }
-//
-//
-//
-//    @Override
-//    public void getMedStatus(LifecycleOwner lifecycleOwner, String date, String email) {
-////        repositoryInterface.getMedStatus(date, email);
-//
-//        repositoryInterface.getMedStatus(date, email).observe(lifecycleOwner, new Observer<List<MedStatus>>() {
-//            @Override
-//            public void onChanged(List<MedStatus> medStatusList) {
-//                Log.d("TAG", "showAllStoredMedicines: On Change-> " +date );
-//
-//                homeMedViewInterface.getMedStatus(medStatusList);
-//            }
-//        });
-//
-//    }
+    @Override
+    public void getMedicinesOnDateFromFirebase(String email, long time) {
+        repositoryInterface.getMedicinesOnDateFromFirebase(email,time,  this);
+    }
 
+
+    @Override
+    public void successToFetchMeds(List<Medicine> meds) {
+        homeMedViewInterface.successToFetchMeds(meds);
+    }
+
+    @Override
+    public void failedToFetchMeds(String msg) {
+      homeMedViewInterface.failedToFetchMeds(msg);
+    }
 }

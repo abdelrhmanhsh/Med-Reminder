@@ -3,9 +3,11 @@ package com.med.medreminder.model;
 import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
-import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.FirebaseSource;
 import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
+import com.med.medreminder.firebase.firebaseLoginDelegate;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class Repository implements RepositoryInterface {
         return repository;
     }
 
+
     @Override
     public void insertMedicine(Medicine medicine) {
         localSource.insert(medicine);
@@ -43,18 +46,8 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void updateAllMedicines(String email) {
-        localSource.updateAllMedicines(email);
-    }
-
-    @Override
     public void deleteMedicine(Medicine medicine) {
         localSource.delete(medicine);
-    }
-
-    @Override
-    public void deleteAllMedicines() {
-        localSource.deleteAllMedicines();
     }
 
     @Override
@@ -68,8 +61,19 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Medicine>> getActiveMedications(long time, String email) {
-        return localSource.getActiveMedications(time, email);
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        firebaseSource.updateMedFirestore(medicine, email, id);
+    }
+
+    @Override
+    public void deleteMedFirestore(String email, long id) {
+        firebaseSource.deleteMedFirestore(email, id);
+    }
+
+
+    @Override
+    public LiveData<List<Medicine>> getActiveMedications(long time,String email) {
+        return localSource.getActiveMedications(time,email);
     }
 
     @Override
@@ -82,39 +86,62 @@ public class Repository implements RepositoryInterface {
         return localSource.getActiveMedsOnDateSelected(time, email);
     }
 
-//    @Override
-//    public void insertMedStatus(MedStatus medStatus) {
-//        localSource.insertMedStatus(medStatus);
-//    }
-//
-//    @Override
-//    public LiveData<List<MedStatus>> getMedStatus(String date, String email) {
-//        return localSource.getMedStatus(date, email);
-//    }
-
+    //in signup step
     @Override
-    public void addUserToFirestore(User user) {
-
+    public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
+        firebaseSource.addUserToFirestore(user,firebaseDelegate);
     }
 
     @Override
-    public void addMedToFirestore(Medicine medicine, String email, long id) {
+    public void isUserExist(String email, firebaseDelegate firebaseDelegate) {
+        firebaseSource.isUserExist(email,firebaseDelegate);
+    }
+
+    @Override
+    public void addMedToFirestore(Medicine medicine, String email,long id) {
         firebaseSource.addMedToFirestore(medicine, email, id);
     }
 
     @Override
-    public void updateMedFirestore(Medicine medicine, String email, long id) {
-        firebaseSource.updateMedFirestore(medicine, email, id);
+    public void signup(String email, String password, firebaseDelegate firebaseDelegate, User user) {
+        firebaseSource.signup(email,password,firebaseDelegate, user);
     }
 
     @Override
-    public void deleteMedFirestore(String email, long id) {
-        firebaseSource.deleteMedFirestore(email, id);
+    public void loginWithGoogle(Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.loginWithGoogle(context, firebaseLoginDelegate);
     }
+
+    @Override
+    public void isUserExistFromGoogle(String email, firebaseLoginDelegate firebaseLoginDelegate, User user, String idToken) {
+        firebaseSource.isUserExistFromGoogleLogin(email,firebaseLoginDelegate,user,idToken);
+    }
+
+    //in login via google step
+    @Override
+    public void addUserToFirestore(User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
+        firebaseSource.addUserToFirestoreGoogleLogin(user,firebaseLoginDelegate,idToken, context);
+    }
+
+    @Override
+    public void authWithGoogle(String idToken, String email, Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.authWithGoogle(idToken, email, context, firebaseLoginDelegate);
+    }
+
+    @Override
+    public void login(String email, String password, Context context, firebaseLoginDelegate firebaseLoginDelegate) {
+        firebaseSource.login(email,password,context,firebaseLoginDelegate);
+    }
+
 
     @Override
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
         firebaseSource.updateStatusInFirestore(helperEmail,patientEmail,status);
+    }
+
+    @Override
+    public void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate) {
+        firebaseSource.getMedicinesOnDateFromFirebase(email,time,firebaseHomeMedsDelegate);
     }
 
     @Override
@@ -126,14 +153,4 @@ public class Repository implements RepositoryInterface {
     public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
         firebaseSource.addRequestsToFirestore(email,name,status,helper_email);
     }
-
-
-    @Override
-    public void showActiveMedFirestore(String email) {
-        firebaseSource.showActiveMedFirestore(email);
-    }
-
-
-
-
 }

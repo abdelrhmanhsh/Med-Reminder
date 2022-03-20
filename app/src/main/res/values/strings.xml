@@ -156,9 +156,6 @@
     <string name="unskip">Un-skip</string>
     <string name="untake">Un-take</string>
 
-    <!-- notification (reschedule) -->
-    <string name="resched_notification_title">Time to take your mid</string>
-    <string name="resched_notification_desc">It\'s time to take your </string>
 
 
     <string name="signup">SignUp</string>
@@ -227,7 +224,9 @@
     <string name="sendMedFriendRequest">Send a request to a Med Friend</string>
     <string name="showMedFriends">Show my Med Friends</string>
     <string name="Profile">My Profile</string>
-    <string name="Med_Friend">Med Friends</string>
+    <string name="resched_notification_title">Reschedule</string>
+    <string name="resched_notification_desc">Medicine Reschedule</string>
+    <string name="medfriend">Med Friend</string>
     <string name="my_helpers">My Helpers</string>
 
 

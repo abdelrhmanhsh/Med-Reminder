@@ -35,6 +35,6 @@ public class ActivePresenter implements ActivePresenterInterface {
 
     @Override
     public void showActiveMedFirestore(String email) {
-        repositoryInterface.showActiveMedFirestore(email);
+       // repositoryInterface.showActiveMedFirestore(email);
     }
 }

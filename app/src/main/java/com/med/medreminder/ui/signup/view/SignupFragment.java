@@ -36,9 +36,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
+import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.model.Repository;
 import com.med.medreminder.model.User;
 import com.med.medreminder.ui.MainActivity;
+import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
+import com.med.medreminder.ui.signup.presenter.SignupPresenter;
+import com.med.medreminder.ui.signup.presenter.signupPresenterInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -47,7 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class SignupFragment extends Fragment {
+public class SignupFragment extends Fragment implements signupViewInterface{
 
       EditText dob_edt;
     private int mYear, mMonth, mDay;
@@ -60,6 +67,10 @@ public class SignupFragment extends Fragment {
     EditText email_edt;
     RadioButton radio_gender;
     RadioGroup gender_radio_btn;
+
+    User user;
+
+    signupPresenterInterface signupPresenterInterface;
 
     String email, password, firstName, secondName, gender, dob;
     
@@ -103,11 +114,7 @@ public class SignupFragment extends Fragment {
         email_edt = view.findViewById(R.id.email_edt);
         gender_radio_btn = view.findViewById(R.id.gender_radio_btn);
 
-        // get selected radio button from radioGroup
-        int selectedId = gender_radio_btn.getCheckedRadioButtonId();
 
-        // find the radiobutton by returned id
-        radio_gender = view.findViewById(selectedId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dob_edt.setText(dateFormat.format(new Date())); // it will show 16/07/2013
@@ -122,9 +129,26 @@ public class SignupFragment extends Fragment {
 
         signup_btn.setOnClickListener(view1 -> {
           // getContext().startActivity(new Intent(getContext(), HomeActivity.class));
-           registerNewUser();
+           //registerNewUser();
+            // get selected radio button from radioGroup
+            int selectedId = gender_radio_btn.getCheckedRadioButtonId();
+
+
+            // find the radiobutton by returned id
+            radio_gender = view.findViewById(selectedId);
+            isAllFieldsChecked = CheckAllFields();
+
+            if (isAllFieldsChecked) {
+                progressbar.setVisibility(View.VISIBLE);
+
+                email = email_edt.getText().toString();
+                signupPresenterInterface.isUserExist(email);
+            }
 
         });
+
+        signupPresenterInterface = new SignupPresenter(Repository.getInstance(getContext(),
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()),this);
 
         cancel_ic.setOnClickListener(view1 -> {
          findNavController(this).popBackStack();
@@ -159,29 +183,27 @@ public class SignupFragment extends Fragment {
             email = email_edt.getText().toString();
             password = password_edt.getText().toString();
 
-            mAuth.fetchSignInMethodsForEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
 
-                            boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-
-                            if (isNewUser) {
-                                Log.d("TAG", "Is New User!");
-                                createAccount();
-                            } else {
-                                Log.d("TAG", "Is Old User!");
-                                Toast.makeText(getContext(), "" + "This email address is already exist !", Toast.LENGTH_LONG).show();
-                                progressbar.setVisibility(View.GONE);
-                            }
-
-                        }
-                    });
-
+//
+//            mAuth.fetchSignInMethodsForEmail(email)
+//                    .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+//
+//                            boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+//
+//                            if (isNewUser) {
+//                                Log.d("TAG", "Is New User!");
+//                                createAccount();
+//                            } else {
+//                                Log.d("TAG", "Is Old User!");
+//                                Toast.makeText(getContext(), "" + "This email address is already exist !", Toast.LENGTH_LONG).show();
+//                                progressbar.setVisibility(View.GONE);
+//                            }
+//
+//                        }
+//                    });
         }
-
-
-
     }
 
     private void createAccount(){
@@ -195,7 +217,7 @@ public class SignupFragment extends Fragment {
                             gender = radio_gender.getText().toString();
                             dob = dob_edt.getText().toString();
 
-                            User user = new User(firstName, secondName, gender, dob, email, password,task.getResult().getUser().getUid());
+                             //user = new User(firstName, secondName, gender, dob, email, password);
                             // calling method to add data to Firebase Firestore.
                             //task.getResult().getUser().getUid();
                             addDataToFirestore(user);
@@ -304,4 +326,62 @@ public class SignupFragment extends Fragment {
 
     }
 
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void userAlreadyExist(String msg) {
+        Toast.makeText(getContext(), "" + msg, Toast.LENGTH_LONG).show();
+        progressbar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void newUser() {
+        firstName = firstName_edt.getText().toString();
+        secondName = secondName_edt.getText().toString();
+        gender = radio_gender.getText().toString();
+        dob = dob_edt.getText().toString();
+        email = email_edt.getText().toString();
+        password = password_edt.getText().toString();
+        //user = new User(firstName, secondName, gender, dob, email, password,task.getResult().getUser().getUid());
+        user = new User(firstName, secondName, gender, dob, email, password);
+
+        signup(email,password,user);
+    }
+
+    @Override
+    public void signup(String email, String password, User user) {
+        signupPresenterInterface.signup(email,password,user);
+    }
+
+    @Override
+    public void signupSuccess(User user) {
+        addUserToFirestore(user);
+    }
+
+    @Override
+    public void signupFail(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void addUserToFirestore(User user) {
+      signupPresenterInterface.addUserToFirestore(user);
+    }
+
+    @Override
+    public void addUserToFirestoreSuccessfully(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        progressbar.setVisibility(View.GONE);
+        findNavController(SignupFragment.this).navigate(R.id.signupToLogin);
+    }
+
+    @Override
+    public void addUserToFirestoreFailed(String msg) {
+        progressbar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), msg , Toast.LENGTH_LONG).show();
+    }
 }
