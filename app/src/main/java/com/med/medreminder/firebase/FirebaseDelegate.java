@@ -1,8 +1,14 @@
 package com.med.medreminder.firebase;
 
-public interface FirebaseDelegate {
+import android.content.Intent;
 
-//    void onSuccessResult(String successMsg);
-//    void onFailureResult(String errorMsg);
+import com.med.medreminder.model.User;
 
+public interface firebaseDelegate {
+     void userExist(String msg);
+     void newUser();
+     void signupSuccess(User user);
+     void signupFail(String msg);
+     void userAddedToFirestore(String msg);
+     void userFailToFirestore(String msg);
 }
