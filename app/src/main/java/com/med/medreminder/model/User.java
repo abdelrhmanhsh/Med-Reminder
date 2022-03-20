@@ -7,28 +7,28 @@ public class User {
    private String dob;
    private String email;
    private String password;
-   private String userUId;
+  // private String userUId;
 
     public User() {
     }
 
-    public User(String firstName, String secondName, String gender, String dob, String email, String password, String userUId) {
+    public User(String firstName, String secondName, String gender, String dob, String email, String password) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.gender = gender;
         this.dob = dob;
         this.email = email;
         this.password = password;
-        this.userUId = userUId;
+       // this.userUId = userUId;
     }
 
-    public String getUserUId() {
-        return userUId;
-    }
-
-    public void setUserUId(String userUId) {
-        this.userUId = userUId;
-    }
+//    public String getUserUId() {
+//        return userUId;
+//    }
+//
+//    public void setUserUId(String userUId) {
+//        this.userUId = userUId;
+//    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".BaseApplication"
+        android:name=".ui.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,19 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
         <activity
-            android:name=".ui.displayHelpers.DisplayHelpersActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.displayMedFriends.DisplayMedFriendsActivity"
-            android:exported="true" />
-        <activity
             android:name=".ui.meddisplayedit.view.MedDisplayEditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.medfriend.view.MedFriendActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.request.view.RequestsActivity"
             android:exported="true" />
         <activity
             android:name=".ui.dependency.view.DependentActivity"
@@ -40,6 +31,8 @@
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
+        <activity android:name=".ui.request.view.RequestsActivity"
+            android:exported="true"/>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

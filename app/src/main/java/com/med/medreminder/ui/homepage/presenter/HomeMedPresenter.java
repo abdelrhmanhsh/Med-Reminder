@@ -2,6 +2,8 @@ package com.med.medreminder.ui.homepage.presenter;
 
 import android.util.Log;
 
+import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.homepage.view.homeMedViewInterface;
@@ -12,7 +14,7 @@ import java.util.List;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-public class HomeMedPresenter implements homeMedPresenterInterface {
+public class HomeMedPresenter implements homeMedPresenterInterface, firebaseHomeMedsDelegate {
 
     homeMedViewInterface homeMedViewInterface;
     RepositoryInterface repositoryInterface;
@@ -57,4 +59,19 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
         repositoryInterface.updateMedicine(medicine);
     }
 
+    @Override
+    public void getMedicinesOnDateFromFirebase(String email, long time) {
+        repositoryInterface.getMedicinesOnDateFromFirebase(email,time,  this);
+    }
+
+
+    @Override
+    public void successToFetchMeds(List<Medicine> meds) {
+        homeMedViewInterface.successToFetchMeds(meds);
+    }
+
+    @Override
+    public void failedToFetchMeds(String msg) {
+      homeMedViewInterface.failedToFetchMeds(msg);
+    }
 }
