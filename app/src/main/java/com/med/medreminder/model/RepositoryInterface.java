@@ -10,7 +10,9 @@ public interface RepositoryInterface {
 
     void insertMedicine(Medicine medicine);
     void updateMedicine(Medicine medicine);
+    void updateAllMedicines(String email);
     void deleteMedicine(Medicine medicine);
+    void deleteAllMedicines();
     LiveData<Medicine> getMedicineById(long id);
     LiveData<List<Medicine>> getStoredMedicines();
 
@@ -33,6 +35,7 @@ public interface RepositoryInterface {
 
     void showActiveMedFirestore(String email);
 
-
+//    void insertMedStatus(MedStatus medStatus);
+//    LiveData<List<MedStatus>> getMedStatus(String date, String email);
 
 }

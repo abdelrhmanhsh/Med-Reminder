@@ -15,6 +15,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.ActivityHomeBinding;
+import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseHelper;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.model.Medicine;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -24,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
     //FirebaseUser currentUser;
     String currUserName;
     YourPreference yourPreference;
+    RepositoryInterface repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +39,17 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+
 //        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        if (currentUser != null){
 //            currUserName = currentUser.getDisplayName()
 //        }
+
+        repo = Repository.getInstance(this, ConcreteLocalSource.getInstance(this),
+                FirebaseWork.getInstance());
+        String email = FirebaseHelper.getUserEmail(this);
+        updateAllMedicines(email);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -56,6 +70,11 @@ public class HomeActivity extends AppCompatActivity {
 
         binding.usernameTxt.setText(yourPreference.getData(Constants.FIRST_NAME));
 
+    }
+
+
+    public void updateAllMedicines(String email) {
+        repo.updateAllMedicines(email);
     }
 
 }

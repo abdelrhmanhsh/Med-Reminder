@@ -134,8 +134,6 @@ public class FirebaseWork implements FirebaseSource {
                 }
             }
         });
-
-
     }
 
     @Override

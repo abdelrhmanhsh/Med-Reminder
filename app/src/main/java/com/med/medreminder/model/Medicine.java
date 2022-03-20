@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 public class Medicine {
 
     @PrimaryKey
+    @ColumnInfo(name = "id")
     long id;
 
     @ColumnInfo(name = "name")

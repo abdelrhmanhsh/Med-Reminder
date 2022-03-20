@@ -2,6 +2,7 @@ package com.med.medreminder.ui.homepage.presenter;
 
 import android.util.Log;
 
+import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.homepage.view.homeMedViewInterface;
@@ -56,5 +57,27 @@ public class HomeMedPresenter implements homeMedPresenterInterface {
     public void updateMed(Medicine medicine) {
         repositoryInterface.updateMedicine(medicine);
     }
+
+//    @Override
+//    public void addMedStatus(MedStatus medStatus) {
+//        repositoryInterface.insertMedStatus(medStatus);
+//    }
+//
+//
+//
+//    @Override
+//    public void getMedStatus(LifecycleOwner lifecycleOwner, String date, String email) {
+////        repositoryInterface.getMedStatus(date, email);
+//
+//        repositoryInterface.getMedStatus(date, email).observe(lifecycleOwner, new Observer<List<MedStatus>>() {
+//            @Override
+//            public void onChanged(List<MedStatus> medStatusList) {
+//                Log.d("TAG", "showAllStoredMedicines: On Change-> " +date );
+//
+//                homeMedViewInterface.getMedStatus(medStatusList);
+//            }
+//        });
+//
+//    }
 
 }

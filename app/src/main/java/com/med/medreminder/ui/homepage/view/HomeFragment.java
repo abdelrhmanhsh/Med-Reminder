@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -29,6 +31,7 @@ import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
@@ -46,11 +49,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -83,6 +88,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
     int schedYear, schedMonth, schedDay, schedHour, schedMinute;
     long curDate;
+    String dateSelectedStatus, userEmail;
+    List<MedStatus> medStatusList;
 
     HorizontalCalendar horizontalCalendar;
 
@@ -155,11 +162,12 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             public void onDateSelected(Calendar date, int position) {
                 Log.d("TAG", "onDateSelected: " + date.getTimeInMillis());
                 String dateString = DateFormat.format("MM/dd/yyyy", new Date(String.valueOf(date.getTime()))).toString();
+                dateSelectedStatus = DateFormat.format("dd-MM-yyyy", new Date(String.valueOf(date.getTime()))).toString();
                 Log.d("TAG", "onDateSelected: Dateeeeeeeeeeeeeeeeeeeeeeeeee" + dateString);
                 //Log.d("TAG", "onDateSelected: " + date.get(position));
-                String email = FirebaseHelper.getUserEmail(getContext());
-                Log.i(TAG, "onViewCreated: email: " + email);
-                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis(), email);
+                userEmail = FirebaseHelper.getUserEmail(getContext());
+                Log.i(TAG, "onViewCreated: email: " + userEmail);
+                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis(), userEmail);
             }
 
             @Override
@@ -181,12 +189,18 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv.setAdapter(medHomeAdapter);
 
 
+        Date c = Calendar.getInstance().getTime();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        String formattedDate = df.format(c);
+        dateSelectedStatus = formattedDate;
+
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
                 ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()), curDate);
 
-        String email = FirebaseHelper.getUserEmail(getContext());
-        Log.i(TAG, "onViewCreated: email: " + email);
-        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, email);
+        userEmail = FirebaseHelper.getUserEmail(getContext());
+        Log.i(TAG, "onViewCreated: email: " + userEmail);
+        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
 
 
         addMed_floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -196,6 +210,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             }
         });
 
+//        homeMedPresenterInterface.getMedStatus(getViewLifecycleOwner(), dateSelectedStatus, userEmail);
+//        homeMedPresenterInterface.getMedStatus(getViewLifecycleOwner(), "19-03-2022", userEmail);
 
         // oneTimeWork();
 
@@ -224,6 +240,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnTake = dialog.findViewById(R.id.dialog_btn_take);
         btnReschedule = dialog.findViewById(R.id.dialog_btn_reschedule);
         Log.i(TAG, "showNotificationDialog: med id " + medicine.getId());
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList.get(0));
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList);
+//        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList.size());
 
         imgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,12 +277,23 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (medicine.getStatus().equals(getString(R.string.skipped))) // perform un-skip
-                    medicine.setStatus("");
-                else {
-                    medicine.setStatus(getString(R.string.skipped));
+
+                MedStatus medStatus;
+
+                if (medicine.getStatus().equals(getString(R.string.skipped))) {
+//                    medicine.setStatus("");
+
+                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
+//                    addMedStatus(medStatus);
                 }
-                updateMed(medicine);
+
+                else {
+                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.skipped), medicine.getUserEmail());
+//                    addMedStatus(medStatus);
+//                    medicine.setStatus(getString(R.string.skipped));
+                }
+//                addMedStatus(medStatus);
+//                updateMed(medicine);
                 dialog.dismiss();
             }
         });
@@ -274,8 +304,14 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
                 // For refill reminder (check if isRefillReminder==true)
                 int currMedLeft = medicine.getMedLeft();
+
+                MedStatus medStatus;
+
+//                if(medicine.getId())
+
                 if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
-                    medicine.setStatus("");
+//                    medicine.setStatus("");
+                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
                     medicine.setMedLeft(currMedLeft+1);
 
                 } else {
@@ -287,8 +323,10 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                         medicine.setMedLeft(currMedLeft-1);
                     }
 
-                    medicine.setStatus(getString(R.string.taken));
+                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.taken), medicine.getUserEmail());
+//                    medicine.setStatus(getString(R.string.taken));
                 }
+//                addMedStatus(medStatus);
                 updateMed(medicine);
                 dialog.dismiss();
 
@@ -299,7 +337,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         btnReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker(medicine.getImage(), medicine.getName(), medicine);
+                datePicker(medicine.getImage(), medicine.getName(), medicine.getId());
                 dialog.dismiss();
             }
         });
@@ -310,7 +348,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    private void datePicker(int imageResource, String medName, Medicine medicine){
+    private void datePicker(int imageResource, String medName, long id){
 
         // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -328,13 +366,13 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                         schedYear = year;
                         schedMonth = monthOfYear+1;
                         schedDay = dayOfMonth;
-                        timePicker(imageResource, medName, medicine);
+                        timePicker(imageResource, medName, id);
                     }
                 }, year, month, day);
         datePickerDialog.show();
     }
 
-    private void timePicker(int imageResource, String medName, Medicine medicine){
+    private void timePicker(int imageResource, String medName, long id){
         // Get Current Time
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -370,9 +408,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                             if(delayInMillis <= 0)
                                 Toast.makeText(getContext(), "You need to provide time in future", Toast.LENGTH_SHORT).show();
                             else{
-                                sendRescheduleNotification(delayInMillis, imageResource, medName);
-                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
-                                updateMed(medicine);
+                                sendRescheduleNotification(delayInMillis, imageResource, medName, id);
+//                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
+//                                updateMed(medicine);
                             }
 
                         } catch(ParseException e){
@@ -384,10 +422,11 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         timePickerDialog.show();
     }
 
-    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName){
+    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName, long id){
         Data data = new Data.Builder()
                 .putInt(MyWorkManager.IMAGE_RESOURCE, imageResource)
                 .putString(MyWorkManager.MED_NAME, medName)
+                .putLong(MyWorkManager.MED_ID, id)
                 .build();
 
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MyWorkManager.class)
@@ -400,10 +439,22 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         androidx.work.WorkManager.getInstance(getContext()).enqueue(request);
     }
 
+
     @Override
     public void updateMed(Medicine medicine) {
         homeMedPresenterInterface.updateMed(medicine);
     }
+
+//    @Override
+//    public void addMedStatus(MedStatus medStatus) {
+//        homeMedPresenterInterface.addMedStatus(medStatus);
+//    }
+//
+//    @Override
+//    public void getMedStatus(List<MedStatus> medStatusList) {
+////        homeMedPresenterInterface.getMedStatus(date, email);
+//        medStatusList.addAll(medStatusList);
+//    }
 
     public void oneTimeWork() {
 //        WorkRequest locationUploadWorkRequest =
@@ -431,6 +482,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             medHomeAdapter.removeMeds();
             Toast.makeText(getContext(), "we don't have any medicines for this day", Toast.LENGTH_SHORT).show();
         } else {
+            Log.i(TAG, "getAllStoredMedicinesOnDate: checking date and email: " + dateSelectedStatus + " EMAIL: " + userEmail);
+//            getMedStatus(dateSelectedStatus, "");
             medHomeAdapter.setMedInfo(medicines);
         }
     }

@@ -3,6 +3,7 @@ package com.med.medreminder.db;
 import android.content.Context;
 
 import com.med.medreminder.R;
+import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 
 import java.util.List;
@@ -51,11 +52,31 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
+    public void updateAllMedicines(String email) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.updateAllMedicine(email);
+            }
+        }).start();
+    }
+
+    @Override
     public void delete(Medicine medicine) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 dao.deleteMedicine(medicine);
+            }
+        }).start();
+    }
+
+    @Override
+    public void deleteAllMedicines() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.deleteAllMedicines();
             }
         }).start();
     }
@@ -86,5 +107,20 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
 
+
+//    @Override
+//    public void insertMedStatus(MedStatus medStatus) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                dao.insertMedStatus(medStatus);
+//            }
+//        }).start();
+//    }
+//
+//    @Override
+//    public LiveData<List<MedStatus>> getMedStatus(String date, String email) {
+//        return dao.getMedStatus(date, email);
+//    }
 
 }

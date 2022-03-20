@@ -133,6 +133,7 @@
     <string name="delete_alert_message">Deleting this medication will stop any future notifications.</string>
     <string name="suspend_alert_title">Suspend Med</string>
     <string name="suspend_alert_message">Suspend all future reminders for this medication?</string>
+    <string name="what_time_question">What time?</string>
 
     <!-- dialog refill med -->
     <string name="refill_your_prescription">Refill your prescription</string>

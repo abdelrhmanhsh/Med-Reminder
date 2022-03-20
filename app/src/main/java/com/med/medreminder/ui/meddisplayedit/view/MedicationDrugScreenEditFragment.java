@@ -52,7 +52,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     EditText inputEditName, inputEditCondition, inputEditStrength, inputEditMedAmount, inputEditRefillLimit;
     SwitchCompat medReminderSwitch, refillReminderSwitch;
     Spinner reminderTimesOftenSpinner;
-    TextView firstReminder, secondReminder, thirdReminder, textStartDate;
+    TextView firstReminder, secondReminder, thirdReminder, textStartDate, textRefillReminderTime, refillReminderQuestion;
     RadioButton radioOngoing, radioSetEndDate;
     ImageView imgCurrent, imgPill, imgInjection, imgDrops, imgOther;
     Button btnDone;
@@ -89,6 +89,8 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         secondReminder = view.findViewById(R.id.second_reminder);
         thirdReminder = view.findViewById(R.id.third_reminder);
         textStartDate = view.findViewById(R.id.text_start_date);
+        textRefillReminderTime = view.findViewById(R.id.refill_reminder_time);
+        refillReminderQuestion = view.findViewById(R.id.refill_reminder_question);
         radioOngoing = view.findViewById(R.id.radio_ongoing);
         radioSetEndDate = view.findViewById(R.id.radio_set_end_date);
         imgCurrent = view.findViewById(R.id.med_current_icon);
@@ -102,6 +104,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         firstReminder.setOnClickListener(this);
         secondReminder.setOnClickListener(this);
         thirdReminder.setOnClickListener(this);
+        textRefillReminderTime.setOnClickListener(this);
         radioSetEndDate.setOnClickListener(this);
         imgPill.setOnClickListener(this);
         imgInjection.setOnClickListener(this);
@@ -144,7 +147,14 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         refillReminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                updateMed.setRefillReminder(isChecked);
+                if (isChecked) {
+                    textRefillReminderTime.setVisibility(View.VISIBLE);
+                    refillReminderQuestion.setVisibility(View.VISIBLE);
+                } else{
+                    textRefillReminderTime.setVisibility(View.GONE);
+                    refillReminderQuestion.setVisibility(View.GONE);
+                }
+//                updateMed.setRefillReminder(isChecked);
             }
         });
 
@@ -283,6 +293,11 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         //refill reminder
         boolean isRefillReminder = medicine.isRefillReminder();
         refillReminderSwitch.setChecked(isRefillReminder);
+        textRefillReminderTime.setText("20:0");
+        if(isRefillReminder){
+            textRefillReminderTime.setVisibility(View.VISIBLE);
+            textRefillReminderTime.setText(medicine.getRefillReminderTime());
+        }
 
     }
 
@@ -424,6 +439,10 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                         case "Pick time for dose 3":
                             thirdReminder.setText(hourOfDay + ":" + minute);
                             break;
+                        case "Pick time for refill reminder":
+                            textRefillReminderTime.setText(hourOfDay + ":" + minute);
+                            break;
+
                     }
                     textRemindersRestrictions();
                 }
@@ -537,6 +556,8 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         //update refill reminders
         updateMed.setMedLeft(Integer.parseInt(inputEditMedAmount.getText().toString()));
         updateMed.setRefillLimit(Integer.parseInt(inputEditRefillLimit.getText().toString()));
+        updateMed.setRefillReminder(refillReminderSwitch.isChecked());
+        updateMed.setRefillReminderTime(textRefillReminderTime.getText().toString());
 
         // update med locally
         updateMed(medicine);
@@ -583,6 +604,9 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                 break;
             case R.id.third_reminder:
                 actionReminderText("Pick time for dose 3");
+                break;
+            case R.id.refill_reminder_time:
+                actionReminderText("Pick time for refill reminder");
                 break;
             case R.id.radio_set_end_date:
                 actionRadioSetEndDate();

@@ -43,8 +43,18 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void updateAllMedicines(String email) {
+        localSource.updateAllMedicines(email);
+    }
+
+    @Override
     public void deleteMedicine(Medicine medicine) {
         localSource.delete(medicine);
+    }
+
+    @Override
+    public void deleteAllMedicines() {
+        localSource.deleteAllMedicines();
     }
 
     @Override
@@ -71,6 +81,16 @@ public class Repository implements RepositoryInterface {
     public LiveData<List<Medicine>> getActiveMedsOnDateSelected(long time, String email) {
         return localSource.getActiveMedsOnDateSelected(time, email);
     }
+
+//    @Override
+//    public void insertMedStatus(MedStatus medStatus) {
+//        localSource.insertMedStatus(medStatus);
+//    }
+//
+//    @Override
+//    public LiveData<List<MedStatus>> getMedStatus(String date, String email) {
+//        return localSource.getMedStatus(date, email);
+//    }
 
     @Override
     public void addUserToFirestore(User user) {
@@ -112,6 +132,8 @@ public class Repository implements RepositoryInterface {
     public void showActiveMedFirestore(String email) {
         firebaseSource.showActiveMedFirestore(email);
     }
+
+
 
 
 }

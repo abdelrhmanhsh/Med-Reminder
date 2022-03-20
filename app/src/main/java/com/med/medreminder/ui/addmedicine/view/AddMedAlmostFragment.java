@@ -144,6 +144,9 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         if(filledMed.getImage()==0){
             filledMed.setImage(R.drawable.ic_medicine_other);
         }
+        if(filledMed.getRefillReminderTime()==null){
+            filledMed.setRefillReminderTime("");
+        }
         if(!filledMed.getRefillReminderTime().equals("")){
             filledMed.setRefillReminder(true);
         }

@@ -61,6 +61,7 @@ public class AddMedTimeFragment extends Fragment implements View.OnClickListener
 
         btnNext.setOnClickListener(this);
 
+        doseTimes = "";
         setTitleText();
 
         if(often > 1){

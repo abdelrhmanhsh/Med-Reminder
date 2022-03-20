@@ -453,6 +453,26 @@
                     android:layout_marginBottom="15dp"
                     android:inputType="number"/>
 
+                <TextView
+                    android:id="@+id/refill_reminder_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/what_time_question"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginStart="18dp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/refill_reminder_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/title_cyan"
+                    android:padding="18dp"
+                    android:visibility="gone"/>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

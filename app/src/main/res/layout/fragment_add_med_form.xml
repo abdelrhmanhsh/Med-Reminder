@@ -35,16 +35,16 @@
         android:layout_marginTop="15dp"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/skip"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:padding="16dp" />
+<!--    <TextView-->
+<!--        android:id="@+id/skip"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:text="@string/skip"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="16sp"-->
+<!--        android:padding="16dp" />-->
 
     <TextView
         android:id="@+id/description"
@@ -60,14 +60,17 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textSize="22sp" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
+    <ProgressBar
         android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="8dp"
         app:layout_constraintBottom_toBottomOf="@id/top_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent=".8" />
+        app:layout_constraintWidth_percent=".8"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/add_med_progressbar" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/selection_pill"
