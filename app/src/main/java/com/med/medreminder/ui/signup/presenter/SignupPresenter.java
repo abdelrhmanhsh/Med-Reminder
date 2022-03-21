@@ -1,11 +1,13 @@
 package com.med.medreminder.ui.signup.presenter;
 
-import com.med.medreminder.firebase.firebaseDelegate;
+import androidx.lifecycle.LifecycleOwner;
+
+import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.model.User;
 import com.med.medreminder.ui.signup.view.signupViewInterface;
 
-public class SignupPresenter implements signupPresenterInterface, firebaseDelegate{
+public class SignupPresenter implements signupPresenterInterface, FirebaseDelegate {
 
     RepositoryInterface repo;
     signupViewInterface signupViewInterface;
@@ -21,8 +23,8 @@ public class SignupPresenter implements signupPresenterInterface, firebaseDelega
     }
 
     @Override
-    public void signup(String email, String password, User user) {
-        repo.signup(email,password,this,user);
+    public void signup(LifecycleOwner lifecycleOwner, String email, String password, User user) {
+        repo.signup(lifecycleOwner, email,password,this,user);
     }
 
     @Override

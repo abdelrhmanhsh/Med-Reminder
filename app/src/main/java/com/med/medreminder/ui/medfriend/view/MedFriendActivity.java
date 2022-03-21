@@ -118,7 +118,7 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
     //send my email and name
     @Override
     public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
-        medFriendPresenterInterface = new MedFriendPresenter(Repository.getInstance(this, ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
+        medFriendPresenterInterface = new MedFriendPresenter(Repository.getInstance(this, ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance(this)));
         medFriendPresenterInterface.addRequestsToFirestore(email,name,status,helper_email);
     }
 

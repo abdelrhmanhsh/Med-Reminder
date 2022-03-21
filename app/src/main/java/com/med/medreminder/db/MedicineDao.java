@@ -16,7 +16,7 @@ import java.util.List;
 @Dao
 public interface MedicineDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMedicine(Medicine medicine);
 
     @Query("Select * From medicines Where id =:id")

@@ -2,13 +2,11 @@ package com.med.medreminder.ui.homepage.presenter;
 
 import android.util.Log;
 
-import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.homepage.view.homeMedViewInterface;
 
-import java.util.Calendar;
 import java.util.List;
 
 import androidx.lifecycle.LifecycleOwner;

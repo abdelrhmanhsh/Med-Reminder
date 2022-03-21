@@ -1,7 +1,6 @@
 package com.med.medreminder.ui.signup.view;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,8 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.text.Editable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,28 +23,18 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseWork;
-import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.model.User;
-import com.med.medreminder.ui.MainActivity;
-import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
-import com.med.medreminder.ui.homepage.view.HomeActivity;
 import com.med.medreminder.ui.signup.presenter.SignupPresenter;
 import com.med.medreminder.ui.signup.presenter.signupPresenterInterface;
-import com.med.medreminder.utils.Constants;
-import com.med.medreminder.utils.YourPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -148,7 +135,7 @@ public class SignupFragment extends Fragment implements signupViewInterface{
         });
 
         signupPresenterInterface = new SignupPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()),this);
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())),this);
 
         cancel_ic.setOnClickListener(view1 -> {
          findNavController(this).popBackStack();
@@ -353,7 +340,7 @@ public class SignupFragment extends Fragment implements signupViewInterface{
 
     @Override
     public void signup(String email, String password, User user) {
-        signupPresenterInterface.signup(email,password,user);
+        signupPresenterInterface.signup(getViewLifecycleOwner(), email,password,user);
     }
 
     @Override

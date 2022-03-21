@@ -1,6 +1,5 @@
 package com.med.medreminder.ui.signup.view;
 
-import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.model.User;
 
 public interface signupViewInterface {

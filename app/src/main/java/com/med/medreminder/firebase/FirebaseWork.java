@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,18 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.med.medreminder.R;
 import com.med.medreminder.db.AppDatabase;
-import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.db.MedicineDao;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.User;
-import com.med.medreminder.ui.homepage.view.HomeActivity;
-import com.med.medreminder.ui.signup.view.SignupFragment;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -42,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 public class FirebaseWork implements FirebaseSource {
 
@@ -51,18 +45,22 @@ public class FirebaseWork implements FirebaseSource {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private MedicineDao dao;
+    private LiveData<List<Medicine>> medicines;
     public static final String TAG = "FirebaseWork";
 
 
-    public FirebaseWork() {
+    public FirebaseWork(Context context) {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
+        AppDatabase db = AppDatabase.getInstance(context.getApplicationContext());
+        dao = db.medicineDao();
+        medicines = dao.getAllMedicines();
     }
 
-    public static FirebaseWork getInstance() {
+    public static FirebaseWork getInstance(Context context) {
         if (localSource == null) {
-            localSource = new FirebaseWork();
+            localSource = new FirebaseWork(context);
         }
         return localSource;
     }
@@ -105,7 +103,7 @@ public class FirebaseWork implements FirebaseSource {
 
 
     @Override
-    public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
+    public void addUserToFirestore(User user, FirebaseDelegate firebaseDelegate) {
         CollectionReference dbUsers = db.collection("Users");
         //db.document(user.getEmail());
         // below method is use to add data to Firebase Firestore.
@@ -131,7 +129,7 @@ public class FirebaseWork implements FirebaseSource {
 
 
     @Override
-    public void isUserExist(String email, firebaseDelegate firebaseDelegate) {
+    public void isUserExist(String email, FirebaseDelegate firebaseDelegate) {
 
         mAuth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -185,7 +183,7 @@ public class FirebaseWork implements FirebaseSource {
     }
 
     @Override
-    public void signup(String email, String password, firebaseDelegate firebaseDelegate, User user) {
+    public void signup(LifecycleOwner lifecycleOwner, String email, String password, FirebaseDelegate firebaseDelegate, User user) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -193,6 +191,20 @@ public class FirebaseWork implements FirebaseSource {
                         if (task.isSuccessful()) {
                             //  addUserToFirestore(user);
                             firebaseDelegate.signupSuccess(user);
+
+                            // update all meds email to signed up user email
+                            updateAllMedicines(email);
+                            // uploading meds to firestore to signed up user email
+                            medicines.observe(lifecycleOwner, new Observer<List<Medicine>>() {
+                                @Override
+                                public void onChanged(List<Medicine> medicines) {
+                                    for (Medicine medicine : medicines){
+                                        addMedToFirestore(medicine, email, medicine.getId());
+                                    }
+
+                                }
+                            });
+
 
                         } else {
                             firebaseDelegate.signupFail("Fail to create the account");
@@ -233,7 +245,7 @@ public class FirebaseWork implements FirebaseSource {
     }
 
     @Override
-    public void addUserToFirestoreGoogleLogin(User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
+    public void addUserToFirestoreGoogleLogin(LifecycleOwner lifecycleOwner, User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
         CollectionReference dbUsers = db.collection("Users");
         //db.document(user.getEmail());
         // below method is use to add data to Firebase Firestore.
@@ -244,6 +256,20 @@ public class FirebaseWork implements FirebaseSource {
                 if (task.isSuccessful()) {
 //                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
 //                    firebaseAuthWithGoogle(idToken,user.getEmail());
+
+                    // update all meds email to signed up user email
+                    updateAllMedicines(user.getEmail());
+                    // uploading meds to firestore to signed up user email
+                    medicines.observe(lifecycleOwner, new Observer<List<Medicine>>() {
+                        @Override
+                        public void onChanged(List<Medicine> medicines) {
+                            for (Medicine medicine : medicines){
+                                addMedToFirestore(medicine, user.getEmail(), medicine.getId());
+                            }
+
+                        }
+                    });
+
                     firebaseLoginDelegate.firebaseAuthWithGoogle(idToken, user.getEmail(), context);
                 } else {
 //                    Log.d("TAG", "onFailure: ");
@@ -283,6 +309,8 @@ public class FirebaseWork implements FirebaseSource {
 
                                     yourPrefrence.saveData(Constants.SECOND_NAME, user.getSecondName());
                                     yourPrefrence.saveData(Constants.EMAIL, user.getEmail());
+
+                                    getAllMedicinesFromFirebase(email);
 
                                     firebaseLoginDelegate.authWithGoogleSuccess("Login Successfully");
                                     //progressbar.setVisibility(View.GONE);
@@ -331,6 +359,8 @@ public class FirebaseWork implements FirebaseSource {
                                     yourPrefrence.saveData(Constants.SECOND_NAME, user.getSecondName());
                                     yourPrefrence.saveData(Constants.EMAIL, user.getEmail());
 
+                                    getAllMedicinesFromFirebase(email);
+
                                     firebaseLoginDelegate.loginSuccessfully("Login successfully");
 //                                    progressbar.setVisibility(View.GONE);
 //
@@ -363,8 +393,10 @@ public class FirebaseWork implements FirebaseSource {
                 List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
                 for (int i = 0; i < meds.size(); i++) {
 
+//                    insert(meds.get(i));
                     if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()) {
                         allMeds.add(meds.get(i));
+
                     }
                 }
                 firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
@@ -391,6 +423,50 @@ public class FirebaseWork implements FirebaseSource {
         });
     }
 
+    public void getAllMedicinesFromFirebase(String email) {
+        db.collection("Users").document(email).collection("Meds").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                List<Medicine> allMeds = new ArrayList<>();
+                List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
+                for (int i = 0; i < meds.size(); i++) {
+
+                    Log.i(TAG, "onSuccess: getMedicinesOnDateFromFirebase: MEDS" + meds);
+                    insert(meds.get(i));
+                }
+//                firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+//                firebaseHomeMedsDelegate.failedToFetchMeds("Failed to retrieve medicines");
+            }
+        });
+    }
+
+    private void updateAllMedicines(String email) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.updateAllMedicine(email);
+            }
+        }).start();
+    }
+
+    void insert(Medicine medicine) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.insertMedicine(medicine);
+            }
+        }).start();
+    }
+
+    // void logout(){
+    //      dao.deleteAllMedicines();
+    // }
 
     @Override
     public void addHelperToFirestore(String helperEmail, String patientEmail) {

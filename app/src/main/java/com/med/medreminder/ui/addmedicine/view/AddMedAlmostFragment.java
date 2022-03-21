@@ -21,25 +21,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
-import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
-import com.med.medreminder.ui.signup.view.SignupFragment;
-import com.med.medreminder.utils.Constants;
-import com.med.medreminder.utils.YourPreference;
 import com.med.medreminder.workmanager.MyWorkManager;
 
 import java.text.ParseException;
@@ -82,7 +72,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         textTitle = view.findViewById(R.id.description);
 
         presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())));
 
         progressBar.setProgress(90);
 

@@ -95,7 +95,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         inactiveAdapter = new InactiveMedsAdapter(this,getContext());
         inactiveMeds.setAdapter(inactiveAdapter);
 
-        activePresenterInterface = new ActivePresenter(this, (Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance())));
+        activePresenterInterface = new ActivePresenter(this, (Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext()))));
 
         Log.d("TAG", "Dashboard Fragment: " + getViewLifecycleOwner());
 
@@ -104,7 +104,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
         Log.d("TAG", "onViewCreated: " + 1);
 
-        inactivePresenterInterface = new InactivePresenter(this,(Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance())));
+        inactivePresenterInterface = new InactivePresenter(this,(Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext()))));
         inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
 
         medBtn.setOnClickListener(new View.OnClickListener() {

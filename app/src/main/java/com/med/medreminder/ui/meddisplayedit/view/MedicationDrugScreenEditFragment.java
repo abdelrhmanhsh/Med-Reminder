@@ -114,7 +114,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
 
         presenterInterface = new DisplayEditPresenter(this,
                 Repository.getInstance(getContext(),
-                        ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
+                        ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())));
 
         strengthType = "";
 

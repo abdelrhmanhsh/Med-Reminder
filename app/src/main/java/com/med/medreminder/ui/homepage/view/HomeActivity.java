@@ -47,9 +47,9 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
         repo = Repository.getInstance(this, ConcreteLocalSource.getInstance(this),
-                FirebaseWork.getInstance());
-        String email = FirebaseHelper.getUserEmail(this);
-        updateAllMedicines(email);
+                FirebaseWork.getInstance(this));
+//        String email = FirebaseHelper.getUserEmail(this);
+//        deleteAllMedicines();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -73,8 +73,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void updateAllMedicines(String email) {
-        repo.updateAllMedicines(email);
+    public void deleteAllMedicines() {
+        repo.deleteAllMedicines();
     }
 
 }

@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
 
         homeMedPresenterInterface = new HomeMedPresenter(this, Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()), curDate);
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())), curDate);
 
 
 

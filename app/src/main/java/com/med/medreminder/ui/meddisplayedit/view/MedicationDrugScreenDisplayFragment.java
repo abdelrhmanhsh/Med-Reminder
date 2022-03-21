@@ -75,7 +75,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
         presenterInterface = new DisplayEditPresenter(this,
                 Repository.getInstance(getContext(),
-                        ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()));
+                        ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())));
 
         imgEdit.setOnClickListener(this);
         imgDelete.setOnClickListener(this);

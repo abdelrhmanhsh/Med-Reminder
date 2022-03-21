@@ -1,11 +1,7 @@
 package com.med.medreminder.ui.addmedicine.presenter;
 
-import android.widget.Toast;
-
-import com.med.medreminder.firebase.firebaseDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
-import com.med.medreminder.ui.addmedicine.view.AddMedViewInterface;
 
 public class AddMedPresenter implements AddMedPresenterInterface {
 

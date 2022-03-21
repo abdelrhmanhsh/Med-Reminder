@@ -4,15 +4,14 @@ import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
 import com.med.medreminder.firebase.FirebaseSource;
-import com.med.medreminder.firebase.FirebaseWork;
-import com.med.medreminder.firebase.firebaseDelegate;
+import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.firebase.firebaseLoginDelegate;
 
 import java.util.List;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public class Repository implements RepositoryInterface {
 
@@ -98,12 +97,12 @@ public class Repository implements RepositoryInterface {
 
     //in signup step
     @Override
-    public void addUserToFirestore(User user, firebaseDelegate firebaseDelegate) {
+    public void addUserToFirestore(User user, FirebaseDelegate firebaseDelegate) {
         firebaseSource.addUserToFirestore(user,firebaseDelegate);
     }
 
     @Override
-    public void isUserExist(String email, firebaseDelegate firebaseDelegate) {
+    public void isUserExist(String email, FirebaseDelegate firebaseDelegate) {
         firebaseSource.isUserExist(email,firebaseDelegate);
     }
 
@@ -113,8 +112,8 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void signup(String email, String password, firebaseDelegate firebaseDelegate, User user) {
-        firebaseSource.signup(email,password,firebaseDelegate, user);
+    public void signup(LifecycleOwner lifecycleOwner, String email, String password, FirebaseDelegate firebaseDelegate, User user) {
+        firebaseSource.signup(lifecycleOwner, email,password,firebaseDelegate, user);
     }
 
     @Override
@@ -129,8 +128,8 @@ public class Repository implements RepositoryInterface {
 
     //in login via google step
     @Override
-    public void addUserToFirestore(User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
-        firebaseSource.addUserToFirestoreGoogleLogin(user,firebaseLoginDelegate,idToken, context);
+    public void addUserToFirestore(LifecycleOwner lifecycleOwner, User user, firebaseLoginDelegate firebaseLoginDelegate, String idToken, Context context) {
+        firebaseSource.addUserToFirestoreGoogleLogin(lifecycleOwner, user,firebaseLoginDelegate,idToken, context);
     }
 
     @Override

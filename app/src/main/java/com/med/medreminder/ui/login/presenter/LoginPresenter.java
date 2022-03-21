@@ -3,6 +3,8 @@ package com.med.medreminder.ui.login.presenter;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.med.medreminder.firebase.firebaseLoginDelegate;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.model.User;
@@ -29,8 +31,8 @@ public class LoginPresenter implements loginPresenterInterface, firebaseLoginDel
     }
 
     @Override
-    public void addUserToFirestore(User user, String idToken, Context context) {
-        repo.addUserToFirestore(user,this, idToken, context);
+    public void addUserToFirestore(LifecycleOwner lifecycleOwner, User user, String idToken, Context context) {
+        repo.addUserToFirestore(lifecycleOwner, user,this, idToken, context);
     }
 
     @Override

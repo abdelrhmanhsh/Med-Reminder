@@ -2,6 +2,8 @@ package com.med.medreminder.ui.login.view;
 
 import android.content.Intent;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.med.medreminder.model.User;
 
 public interface loginViewInterface {

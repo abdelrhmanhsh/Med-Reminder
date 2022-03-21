@@ -99,13 +99,13 @@ public class RequestsActivity extends AppCompatActivity implements RequestViewIn
 
     @Override
     public void updateStatusInFirestore(String helperEmail,String patientEmail,String status) {
-        requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
+        requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance(this)));
         requestPresenterInterface.updateStatusInFirestore(helperEmail,patientEmail,status);
     }
 
     @Override
     public void addHelperToFirestore(String helperEmail,String patientEmail) {
-        requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance()));
+        requestPresenterInterface = new RequestPresenter(Repository.getInstance(this,ConcreteLocalSource.getInstance(this), FirebaseWork.getInstance(this)));
         requestPresenterInterface.addHelperToFirestore(helperEmail,patientEmail);
     }
 

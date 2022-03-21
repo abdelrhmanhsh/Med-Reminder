@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +33,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,15 +40,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseWork;
-import com.med.medreminder.firebase.firebaseDelegate;
-import com.med.medreminder.firebase.firebaseLoginDelegate;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.model.User;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
 import com.med.medreminder.ui.login.presenter.LoginPresenter;
 import com.med.medreminder.ui.login.presenter.loginPresenterInterface;
-import com.med.medreminder.ui.signup.presenter.SignupPresenter;
-import com.med.medreminder.ui.signup.presenter.signupPresenterInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -117,7 +111,7 @@ public class LoginFragment extends Fragment implements loginViewInterface {
         db = FirebaseFirestore.getInstance();
 
         loginPresenterInterface = new LoginPresenter(Repository.getInstance(getContext(),
-                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance()),this);
+                ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())),this);
 
 
         sign_in_google_btn.setOnClickListener(view1 -> {
@@ -372,7 +366,7 @@ public class LoginFragment extends Fragment implements loginViewInterface {
 
     @Override
     public void newUser(User user, String idToken) {
-        loginPresenterInterface.addUserToFirestore(user,idToken,getContext());
+        loginPresenterInterface.addUserToFirestore(getViewLifecycleOwner(), user,idToken,getContext());
     }
 
     @Override
