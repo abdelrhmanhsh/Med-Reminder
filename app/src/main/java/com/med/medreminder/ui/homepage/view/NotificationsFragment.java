@@ -20,6 +20,7 @@ import com.med.medreminder.ui.displayHelpers.DisplayHelpersActivity;
 import com.med.medreminder.ui.displayMedFriends.DisplayMedFriendsActivity;
 import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.request.view.RequestsActivity;
+import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,8 @@ public class NotificationsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     FirebaseDatabase database;
+    YourPreference yourPrefrence;
+
 
 
     private FragmentNotificationsBinding binding;
@@ -63,7 +66,9 @@ public class NotificationsFragment extends Fragment {
 
         });
         binding.profileTxt.setOnClickListener(view1 -> {
-
+            yourPrefrence = YourPreference.getInstance(getContext());
+            yourPrefrence.saveData(Constants.isMedFriend,"false");
+            startActivity(new Intent(getActivity(), HomeActivity.class));
         });
 
         binding.myMedFriendsRequestsTxt.setOnClickListener(view1 -> {

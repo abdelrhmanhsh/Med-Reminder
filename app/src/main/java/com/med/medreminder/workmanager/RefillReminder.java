@@ -54,14 +54,14 @@ public class RefillReminder extends Worker{
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, REFILL_CHANNEL)
-                .setSmallIcon(imageSource)
+           //     .setSmallIcon(imageSource)
                 .setContentTitle("Refill")
                 .setContentText(medName)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .addAction(R.drawable.ic_delete,"Skip", intent)
-                .addAction(R.drawable.ic_snooze,"Snooze", intent)
-                .addAction(R.drawable.ic_edit,"Refill", intent)
+             //   .addAction(R.drawable.ic_delete,"Skip", intent)
+             //   .addAction(R.drawable.ic_snooze,"Snooze", intent)
+               // .addAction(R.drawable.ic_edit,"Refill", intent)
                 .build();
 
         notificationManagerCompat.notify(2, notification);

@@ -41,6 +41,11 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
         notifyDataSetChanged();
     }
 
+    public void removeMeds(){
+        medicines.clear();
+        notifyDataSetChanged();
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView medTime_txt;

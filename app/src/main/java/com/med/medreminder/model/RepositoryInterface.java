@@ -2,7 +2,9 @@ package com.med.medreminder.model;
 
 import android.content.Context;
 
+import com.med.medreminder.firebase.FirebaseActiveMedDelegate;
 import com.med.medreminder.firebase.FirebaseDelegate;
+import com.med.medreminder.firebase.FirebaseInactiveMedDelegate;
 import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.firebase.firebaseLoginDelegate;
 
@@ -45,6 +47,9 @@ public interface RepositoryInterface {
 
 
     void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate);
+    void getInactiveMedsFromFirebase(String email,long time, FirebaseInactiveMedDelegate firebaseInactiveMedDelegate);
+    void getActiveMedsFromFirebase(String email,long time, FirebaseActiveMedDelegate firebaseActiveMedDelegate);
+
 
 //    void insertMedStatus(MedStatus medStatus);
 //    LiveData<List<MedStatus>> getMedStatus(String date, String email);

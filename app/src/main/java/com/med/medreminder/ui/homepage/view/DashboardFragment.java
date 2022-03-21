@@ -46,6 +46,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +62,8 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     ActivePresenterInterface activePresenterInterface;
     InactivePresenterInterface inactivePresenterInterface;
     private FragmentDashboardBinding binding;
-
     private FirebaseFirestore db;
-
+    long curDate;
 
 
     @Override
@@ -79,6 +79,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         activeMeds = view.findViewById(R.id.recyclerView_ActiveMeds);
         inactiveMeds = view.findViewById(R.id.recyclerView_InctiveMeds);
         medBtn = view.findViewById(R.id.medBtn);
+        curDate  = Calendar.getInstance().getTimeInMillis();
 
         activeMeds.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -94,18 +95,10 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         inactiveMeds.setLayoutManager(layoutManager2);
         inactiveAdapter = new InactiveMedsAdapter(this,getContext());
         inactiveMeds.setAdapter(inactiveAdapter);
+        String email = FirebaseHelper.getUserEmail(getContext());
 
         activePresenterInterface = new ActivePresenter(this, (Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext()))));
-
-        Log.d("TAG", "Dashboard Fragment: " + getViewLifecycleOwner());
-
-        String email = FirebaseHelper.getUserEmail(getContext());
-        activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner(), email);
-
-        Log.d("TAG", "onViewCreated: " + 1);
-
         inactivePresenterInterface = new InactivePresenter(this,(Repository.getInstance(getContext(),ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext()))));
-        inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
 
         medBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +106,28 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
                 startActivity(new Intent(getActivity(), AddMedActivity.class));
             }
         });
-        Log.d("TAG", "onViewCreated: " + 2);
 
+        YourPreference yourPrefrence = YourPreference.getInstance(getContext());
+        //get all medications from firestore
+        if (FirebaseHelper.isInternetAvailable(getContext())){
+            if(yourPrefrence.getData(Constants.isMedFriend).equals("true"))
+            {
+                //med friend
+                activePresenterInterface.getActiveMedsFromFirebase(yourPrefrence.getData(Constants.MED_FRIEND_EMAIL),curDate);
+                inactivePresenterInterface.getInactiveMedsFromFirebase(yourPrefrence.getData(Constants.MED_FRIEND_EMAIL),curDate);
+            } else {
+                activePresenterInterface.getActiveMedsFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+                inactivePresenterInterface.getInactiveMedsFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+            }
+        }
+        else{
+            if(yourPrefrence.getData(Constants.isMedFriend).equals("true")){
+                Toast.makeText(getContext(), "Internet disconnected!", Toast.LENGTH_SHORT).show();
+            } else {
+                activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner(), email);
+                inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
+            }
+        }
     }
 
     @Override
@@ -126,15 +139,9 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     @Override
     public void getActiveMeds(List<Medicine> medicines) {
-
         if(medicines.size()==0){
-            //binding.textView.setVisibility(View.GONE);
-            //binding.recyclerViewActiveMeds.setVisibility(View.GONE);
+
         }else{
-           // binding.textView.setVisibility(View.VISIBLE);
-            //binding.recyclerViewActiveMeds.setVisibility(View.VISIBLE);
-           // activeAdapter = new ActiveMedsAdapter(this,getContext());
-           // binding.recyclerViewActiveMeds.setAdapter(activeAdapter);
             activeAdapter.setMedInfo(medicines);
         }
     }
@@ -142,8 +149,49 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     @Override
     public void getInactiveMeds(List<Medicine> medicines) {
         inactiveAdapter.setInactiveMedInfo(medicines);
-
     }
+
+    @Override
+    public void successToFetchInactiveMeds(List<Medicine> meds) {
+        if(meds.size() == 0){
+            inactiveAdapter.removeMeds();
+        } else {
+            inactiveAdapter.setInactiveMedInfo(meds);
+        }
+    }
+
+    @Override
+    public void failedToFetchInactiveMeds(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateInactiveMed(Medicine medicine) {
+        inactivePresenterInterface.updateMed(medicine);
+    }
+
+    @Override
+    public void successToFetchMeds(List<Medicine> meds) {
+        if(meds.size() == 0){
+            activeAdapter.removeMeds();
+            Toast.makeText(getContext(), "You don't have any active medications", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("TAG", "DASHBOARD: successToFetchMeds: "+ meds.get(0).getName());
+            Log.d("TAG", "DASHBOARD: successToFetchMeds: "+ meds.size());
+            activeAdapter.setMedInfo(meds);
+        }
+    }
+
+    @Override
+    public void failedToFetchMeds(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        activePresenterInterface.updateMed(medicine);
+    }
+
 
     @Override
     public void onActiveCLick(Medicine medicine) {
@@ -163,11 +211,8 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
     }
 
-    @Override
-    public void showActiveMedFirestore(String email){
-       activePresenterInterface.showActiveMedFirestore(email);
-}
 
 
-        }
+
+ }
 

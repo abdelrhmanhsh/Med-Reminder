@@ -32,6 +32,8 @@ import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.view.AddMedActivity;
+import com.med.medreminder.ui.displayMedFriends.DisplayMedFriendsActivity;
+import com.med.medreminder.ui.displayMedFriends.OnClickListener;
 import com.med.medreminder.ui.homepage.presenter.HomeMedPresenter;
 import com.med.medreminder.ui.homepage.presenter.homeMedPresenterInterface;
 import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenter;
@@ -72,7 +74,7 @@ import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 
-public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface     {
+public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface {
 
     public static final String TAG = "HomeFragment";
 
@@ -88,19 +90,13 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
     long curDate;
 
     HorizontalCalendar horizontalCalendar;
-
     ActivePresenterInterface activePresenterInterface;
-
     homeMedPresenterInterface homeMedPresenterInterface;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
         return root;
     }
 
@@ -142,9 +138,6 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             String dateString = startDate.getTime().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date date = sdf.parse(dateString);
-
-            // curDate = date.getTime();
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -166,21 +159,25 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 //Log.d("TAG", "onDateSelected: " + date.get(position));
                 //homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(),date.getTimeInMillis());
 
-
-                // shared pref -> isMedFriedn medFriendEMA
                 if (FirebaseHelper.isInternetAvailable(getContext())){
+                    if(yourPrefrence.getData(Constants.isMedFriend).equals("true"))
+                    {
+                        //medFriend profile
+                        homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.MED_FRIEND_EMAIL),curDate);
+                    }
+                    else{
+                        homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+                    }
 
-//                    Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
-//                    Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
-
-
-                    homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
                 }
                 else {
                     Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
-
-                    homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
-
+                    if(yourPrefrence.getData(Constants.isMedFriend).equals("true")){
+                        Toast.makeText(getContext(), "Internet disconnected!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+                    }
                 }
             }
 
@@ -213,11 +210,23 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
             Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
             Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
-            homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+            if(yourPrefrence.getData(Constants.isMedFriend).equals("true"))
+            {
+                //medFriend profile
+                homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.MED_FRIEND_EMAIL),curDate);
+            }
+            else{
+                homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
+            }
         }
         else {
             Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
-            homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+            if(yourPrefrence.getData(Constants.isMedFriend).equals("true")){
+                Toast.makeText(getContext(), "Internet disconnected!", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+            }
         }
 
 
@@ -553,6 +562,5 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
     public void getAllStoredMedicines(List<Medicine> medicines) {
         medHomeAdapter.setMedInfo(medicines);
     }
-
 
 }

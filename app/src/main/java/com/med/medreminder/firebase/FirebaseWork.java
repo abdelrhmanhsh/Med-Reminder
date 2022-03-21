@@ -464,9 +464,6 @@ public class FirebaseWork implements FirebaseSource {
         }).start();
     }
 
-    // void logout(){
-    //      dao.deleteAllMedicines();
-    // }
 
     @Override
     public void addHelperToFirestore(String helperEmail, String patientEmail) {
@@ -506,6 +503,52 @@ public class FirebaseWork implements FirebaseSource {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // Toast.makeText(getApplicationContext(), "Fail to send request \n", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void getInactiveMedsFromFirebase(String email,long time, FirebaseInactiveMedDelegate firebaseInactiveMedDelegate) {
+        db.collection("Users").document(email).collection("Meds").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<Medicine> allMeds = new ArrayList<>();
+                List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
+                for (int i = 0; i < meds.size(); i++) {
+                    if (time > meds.get(i).getEndDateMillis()) {
+                        allMeds.add(meds.get(i));
+                    }
+                }
+                firebaseInactiveMedDelegate.successToFetchInactiveMeds(allMeds);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                firebaseInactiveMedDelegate.failedToFetchInactiveMeds("Failed to retrieve medicines");
+            }
+        });
+    }
+
+    @Override
+    public void getActiveMedsFromFirebase(String email, long time, FirebaseActiveMedDelegate firebaseActiveMedDelegate) {
+        db.collection("Users").document(email).collection("Meds").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<Medicine> allMeds = new ArrayList<>();
+                List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
+                for (int i = 0; i < meds.size(); i++) {
+                    if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()) {
+                        allMeds.add(meds.get(i));
+
+                    }
+                }
+                firebaseActiveMedDelegate.successToFetchActiveMeds(allMeds);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                firebaseActiveMedDelegate.failedToFetchActiveMeds("Failed to retrieve medicines");
             }
         });
     }

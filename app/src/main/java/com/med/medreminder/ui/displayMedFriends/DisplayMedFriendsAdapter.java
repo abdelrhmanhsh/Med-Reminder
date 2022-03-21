@@ -21,23 +21,17 @@ import java.util.List;
 public class DisplayMedFriendsAdapter extends RecyclerView.Adapter<DisplayMedFriendsAdapter.ViewHolder> {
     Context context;
     List<String> patientEmails = new ArrayList<>();
+    OnClickListener onClickListener;
 
-    public DisplayMedFriendsAdapter(Context context, List<String> patientEmails) {
+    public DisplayMedFriendsAdapter(Context context, List<String> patientEmails, OnClickListener onClickListener) {
         this.context = context;
         this.patientEmails = patientEmails;
+        this.onClickListener = onClickListener;
     }
 
     public void setMedFriends(List<String> patientEmails){
         this.patientEmails = patientEmails;
-    }
-
-    @NonNull
-    @Override
-    public DisplayMedFriendsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.medfriend_row,parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        notifyDataSetChanged();
     }
 
 
@@ -50,14 +44,28 @@ public class DisplayMedFriendsAdapter extends RecyclerView.Adapter<DisplayMedFri
             super(itemView);
             user_img = itemView.findViewById(R.id.user_img);
             senderEmail_txt = itemView.findViewById(R.id.senderEmail_txt);
-            medfriend_cardView = itemView.findViewById(R.id.medfriend_cardView);
+            medfriend_cardView = itemView.findViewById(R.id.medfriend_cv);
         }
     }
 
+    @NonNull
+    @Override
+    public DisplayMedFriendsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.medfriend_row,parent,false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
+    }
 
     @Override
     public void onBindViewHolder(@NonNull DisplayMedFriendsAdapter.ViewHolder holder, int position) {
         holder.senderEmail_txt.setText(patientEmails.get(position));
+        holder.medfriend_cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickListener.onMedFriendClick(patientEmails.get(position).toString());
+            }
+        });
     }
 
     @Override
