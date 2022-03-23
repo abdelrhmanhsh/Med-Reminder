@@ -6,7 +6,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 
 @Database(entities = {Medicine.class}, version = 1, exportSchema = false)

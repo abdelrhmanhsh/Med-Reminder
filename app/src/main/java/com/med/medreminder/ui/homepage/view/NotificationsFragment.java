@@ -1,7 +1,9 @@
 package com.med.medreminder.ui.homepage.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentNotificationsBinding;
 import com.med.medreminder.firebase.FirebaseHelper;
+import com.med.medreminder.ui.MainActivity;
 import com.med.medreminder.ui.displayHelpers.DisplayHelpersActivity;
 import com.med.medreminder.ui.displayMedFriends.DisplayMedFriendsActivity;
 import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.request.view.RequestsActivity;
+import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
 import androidx.annotation.NonNull;
@@ -39,6 +44,9 @@ public class NotificationsFragment extends Fragment {
     private FirebaseFirestore db;
     FirebaseDatabase database;
 
+   // TextView logout_txt;
+
+    YourPreference preference;
 
     private FragmentNotificationsBinding binding;
 
@@ -59,9 +67,52 @@ public class NotificationsFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        binding.logoutTxt.setOnClickListener(view1 -> {
+        //logout_txt = view.findViewById(R.id.logout_txt);
 
+        preference = YourPreference.getInstance(getContext());
+
+        if (preference.getData(Constants.IS_LOGIN).equals("false") || preference.getData(Constants.IS_LOGIN).equals("")){
+           // logout_txt.setText(R.string.login);
+            binding.logoutTxt.setText(R.string.login);
+            binding.logoutTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.login_ic,0,0,0);
+
+        }
+        else {
+            //logout_txt.setText(R.string.logout);
+           binding.logoutTxt.setText(R.string.logout);
+            binding.logoutTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.logout_ic,0,0,0);
+
+        }
+
+
+        binding.logoutTxt.setOnClickListener(view1 -> {
+            Log.d("TAG", "onViewCreated: inside onclick logout");
+            Log.d("TAG", "onViewCreated: ISLOGIN NOW--->"+ preference.getData(Constants.IS_LOGIN));
+            Log.d("TAG", "onViewCreated: " +binding.logoutTxt.getText().toString());
+
+            if (preference.getData(Constants.IS_LOGIN).equals("true")){
+                Log.d("TAG", "onViewCreated: inside if is login");
+                mAuth.signOut();
+                binding.logoutTxt.setText(R.string.login);
+                binding.logoutTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.login_ic,0,0,0);
+                preference.saveData(Constants.IS_LOGIN,"");
+                preference.saveData(Constants.EMAIL,"");
+                preference.saveData(Constants.FIRST_NAME,"");
+                preference.saveData(Constants.SECOND_NAME,"");
+                Log.d("TAG", "onViewCreated: inside if is login" + preference.getData(Constants.IS_LOGIN));
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                getContext().startActivity(intent);
+                getActivity().finish();
+            }
+            else {
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                getContext().startActivity(intent);
+                getActivity().finish();
+            }
         });
+
+
+
         binding.profileTxt.setOnClickListener(view1 -> {
 
         });

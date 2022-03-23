@@ -17,12 +17,16 @@ import android.widget.TextView;
 
 import com.med.medreminder.R;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
+import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 
 
 public class StartingFragment extends Fragment {
     Button signup_btn;
     TextView login_txt;
     TextView skip_txt;
+
+    YourPreference preference;
 
 
     public StartingFragment() {
@@ -49,6 +53,8 @@ public class StartingFragment extends Fragment {
         signup_btn = view.findViewById(R.id.signup_btn);
         login_txt = view.findViewById(R.id.login_txt);
         skip_txt = view.findViewById(R.id.skip_txt);
+
+        preference = YourPreference.getInstance(getContext());
 
         signup_btn.setOnClickListener(view1 -> {
             findNavController(this).navigate(R.id.fragmentToSignup);

@@ -4,9 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/drawable/login_ic.xml" value="0.126" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/drawable/logout_ic.xml" value="0.126" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/activity_main.xml" value="0.19074074074074074" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/activity_splash.xml" value="0.16458333333333333" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_add_med_instructions_other.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
-        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.4" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_starting.xml" value="0.16458333333333333" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.2" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/menu/bottom_nav_menu.xml" value="0.11388888888888889" />
         <entry key="app/src/main/res/drawable/add_med_progressbar.xml" value="0.24444444444444444" />
         <entry key="app/src/main/res/drawable/button_blue_border.xml" value="0.2574074074074074" />

@@ -53,7 +53,7 @@ public class AddMedStrengthFragment extends Fragment implements View.OnClickList
         progressBar = view.findViewById(R.id.progress_bar);
         strengthInput = view.findViewById(R.id.input_med_strength);
         textTitle = view.findViewById(R.id.title);
-        textSkip = view.findViewById(R.id.skip);
+        //textSkip = view.findViewById(R.id.skip);
 
         btnNext.setOnClickListener(this);
 

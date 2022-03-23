@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constants {
+    public static final String MED_STRING_LIST = "MEDLISTSTRING";
+    public static final String MED_POSITION = "MEDPOSITION";
     public static String IS_LOGIN = "ISLOGIN";
     public static String FIRST_NAME = "FIRSTNAME";
     public static String SECOND_NAME = "SECONDNAME";

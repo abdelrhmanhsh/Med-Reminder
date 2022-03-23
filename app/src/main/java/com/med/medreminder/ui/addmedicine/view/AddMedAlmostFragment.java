@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.addmedicine.view;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,6 +10,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -30,6 +33,8 @@ import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
+import com.med.medreminder.ui.homepage.view.HomeActivity;
+import com.med.medreminder.workmanager.MedReminderWorkManager;
 import com.med.medreminder.workmanager.MyWorkManager;
 
 import java.text.ParseException;
@@ -108,6 +113,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         Navigation.findNavController(view).navigate(action);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     void setAlarm(int hours, int minutes) {
         Log.d(TAG, "setAlarm: \n" + hours + "\n" + minutes);
@@ -116,12 +122,27 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         LocalDateTime timeAt = LocalDate.now().atTime(hours,minutes);
         LocalDateTime timeNow = LocalDateTime.now();
 
-        PeriodicWorkRequest workBuilder = new PeriodicWorkRequest.Builder(MyWorkManager.class, 24, TimeUnit.HOURS)
-                .setInitialDelay(Duration.between(timeNow, timeAt))
+        Data data = new Data.Builder()
+                .putInt(MedReminderWorkManager.HOUR,hours)
+                .putInt(MedReminderWorkManager.MIN,minutes)
                 .build();
 
-        // This is just to complete the example
-        WorkManager.getInstance().enqueue(workBuilder);
+
+        //set one time work request
+        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MedReminderWorkManager.class)
+                .setInitialDelay(Duration.between(timeNow,timeAt))
+                .setInputData(data)
+                .build();
+        WorkManager.getInstance(getContext()).enqueue(oneTimeWorkRequest);
+
+
+//        PeriodicWorkRequest workBuilder = new PeriodicWorkRequest.Builder(MyWorkManager.class, 24, TimeUnit.HOURS)
+//                .setInitialDelay(Duration.between(timeNow, timeAt))
+//                .setInputData(data)
+//                .build();
+//
+//        // This is just to complete the example
+//        WorkManager.getInstance().enqueue(workBuilder);
     }
 
 
@@ -196,7 +217,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 //        Log.d("TAG", "actionSave: " + min);
 
         //int often = 24;
-        int hour, min;
+       /* int hour, min;
         String[] time, dose2Time, dose3Time;
         String[] twiceDaily, threeDaily;
         int dose2hour, dose2min;
@@ -205,39 +226,43 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             case "Once Daily":
                 //often = 24;
                 time = medicine.getTime().split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
+                Log.d(TAG, "actionSave:"+time[0]);
+                Log.d(TAG, "actionSave:"+time[1]);
+                hour = Integer.parseInt(time[0].trim());
+                min = Integer.parseInt(time[1].trim());
                 setAlarm(hour, min);
                 break;
             case "Twice Daily":
                 // often = 12;
                 twiceDaily = medicine.getTime().split(",");            //12:30,1:30
                 time = twiceDaily[0].split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
+                hour = Integer.parseInt(time[0].trim());
+                min = Integer.parseInt(time[1].trim());
                 setAlarm(hour, min);
                 dose2Time = twiceDaily[1].split(":");
-                dose2hour = Integer.parseInt(dose2Time[0]);
-                dose2min = Integer.parseInt(dose2Time[1]);
+                Log.d(TAG, "actionSave:"+dose2Time[0]);
+                Log.d(TAG, "actionSave:"+dose2Time[1]);
+                dose2hour = Integer.parseInt(dose2Time[0].trim());
+                dose2min = Integer.parseInt(dose2Time[1].trim());
                 setAlarm(dose2hour,dose2min);
                 break;
             case "3 times a day":
                 // often = 8;
                 threeDaily = medicine.getTime().split(",");            //12:30,1:30,3:30
                 time = threeDaily[0].split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
+                hour = Integer.parseInt(time[0].trim());
+                min = Integer.parseInt(time[1].trim());
                 setAlarm(hour, min);
                 dose2Time = threeDaily[1].split(":");
-                dose2hour = Integer.parseInt(dose2Time[0]);
-                dose2min = Integer.parseInt(dose2Time[1]);
+                dose2hour = Integer.parseInt(dose2Time[0].trim());
+                dose2min = Integer.parseInt(dose2Time[1].trim());
                 setAlarm(dose2hour,dose2min);
                 dose3Time = threeDaily[2].split(":");
-                dose3hour = Integer.parseInt(dose3Time[0]);
-                dose3min = Integer.parseInt(dose3Time[1]);
+                dose3hour = Integer.parseInt(dose3Time[0].trim());
+                dose3min = Integer.parseInt(dose3Time[1].trim());
                 setAlarm(dose3hour,dose3min);
                 break;
-        }
+        }*/
 
         //  setAlarm(hour, min);
 
@@ -301,8 +326,10 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     public void addMed(Medicine medicine) {
         presenterInterface.addMed(medicine);
         Toast.makeText(getContext(), "Medicine Added!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getActivity(), HomeActivity.class));
         getActivity().finish();
     }
+
 
     @Override
     public void addMedToFirestore(Medicine medicine, String email, long id) {

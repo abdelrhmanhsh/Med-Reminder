@@ -20,7 +20,7 @@ public class YourPreference {
 
     public void saveData(String key,String value) {
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        prefsEditor .putString(key, value);
+        prefsEditor.putString(key, value);
         prefsEditor.apply();
     }
 

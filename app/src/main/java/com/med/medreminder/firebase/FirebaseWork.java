@@ -1,6 +1,7 @@
 package com.med.medreminder.firebase;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -49,14 +50,19 @@ public class FirebaseWork implements FirebaseSource {
     private LiveData<List<Medicine>> medicines;
     public static final String TAG = "FirebaseWork";
 
+    YourPreference preference;
+
 
     public FirebaseWork(Context context) {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         AppDatabase db = AppDatabase.getInstance(context.getApplicationContext());
+        preference = YourPreference.getInstance(context.getApplicationContext());
         dao = db.medicineDao();
         medicines = dao.getAllMedicines();
     }
+
+
 
     public static FirebaseWork getInstance(Context context) {
         if (localSource == null) {
@@ -391,13 +397,22 @@ public class FirebaseWork implements FirebaseSource {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<Medicine> allMeds = new ArrayList<>();
                 List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
+                String curEmail = preference.getData(Constants.EMAIL);
                 for (int i = 0; i < meds.size(); i++) {
 
 //                    insert(meds.get(i));
-                    if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()) {
+                    if ( (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis() ) && ( email.equals(curEmail) )
+                    && ( meds.get(i).getIsDaily().equals("Yes")) ) {
+
                         allMeds.add(meds.get(i));
 
                     }
+                    else if ( (meds.get(i).getStartDateMillis() <= time ) && ( meds.get(i).getEndDate().equals("Ongoing treatment" ) )
+                                && ( email.equals(curEmail) ) && ( meds.get(i).getIsDaily().equals("Yes")) ){
+                            allMeds.add(meds.get(i));
+
+                        }
+
                 }
                 firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
 

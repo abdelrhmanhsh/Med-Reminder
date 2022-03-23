@@ -24,6 +24,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentHomeBinding;
 import com.med.medreminder.db.ConcreteLocalSource;
@@ -39,12 +40,15 @@ import com.med.medreminder.ui.medicationScreen.presenter.ActivePresenterInterfac
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
+import com.med.medreminder.workmanager.MedReminderWorkManager;
 import com.med.medreminder.workmanager.MyWorkManager;
 import com.med.medreminder.workmanager.RefillReminder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,9 +76,10 @@ import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
 
-public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface     {
+public class HomeFragment extends Fragment implements onMedClickListener, homeMedViewInterface {
 
     public static final String TAG = "HomeFragment";
+    boolean isAlarmSet = false;
 
     private static NotificationManagerCompat notificationManagerCompat;
 
@@ -88,6 +93,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
     long curDate;
 
     HorizontalCalendar horizontalCalendar;
+
+    YourPreference yourPrefrence;
 
     ActivePresenterInterface activePresenterInterface;
 
@@ -118,7 +125,10 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         allMed_rv = view.findViewById(R.id.allMed_rv);
         addMed_floatBtn = view.findViewById(R.id.addMed_floatBtn);
 
-        YourPreference yourPrefrence = YourPreference.getInstance(getContext());
+
+        yourPrefrence = YourPreference.getInstance(getContext());
+
+
         String userEmail = FirebaseHelper.getUserEmail(getContext());
 
         /* starts before 1 month from now */
@@ -149,7 +159,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             e.printStackTrace();
         }
 
-        curDate  = Calendar.getInstance().getTimeInMillis();
+        curDate = Calendar.getInstance().getTimeInMillis();
 
         Log.d("TAG", "onViewCreated: " + curDate);
         Log.d("TAG", "onViewCreated: " + Calendar.getInstance().getTimeInMillis());
@@ -168,18 +178,27 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
 
                 // shared pref -> isMedFriedn medFriendEMA
-                if (FirebaseHelper.isInternetAvailable(getContext())){
+
+                if (yourPrefrence.getData(Constants.IS_LOGIN).equals("true")) {
+                    Log.d(TAG, "onViewCreated: ISLOGIN NOW--->" + yourPrefrence.getData(Constants.IS_LOGIN));
+
+                    if (FirebaseHelper.isInternetAvailable(getContext())) {
 
 //                    Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
 //                    Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
 
 
-                    homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
-                }
-                else {
-                    Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
+                        homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL), date.getTimeInMillis());
+                    } else {
+                        Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
 
-                    homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+                        homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), date.getTimeInMillis(), userEmail);
+
+                    }
+                } else {
+                    Log.d(TAG, "onViewCreated: ISLOGIN NOW--->" + yourPrefrence.getData(Constants.IS_LOGIN));
+
+                    homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), date.getTimeInMillis(), userEmail);
 
                 }
             }
@@ -208,16 +227,22 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())), curDate);
 
 
+        if (yourPrefrence.getData(Constants.IS_LOGIN).equals("true")) {
+            Log.d(TAG, "onViewCreated: ISLOGIN NOW--->" + yourPrefrence.getData(Constants.IS_LOGIN));
 
-        if (FirebaseHelper.isInternetAvailable(getContext())){
+            if (FirebaseHelper.isInternetAvailable(getContext())) {
 
-            Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
-            Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
-            homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL),curDate);
-        }
-        else {
-            Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
+                Log.d(TAG, "onViewCreated: " + "INTERNET CONNECTED");
+                Log.d(TAG, "onViewCreated: " + yourPrefrence.getData(Constants.EMAIL));
+                homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL), curDate);
+            } else {
+                Log.d(TAG, "onViewCreated: " + "INTERNET DISCONNECTED");
+                homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+            }
+        } else {
+            Log.d(TAG, "onViewCreated: ISLOGIN NOW--->" + yourPrefrence.getData(Constants.IS_LOGIN));
             homeMedPresenterInterface.showMedsOnDate(getViewLifecycleOwner(), curDate, userEmail);
+
         }
 
 
@@ -225,8 +250,10 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), AddMedActivity.class));
+                getActivity().finish();
             }
         });
+
     }
 
     @Override
@@ -234,7 +261,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         showNotificationDialog(medicine);
     }
 
-    private void showNotificationDialog(Medicine medicine){
+    private void showNotificationDialog(Medicine medicine) {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_notification);
 
@@ -274,7 +301,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         medAmountLeft.setText(medicine.getMedLeft() + " Pills/med left");
 
         String medStatus = medicine.getStatus(); // status are ("", skipped, taken, snoozed)
-        switch (medStatus){
+        switch (medStatus) {
             case "Skipped":
                 btnSkip.setText(getString(R.string.unskip));
                 break;
@@ -297,9 +324,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
 //                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
 //                    addMedStatus(medStatus);
-                }
-
-                else {
+                } else {
 //                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.skipped), medicine.getUserEmail());
 //                    addMedStatus(medStatus);
 //                    medicine.setStatus(getString(R.string.skipped));
@@ -321,18 +346,18 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
 //                if(medicine.getId())
 
-                if (medicine.getStatus().equals(getString(R.string.taken))){ // perform un-take
+                if (medicine.getStatus().equals(getString(R.string.taken))) { // perform un-take
 //                    medicine.setStatus("");
 //                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, "", medicine.getUserEmail());
-                    medicine.setMedLeft(currMedLeft+1);
+                    medicine.setMedLeft(currMedLeft + 1);
 
                 } else {
-                    if(currMedLeft <= 0){
-                        if(medicine.isRefillReminder())
+                    if (currMedLeft <= 0) {
+                        if (medicine.isRefillReminder())
                             Toast.makeText(getContext(), "You have no med left!\nPlease consider refill!", Toast.LENGTH_SHORT).show();
-                    } else{
+                    } else {
                         //check for med amount here to set refill reminder!
-                        medicine.setMedLeft(currMedLeft-1);
+                        medicine.setMedLeft(currMedLeft - 1);
                     }
 
 //                    medStatus = new MedStatus(medicine.getId(), dateSelectedStatus, getString(R.string.taken), medicine.getUserEmail());
@@ -360,7 +385,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    private void datePicker(int imageResource, String medName, long id){
+    private void datePicker(int imageResource, String medName, long id) {
 
         // Get Current Date
         final Calendar c = Calendar.getInstance();
@@ -376,7 +401,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
                         Log.i(TAG, "onDateSet: " + dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                         schedYear = year;
-                        schedMonth = monthOfYear+1;
+                        schedMonth = monthOfYear + 1;
                         schedDay = dayOfMonth;
                         timePicker(imageResource, medName, id);
                     }
@@ -384,7 +409,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         datePickerDialog.show();
     }
 
-    private void timePicker(int imageResource, String medName, long id){
+    private void timePicker(int imageResource, String medName, long id) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -405,7 +430,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
                         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy/HH:mm");
 
-                        try{
+                        try {
 
                             Date date = sdf.parse(dateStr);
                             Calendar calendar = Calendar.getInstance();
@@ -417,15 +442,15 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                             long currMillis = currDate.getTime();
 
                             long delayInMillis = schedMillis - currMillis;
-                            if(delayInMillis <= 0)
+                            if (delayInMillis <= 0)
                                 Toast.makeText(getContext(), "You need to provide time in future", Toast.LENGTH_SHORT).show();
-                            else{
+                            else {
                                 sendRescheduleNotification(delayInMillis, imageResource, medName, id);
 //                                medicine.setStatus("Snoozed until " + schedHour + ":" + schedMinute + ", " + schedDay + "-" + schedMonth + "-" + schedYear);
 //                                updateMed(medicine);
                             }
 
-                        } catch(ParseException e){
+                        } catch (ParseException e) {
                             e.printStackTrace();
                         }
 
@@ -434,7 +459,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         timePickerDialog.show();
     }
 
-    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName, long id){
+    private void sendRescheduleNotification(long delayInMillis, int imageResource, String medName, long id) {
         Data data = new Data.Builder()
                 .putInt(MyWorkManager.IMAGE_RESOURCE, imageResource)
                 .putString(MyWorkManager.MED_NAME, medName)
@@ -462,17 +487,20 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void successToFetchMeds(List<Medicine> medicines) {
-        Log.d(TAG, "successToFetchMeds: "+ "INSIDE SUCCESS");
+        Log.d(TAG, "successToFetchMeds: " + "INSIDE SUCCESS");
         if (medicines.size() == 0) {
             Log.d(TAG, "successToFetchMeds: " + "NO MEDICINES");
             medHomeAdapter.removeMeds();
             Toast.makeText(getContext(), "we don't have any medicines for this day", Toast.LENGTH_SHORT).show();
         } else {
-            Log.d(TAG, "successToFetchMeds: "+ medicines.get(0).getName());
-            Log.d(TAG, "successToFetchMeds: "+ medicines.size());
+            Log.d(TAG, "successToFetchMeds: " + medicines.get(0).getName());
+            Log.d(TAG, "successToFetchMeds: " + medicines.size());
             medHomeAdapter.setMedInfo(medicines);
+            if (!isAlarmSet)
+                setAlarm(medicines);
         }
     }
 
@@ -496,14 +524,13 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
     }
 
 
-
-    private void refillReminderTime(String refillReminderTime, int imageResource, String medName){
+    private void refillReminderTime(String refillReminderTime, int imageResource, String medName) {
 
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH)+1;
+        int month = c.get(Calendar.MONTH) + 1;
         int day = c.get(Calendar.DAY_OF_MONTH);
-        String dateStop = year +"/" +month+"/" + day+" "+refillReminderTime+":00";
+        String dateStop = year + "/" + month + "/" + day + " " + refillReminderTime + ":00";
         Date currentTime = new Date();
 
         // Custom date format
@@ -518,12 +545,12 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 
         // Get msec from each, and subtract.
         long diff = refillTime.getTime() - currentTime.getTime();
-        Log.d("TAG","Time: Delay"+diff);
-        sendRefillNotification(diff,imageResource,medName);
+        Log.d("TAG", "Time: Delay" + diff);
+        sendRefillNotification(diff, imageResource, medName);
 
     }
 
-    private void sendRefillNotification(long delayInMillis, int imageResource, String medName){
+    private void sendRefillNotification(long delayInMillis, int imageResource, String medName) {
         Data data = new Data.Builder()
                 .putInt(RefillReminder.IMAGE_RESOURCE, imageResource)
                 .putString(RefillReminder.MED_NAME, medName)
@@ -539,6 +566,7 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         androidx.work.WorkManager.getInstance(getContext()).enqueue(request);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void getAllStoredMedicinesOnDate(List<Medicine> medicines) {
         if (medicines.size() == 0) {
@@ -546,12 +574,81 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             Toast.makeText(getContext(), "we don't have any medicines for this day", Toast.LENGTH_SHORT).show();
         } else {
             medHomeAdapter.setMedInfo(medicines);
+            if (!isAlarmSet)
+                setAlarm(medicines);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void getAllStoredMedicines(List<Medicine> medicines) {
+        Log.d("Set_ Alarm", "setAlarm:----->0");
+        Log.d("Set_ Alarm", "setAlarm:----->0" + (!isAlarmSet));
+
         medHomeAdapter.setMedInfo(medicines);
+        if (!isAlarmSet)
+            setAlarm(medicines);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setAlarm(List<Medicine> medicines) {
+        WorkManager.getInstance().cancelAllWorkByTag("alarm");
+
+        Log.d("Set_Alarm", "setAlarm:----->1");
+        isAlarmSet = true;
+        if (medicines != null && !medicines.isEmpty()) {
+            Gson gson = new Gson();
+            String medListString = gson.toJson(medicines);
+            Log.d("Set_Alarm", "setAlarm:----->2" + medListString);
+
+            LocalDateTime timeNow = LocalDateTime.now();
+            Log.d("Set_Alarm", "setAlarm:----->3" + timeNow);
+
+            LocalDateTime timeAt = LocalDate.now().atTime(Integer.valueOf(medicines.get(0).getTime().split(",")[0].split(":")[0].trim()), Integer.valueOf(medicines.get(0).getTime().split(",")[0].split(":")[1].trim()));
+
+            Log.d("Set_Alarm", "setAlarm:----->4" + timeAt);
+
+
+            Duration duration = Duration.between(timeNow, timeAt);
+            Log.d("Set_Alarm", "setAlarm:----->5" + duration.toMillis());
+
+
+            int position = 0;
+            int nearestDose = 0;
+            for (int i = 0; i < medicines.size(); i++) {
+                for (int j = 0; j < medicines.get(i).getTime().split(",").length; j++) {
+                    timeAt = LocalDate.now().atTime(Integer.parseInt(medicines.get(i).getTime().split(",")[j].split(":")[0].trim()), Integer.parseInt(medicines.get(i).getTime().split(",")[j].split(":")[1].trim()));
+
+                    if ((timeAt.isAfter(timeNow)) && (duration.abs().toMillis() > Duration.between(timeNow, timeAt).toMillis())) {
+                        duration = Duration.between(timeNow, timeAt);
+                        position = i;
+                        nearestDose = j;
+                        Log.d(TAG, "setAlarm: --> " + timeAt);
+                        Log.d(TAG, "setAlarm: --> " + "position:" + i);
+                        Log.d(TAG, "setAlarm: --> " + "dose:" + j);
+                        Log.d(TAG, "setAlarm: --> " + "medicine:" + medicines.get(i));
+                    }
+                }
+
+            }
+            Data data = new Data.Builder()
+                    .putString(Constants.MED_STRING_LIST, medListString)
+                    .putInt(Constants.MED_POSITION, position)
+                    .putInt("time_nw", timeNow.getMinute()+timeNow.getHour())
+                    .build();
+
+
+            //set one time work request
+            OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MedReminderWorkManager.class)
+                    .setInitialDelay(duration)
+                    .setInputData(data)
+                    .addTag("alarm")
+                    .build();
+            WorkManager.getInstance(getContext()).enqueue(oneTimeWorkRequest);
+
+            Log.d("Set_ Alarm", "setAlarm:----->8");
+
+        }
     }
 
 
