@@ -1,7 +1,6 @@
-package com.med.medreminder.ui.displayMedFriends;
+package com.med.medreminder.ui.displayMedFriends.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.med.medreminder.R;
-import com.med.medreminder.ui.homepage.view.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +29,11 @@ public class DisplayMedFriendsAdapter extends RecyclerView.Adapter<DisplayMedFri
 
     public void setMedFriends(List<String> patientEmails){
         this.patientEmails = patientEmails;
+        notifyDataSetChanged();
+    }
+
+    public void removeMedFriends(){
+        this.patientEmails.clear();
         notifyDataSetChanged();
     }
 

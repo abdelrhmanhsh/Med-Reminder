@@ -1,13 +1,19 @@
 package com.med.medreminder.ui.request.presenter;
 
+import com.med.medreminder.firebase.FirebaseLoadRequestsDelegate;
 import com.med.medreminder.model.RepositoryInterface;
+import com.med.medreminder.ui.request.view.RequestViewInterface;
 
-public class RequestPresenter implements RequestPresenterInterface{
+import java.util.List;
+
+public class RequestPresenter implements RequestPresenterInterface, FirebaseLoadRequestsDelegate {
 
     RepositoryInterface repo;
+    RequestViewInterface requestViewInterface;
 
-    public RequestPresenter(RepositoryInterface repo){
+    public RequestPresenter(RequestViewInterface requestViewInterface,RepositoryInterface repo){
         this.repo = repo;
+        this.requestViewInterface = requestViewInterface;
     }
 
     @Override
@@ -20,4 +26,18 @@ public class RequestPresenter implements RequestPresenterInterface{
         repo.addHelperToFirestore(helperEmail,patientEmail);
     }
 
+    @Override
+    public void loadRequests(String myEmail) {
+        repo.loadRequests(myEmail,this);
+    }
+
+    @Override
+    public void successToLoadRequests(List<String> helper_email) {
+        requestViewInterface.successToLoadRequests(helper_email);
+    }
+
+    @Override
+    public void failedToLoadRequests(String msg) {
+        requestViewInterface.failedToLoadRequests(msg);
+    }
 }

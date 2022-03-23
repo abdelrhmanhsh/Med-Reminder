@@ -153,7 +153,13 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
 
-
+       <!-- <action
+            android:id="@+id/actionAddMedAlmostToInstructionsFood"
+            app:destination="@id/addMedInstructionsFoodFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />-->
         <action
             android:id="@+id/actionAddMedAlmostToChangeIcon"
             app:destination="@id/addMedChangeIconFragment"
@@ -220,7 +226,35 @@
 
     </fragment>
 
+   <!-- <fragment
+        android:id="@+id/addMedInstructionsFoodFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedInstructionsFoodFragment"
+        android:label="fragment_add_med_instructions_food"
+        tools:layout="@layout/fragment_add_med_instructions_food" >
 
+        <action
+            android:id="@+id/actionAddMedInstructionsFoodToInstructionsOther"
+            app:destination="@id/addMedInstructionsOtherFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addMedInstructionsOtherFragment"
+        android:name="com.med.medreminder.ui.addmedicine.view.AddMedInstructionsOtherFragment"
+        android:label="fragment_add_med_instructions_other"
+        tools:layout="@layout/fragment_add_med_instructions_other" >
+        <action
+            android:id="@+id/action_addMedInstructionsOtherFragment_to_addMedAlmostFragment"
+            app:destination="@id/addMedAlmostFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>-->
 
     <fragment
         android:id="@+id/addMedRefillLimitFragment"

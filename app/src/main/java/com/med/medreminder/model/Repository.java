@@ -3,6 +3,11 @@ package com.med.medreminder.model;
 import android.content.Context;
 
 import com.med.medreminder.db.LocalSource;
+import com.med.medreminder.firebase.FirebaseActiveMedDelegate;
+import com.med.medreminder.firebase.FirebaseDisplayMedFriendsDelegate;
+import com.med.medreminder.firebase.FirebaseInactiveMedDelegate;
+import com.med.medreminder.firebase.FirebaseHelpersDelegate;
+import com.med.medreminder.firebase.FirebaseLoadRequestsDelegate;
 import com.med.medreminder.firebase.FirebaseSource;
 import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
@@ -154,6 +159,31 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void getInactiveMedsFromFirebase(String email, long time, FirebaseInactiveMedDelegate firebaseInactiveMedDelegate) {
+        firebaseSource.getInactiveMedsFromFirebase(email, time, firebaseInactiveMedDelegate);
+    }
+
+    @Override
+    public void getActiveMedsFromFirebase(String email, long time, FirebaseActiveMedDelegate firebaseActiveMedDelegate) {
+        firebaseSource.getActiveMedsFromFirebase(email, time, firebaseActiveMedDelegate);
+    }
+
+    @Override
+    public void Helpers(String myEmail, FirebaseHelpersDelegate firebaseHelpersDelegate){
+        firebaseSource.Helpers(myEmail, firebaseHelpersDelegate);
+    }
+
+    @Override
+    public void loadRequests(String myEmail, FirebaseLoadRequestsDelegate firebaseLoadRequestsDelegate) {
+        firebaseSource.loadRequests(myEmail, firebaseLoadRequestsDelegate);
+    }
+
+    @Override
+    public void acceptedRequests(String myEmail, FirebaseDisplayMedFriendsDelegate firebaseDisplayMedFriendsDelegate) {
+        firebaseSource.acceptedRequests(myEmail, firebaseDisplayMedFriendsDelegate);
+    }
+
+    @Override
     public void addHelperToFirestore(String helperEmail, String patientEmail) {
         firebaseSource.addHelperToFirestore(helperEmail,patientEmail);
     }
@@ -162,4 +192,6 @@ public class Repository implements RepositoryInterface {
     public void addRequestsToFirestore(String email, String name, String status, String helper_email) {
         firebaseSource.addRequestsToFirestore(email,name,status,helper_email);
     }
+
+
 }

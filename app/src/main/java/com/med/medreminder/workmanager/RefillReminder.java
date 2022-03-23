@@ -54,7 +54,7 @@ public class RefillReminder extends Worker{
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, REFILL_CHANNEL)
-                .setSmallIcon(imageSource)
+                .setSmallIcon(R.drawable.ic_snooze)
                 .setContentTitle("Refill")
                 .setContentText(medName)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

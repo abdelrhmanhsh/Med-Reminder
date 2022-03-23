@@ -27,5 +27,10 @@ public interface FirebaseSource {
 
     void addHelperToFirestore(String helperEmail,String patientEmail);
     void addRequestsToFirestore(String email,String name,String status,String helper_email);
+    void getInactiveMedsFromFirebase(String email,long time, FirebaseInactiveMedDelegate firebaseInactiveMedDelegate);
+    void getActiveMedsFromFirebase(String email,long time, FirebaseActiveMedDelegate firebaseActiveMedDelegate);
+    void Helpers(String myEmail, FirebaseHelpersDelegate firebaseHelpersDelegate);
+    void loadRequests(String myEmail, FirebaseLoadRequestsDelegate firebaseLoadRequestsDelegate);
+    void acceptedRequests(String myEmail, FirebaseDisplayMedFriendsDelegate firebaseDisplayMedFriendsDelegate);
 
-}
+    }

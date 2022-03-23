@@ -12,23 +12,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.firebase.FirebaseWork;
 import com.med.medreminder.model.Repository;
+import com.med.medreminder.ui.displayHelpers.presenter.HelperPresenter;
+import com.med.medreminder.ui.displayHelpers.presenter.HelperPresenterInterface;
+import com.med.medreminder.ui.displayHelpers.view.HelperViewInterface;
 import com.med.medreminder.ui.medfriend.presenter.MedFriendPresenter;
 import com.med.medreminder.ui.medfriend.presenter.MedFriendPresenterInterface;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class MedFriendActivity extends AppCompatActivity implements MedFriendViewInterface{
+public class MedFriendActivity extends AppCompatActivity implements MedFriendViewInterface {
 
     EditText firstName_edt;
     EditText phone_edt;
@@ -56,17 +66,9 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
         phone_edt = findViewById(R.id.phone_edt);
         email_edt = findViewById(R.id.email_edt);
         send_txt = findViewById(R.id.send_txt);
-        exit_img = findViewById(R.id.exit_img);
-        shareSwitch = findViewById(R.id.shareSwitch);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
-
-       /* exit_img.setOnClickListener(view1 -> {
-            findNavController(this).popBackStack();
-
-        });*/
 
         send_txt.setOnClickListener(view1 -> {
             YourPreference yourPrefrence = YourPreference.getInstance(getApplicationContext());
@@ -92,20 +94,19 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
             helper_email = email_edt.getText().toString();
             phoneNumber = phone_edt.getText().toString();
 
-            if(!helper_email.equals(currUserEmail)){
+            //check if email of user != my email && not in accepted list (not a helper)
+            if(!helper_email.equals(currUserEmail)) {
                 mAuth.fetchSignInMethodsForEmail(helper_email)
                         .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                             @Override
                             public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-
                                 boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-
                                 if (isNewUser) {
                                     Log.d("TAG", "User not found!");
                                     Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
                                 } else {
                                     Log.d("TAG", "User found!");
-                                    addRequestsToFirestore(currUserEmail,currUser,"PENDING",helper_email);
+                                    addRequestsToFirestore(currUserEmail, currUser, "PENDING", helper_email);
                                 }
                             }
                         });
@@ -128,10 +129,6 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
             return false;
         }
 
-        if (phone_edt.length() == 0) {
-            phone_edt.setError("Please enter phone number");
-            return false;
-        }
         if (email_edt.length() == 0) {
             email_edt.setError("Please enter email address");
             return false;
@@ -140,10 +137,5 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
         return true;
     }
 
+ }
 
-   /* public static NavController findNavController(@NonNull Activity activity) {
-        View view = activity.getCurrentFocus();
-        return Navigation.findNavController(view);
-
-    }*/
-}

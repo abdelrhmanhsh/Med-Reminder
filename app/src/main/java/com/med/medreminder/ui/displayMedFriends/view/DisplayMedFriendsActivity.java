@@ -1,4 +1,4 @@
-package com.med.medreminder.ui.displayMedFriends;
+package com.med.medreminder.ui.displayMedFriends.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,9 +16,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.med.medreminder.R;
-import com.med.medreminder.ui.displayHelpers.DisplayHelperAdapter;
+import com.med.medreminder.db.ConcreteLocalSource;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.ui.displayMedFriends.presenter.DisplayMedFriendPresenter;
+import com.med.medreminder.ui.displayMedFriends.presenter.DisplayMedFriendPresenterInterface;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
-import com.med.medreminder.ui.homepage.view.HomeFragment;
+import com.med.medreminder.ui.request.presenter.RequestPresenter;
 import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
@@ -26,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayMedFriendsActivity extends AppCompatActivity implements OnClickListener {
+public class DisplayMedFriendsActivity extends AppCompatActivity implements OnClickListener, DisplayMedFriendViewInterface {
 
     RecyclerView displayMedFriend_recyclerView;
 
@@ -37,6 +42,7 @@ public class DisplayMedFriendsActivity extends AppCompatActivity implements OnCl
     String currUserEmail;
     DisplayMedFriendsAdapter adapter;
     List<String> patientsEmail = new ArrayList<>();
+    DisplayMedFriendPresenterInterface displayMedFriendPresenterInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,8 @@ public class DisplayMedFriendsActivity extends AppCompatActivity implements OnCl
         yourPrefrence = YourPreference.getInstance(getApplicationContext());
         currUserEmail = yourPrefrence.getData(Constants.EMAIL);
 
-        AcceptedRequests(currUserEmail);
+        displayMedFriendPresenterInterface = new DisplayMedFriendPresenter((Repository.getInstance(getApplicationContext(), ConcreteLocalSource.getInstance(getApplicationContext()), FirebaseWork.getInstance(getApplicationContext()))),this);
+        displayMedFriendPresenterInterface.acceptedRequests(currUserEmail);
 
         displayMedFriend_recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -59,29 +66,8 @@ public class DisplayMedFriendsActivity extends AppCompatActivity implements OnCl
         displayMedFriend_recyclerView.setLayoutManager(layoutManager);
         adapter = new DisplayMedFriendsAdapter(getApplicationContext(),patientsEmail,this);
         displayMedFriend_recyclerView.setAdapter(adapter);
-
-        //onClick -> CardView -> home layout of patient
     }
 
-    private void AcceptedRequests(String myEmail) {
-        db.collection("Users").document(myEmail).collection("Requests").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<String> patientsEmail = new ArrayList<>();
-                Map<String, Object> data = new HashMap<>();
-                List<DocumentSnapshot> documentSnapshot = queryDocumentSnapshots.getDocuments();
-                for(int i=0; i<documentSnapshot.size(); i++){
-                    data = documentSnapshot.get(i).getData();
-                    String status = data.get("status").toString();
-                    if(status.equals("ACCEPTED")){
-                        patientsEmail.add(data.get("email").toString());
-                    }
-                    adapter.setMedFriends(patientsEmail);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-    }
 
     @Override
     public void onMedFriendClick(String medFriend_email) {
@@ -90,5 +76,25 @@ public class DisplayMedFriendsActivity extends AppCompatActivity implements OnCl
         Log.d("TAG","Homeeeee: med friend email"+medFriend_email);
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         getApplicationContext().startActivity(intent);
+    }
+
+
+    @Override
+    public void successToDisplayMedFriend(List<String> emails) {
+        if (emails.size() == 0) {
+            Log.d("TAG", "successToFetchHelpers: " + "NO requests");
+            adapter.removeMedFriends();
+            Toast.makeText(getApplicationContext(), "no requests", Toast.LENGTH_SHORT).show();
+
+
+        } else {
+            adapter.setMedFriends(emails);
+        }
+    }
+
+    @Override
+    public void failedToDisplayMedFriend(String msg) {
+        Log.d("TAG", "failedToFetchHelpers: " + "FAILED TO FETCH requests");
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }

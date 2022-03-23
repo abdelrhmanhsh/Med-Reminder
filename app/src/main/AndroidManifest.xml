@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.med.medreminder">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:name=".ui.BaseApplication"
         android:allowBackup="true"
@@ -10,15 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
-        <activity
-            android:name=".ui.SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.meddisplayedit.view.MedDisplayEditActivity"
             android:exported="false" />
@@ -35,22 +32,19 @@
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
-        <activity
-            android:name=".ui.request.view.RequestsActivity"
-            android:exported="true" />
-        <activity android:name=".ui.displayHelpers.DisplayHelpersActivity" />
-        <activity android:name=".ui.displayMedFriends.DisplayMedFriendsActivity" />
+        <activity android:name=".ui.request.view.RequestsActivity"
+            android:exported="true"/>
+        <activity android:name=".ui.displayHelpers.view.DisplayHelpersActivity" />
+        <activity android:name=".ui.displayMedFriends.view.DisplayMedFriendsActivity" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

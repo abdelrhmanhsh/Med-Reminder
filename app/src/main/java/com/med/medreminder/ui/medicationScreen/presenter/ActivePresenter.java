@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
+import com.med.medreminder.firebase.FirebaseActiveMedDelegate;
+import com.med.medreminder.firebase.firebaseHomeMedsDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
@@ -12,7 +14,7 @@ import com.med.medreminder.ui.medicationScreen.view.ActiveMedViewInterface;
 import java.util.Calendar;
 import java.util.List;
 
-public class ActivePresenter implements ActivePresenterInterface {
+public class ActivePresenter implements ActivePresenterInterface, FirebaseActiveMedDelegate {
 
     ActiveMedViewInterface activeMedViewInterface;
     RepositoryInterface repositoryInterface;
@@ -34,7 +36,23 @@ public class ActivePresenter implements ActivePresenterInterface {
     }
 
     @Override
-    public void showActiveMedFirestore(String email) {
-       // repositoryInterface.showActiveMedFirestore(email);
+    public void getActiveMedsFromFirebase(String email, long time) {
+        repositoryInterface.getActiveMedsFromFirebase(email,time, this);
+    }
+
+    @Override
+    public void updateMed(Medicine medicine) {
+        repositoryInterface.updateMedicine(medicine);
+    }
+
+
+    @Override
+    public void successToFetchActiveMeds(List<Medicine> meds) {
+        activeMedViewInterface.successToFetchMeds(meds);
+    }
+
+    @Override
+    public void failedToFetchActiveMeds(String msg) {
+        activeMedViewInterface.failedToFetchMeds(msg);
     }
 }

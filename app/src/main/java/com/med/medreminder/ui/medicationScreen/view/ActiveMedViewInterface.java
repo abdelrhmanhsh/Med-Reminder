@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ActiveMedViewInterface {
     void getActiveMeds(List<Medicine> medicines);
-    void showActiveMedFirestore(String email);
+    void successToFetchMeds(List<Medicine> meds);
+    void failedToFetchMeds(String msg);
+    void updateMed(Medicine medicine);
 
 }
