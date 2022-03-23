@@ -9,6 +9,7 @@ public interface homeMedPresenterInterface {
     void showMedsOnDate(LifecycleOwner owner,Long date, String email);
     void showAllStoredMedicines(LifecycleOwner owner);
     void updateMed(Medicine medicine);
+    void updateMedFirestore(Medicine medicine, String email, long id);
 
     void getMedicinesOnDateFromFirebase(String email, long time);
 

@@ -62,6 +62,10 @@ public class HomeMedPresenter implements homeMedPresenterInterface, firebaseHome
         repositoryInterface.getMedicinesOnDateFromFirebase(email,time,  this);
     }
 
+    @Override
+    public void updateMedFirestore(Medicine medicine, String email, long id) {
+        repositoryInterface.updateMedFirestore(medicine, email, id);
+    }
 
     @Override
     public void successToFetchMeds(List<Medicine> meds) {

@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.addmedicine.view;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -30,6 +31,8 @@ import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
+import com.med.medreminder.ui.homepage.view.HomeActivity;
+import com.med.medreminder.utils.Constants;
 import com.med.medreminder.workmanager.MyWorkManager;
 
 import java.text.ParseException;
@@ -125,7 +128,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+//    @RequiresApi(api = Build.VERSION_CODES.O)
     private void actionSave(){
 
         Medicine filledMed = Medicine.getInstance();
@@ -159,7 +162,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
             filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         }
         if(filledMed.getImage()==0){
-            filledMed.setImage(R.drawable.ic_medicine_other);
+            filledMed.setImage(Constants.IMAGE_MED_OTHER);
         }
         if(filledMed.getRefillReminderTime()==null){
             filledMed.setRefillReminderTime("");
@@ -186,6 +189,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 addMedToFirestore(medicine, email, id);
             }
 
+        Log.i(TAG, "actionSave: " + FirebaseHelper.getUserEmail(getContext()));
+
         // Set reminders HERE ------------------------------------------------------------
         // Set reminders HERE ------------------------------------------------------------
         //String[] time = medicine.getTime().split(":");
@@ -196,48 +201,51 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 //        Log.d("TAG", "actionSave: " + min);
 
         //int often = 24;
-        int hour, min;
-        String[] time, dose2Time, dose3Time;
-        String[] twiceDaily, threeDaily;
-        int dose2hour, dose2min;
-        int dose3hour, dose3min;
-        switch (medicine.getOften()) {
-            case "Once Daily":
-                //often = 24;
-                time = medicine.getTime().split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
-                setAlarm(hour, min);
-                break;
-            case "Twice Daily":
-                // often = 12;
-                twiceDaily = medicine.getTime().split(",");            //12:30,1:30
-                time = twiceDaily[0].split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
-                setAlarm(hour, min);
-                dose2Time = twiceDaily[1].split(":");
-                dose2hour = Integer.parseInt(dose2Time[0]);
-                dose2min = Integer.parseInt(dose2Time[1]);
-                setAlarm(dose2hour,dose2min);
-                break;
-            case "3 times a day":
-                // often = 8;
-                threeDaily = medicine.getTime().split(",");            //12:30,1:30,3:30
-                time = threeDaily[0].split(":");
-                hour = Integer.parseInt(time[0]);
-                min = Integer.parseInt(time[1]);
-                setAlarm(hour, min);
-                dose2Time = threeDaily[1].split(":");
-                dose2hour = Integer.parseInt(dose2Time[0]);
-                dose2min = Integer.parseInt(dose2Time[1]);
-                setAlarm(dose2hour,dose2min);
-                dose3Time = threeDaily[2].split(":");
-                dose3hour = Integer.parseInt(dose3Time[0]);
-                dose3min = Integer.parseInt(dose3Time[1]);
-                setAlarm(dose3hour,dose3min);
-                break;
-        }
+
+
+
+//        int hour, min;
+//        String[] time, dose2Time, dose3Time;
+//        String[] twiceDaily, threeDaily;
+//        int dose2hour, dose2min;
+//        int dose3hour, dose3min;
+//        switch (medicine.getOften()) {
+//            case "Once Daily":
+//                //often = 24;
+//                time = medicine.getTime().split(":");
+//                hour = Integer.parseInt(time[0]);
+//                min = Integer.parseInt(time[1]);
+//                setAlarm(hour, min);
+//                break;
+//            case "Twice Daily":
+//                // often = 12;
+//                twiceDaily = medicine.getTime().split(",");            //12:30,1:30
+//                time = twiceDaily[0].split(":");
+//                hour = Integer.parseInt(time[0]);
+//                min = Integer.parseInt(time[1]);
+//                setAlarm(hour, min);
+//                dose2Time = twiceDaily[1].split(":");
+//                dose2hour = Integer.parseInt(dose2Time[0]);
+//                dose2min = Integer.parseInt(dose2Time[1]);
+//                setAlarm(dose2hour,dose2min);
+//                break;
+//            case "3 times a day":
+//                // often = 8;
+//                threeDaily = medicine.getTime().split(",");            //12:30,1:30,3:30
+//                time = threeDaily[0].split(":");
+//                hour = Integer.parseInt(time[0]);
+//                min = Integer.parseInt(time[1]);
+//                setAlarm(hour, min);
+//                dose2Time = threeDaily[1].split(":");
+//                dose2hour = Integer.parseInt(dose2Time[0]);
+//                dose2min = Integer.parseInt(dose2Time[1]);
+//                setAlarm(dose2hour,dose2min);
+//                dose3Time = threeDaily[2].split(":");
+//                dose3hour = Integer.parseInt(dose3Time[0]);
+//                dose3min = Integer.parseInt(dose3Time[1]);
+//                setAlarm(dose3hour,dose3min);
+//                break;
+//        }
 
         //  setAlarm(hour, min);
 
@@ -263,7 +271,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
         filledMed.setEndDate(getString(R.string.selection_ongoing_treatment));
         filledMed.setEndDateMillis(0);
-        filledMed.setImage(R.drawable.ic_medicine_other);
+        filledMed.setImage(Constants.IMAGE_MED_OTHER);
 
         filledMed.setMedLeft(0);
         filledMed.setRefillLimit(0);
@@ -272,8 +280,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_set_treatment_duration:
@@ -301,6 +309,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
     public void addMed(Medicine medicine) {
         presenterInterface.addMed(medicine);
         Toast.makeText(getContext(), "Medicine Added!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getActivity(), HomeActivity.class));
         getActivity().finish();
     }
 

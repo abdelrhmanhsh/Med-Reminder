@@ -14,6 +14,7 @@ public interface FirebaseSource {
     void updateMedFirestore(Medicine medicine, String email, long id);
     void deleteMedFirestore(String email, long id);
     void addMedToFirestore(Medicine medicine, String email, long id);
+    void updateMedAmountFirestore(String email, long id, int newAmount);
     void updateStatusInFirestore(String helperEmail,String patientEmail,String status);
     void signup(LifecycleOwner lifecycleOwner, String email, String password, FirebaseDelegate firebaseDelegate, User user);
 

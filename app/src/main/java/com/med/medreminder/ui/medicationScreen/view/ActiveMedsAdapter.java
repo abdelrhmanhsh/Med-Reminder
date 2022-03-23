@@ -78,9 +78,31 @@ public class ActiveMedsAdapter extends RecyclerView.Adapter<ActiveMedsAdapter.Vi
             holder.medName_txt.setText(medicines.get(position).getName());
             holder.medStrength_txt.setText(medicines.get(position).getStrength());
             holder.medNum_txt.setText(medicines.get(position).getMedLeft()+"");
-            Glide.with(context).load(medicines.get(position).getImage())
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .error(R.drawable.ic_launcher_foreground)
+
+            int imgResource = medicines.get(position).getImage();
+            int setImgResource;
+            switch (imgResource){
+                case 1:
+                    setImgResource = R.drawable.ic_pill;
+                    break;
+                case 2:
+                    setImgResource = R.drawable.ic_injection;
+                    break;
+                case 3:
+                    setImgResource = R.drawable.ic_drops;
+                    break;
+                case 4:
+                    setImgResource = R.drawable.ic_medicine_other;
+                    break;
+                default:
+                    setImgResource = R.drawable.ic_medicine_other;
+                    break;
+            }
+
+            Glide.with(context).load(setImgResource)
+                    //.apply(new RequestOptions().override(200,200))
+                    .placeholder(R.drawable.ic_medicine_other)
+                    .error(R.drawable.ic_medicine_other)
                     .into(holder.med_img);
 
             holder.med_card_active.setOnClickListener(new View.OnClickListener() {

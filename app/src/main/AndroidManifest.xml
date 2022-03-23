@@ -16,14 +16,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
+        <receiver
+            android:name=".broadcasts.SkipReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+        <receiver
+            android:name=".broadcasts.TakeReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.DialogReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.SnoozeReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <activity
             android:name=".ui.meddisplayedit.view.MedDisplayEditActivity"
             android:exported="false" />
         <activity
             android:name=".ui.medfriend.view.MedFriendActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.dependency.view.DependentActivity"
             android:exported="true" />
         <activity
             android:name=".ui.addmedicine.view.AddMedActivity"
@@ -32,8 +45,17 @@
             android:name=".ui.homepage.view.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
-        <activity android:name=".ui.request.view.RequestsActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".ui.dialogs.NotificationDialogActivity"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ui.dialogs.RefillDialogActivity"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ui.request.view.RequestsActivity"
+            android:exported="true" />
         <activity android:name=".ui.displayHelpers.DisplayHelpersActivity" />
         <activity android:name=".ui.displayMedFriends.DisplayMedFriendsActivity" />
         <activity

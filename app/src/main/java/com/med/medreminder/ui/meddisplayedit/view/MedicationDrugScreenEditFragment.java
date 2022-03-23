@@ -36,6 +36,7 @@ import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.Repository;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayEditPresenter;
 import com.med.medreminder.ui.meddisplayedit.presenter.DisplayPresenterInterface;
+import com.med.medreminder.utils.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -192,7 +193,26 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
         inputEditMedAmount.setText(String.valueOf(medicine.getMedLeft()));
         inputEditRefillLimit.setText(String.valueOf(medicine.getRefillLimit()));
 
-        imgCurrent.setImageResource(medicine.getImage());
+        int setImgResource;
+        switch (medicine.getImage()){
+            case 1:
+                setImgResource = R.drawable.ic_pill;
+                break;
+            case 2:
+                setImgResource = R.drawable.ic_injection;
+                break;
+            case 3:
+                setImgResource = R.drawable.ic_drops;
+                break;
+            case 4:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+            default:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+        }
+
+        imgCurrent.setImageResource(setImgResource);
 
         //set spinner
         int selection = 0;
@@ -456,12 +476,32 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     }
 
     private void actionChangeMedImage(int imgResource){
-        imgCurrent.setImageResource(imgResource);
+        int setImgResource;
+        switch (imgResource){
+            case 1:
+                setImgResource = R.drawable.ic_pill;
+                break;
+            case 2:
+                setImgResource = R.drawable.ic_injection;
+                break;
+            case 3:
+                setImgResource = R.drawable.ic_drops;
+                break;
+            case 4:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+            default:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+        }
+
+        imgCurrent.setImageResource(setImgResource);
         imgRes = imgResource;
     }
 
     private void actionDone(Medicine medicine){
         editMed(medicine);
+//        getActivity().finish();
     }
 
     private void editMed(Medicine medicine){
@@ -530,7 +570,7 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
             updateMed.setEndDate(endDate);
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         try {
 
@@ -612,16 +652,16 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
                 actionRadioSetEndDate();
                 break;
             case R.id.med_pill_icon:
-                actionChangeMedImage(R.drawable.ic_pill);
+                actionChangeMedImage(Constants.IMAGE_PILL);
                 break;
             case R.id.med_injection_icon:
-                actionChangeMedImage(R.drawable.ic_injection);
+                actionChangeMedImage(Constants.IMAGE_INJECTION);
                 break;
             case R.id.med_drops_icon:
-                actionChangeMedImage(R.drawable.ic_drops);
+                actionChangeMedImage(Constants.IMAGE_DROPS);
                 break;
             case R.id.med_other_icon:
-                actionChangeMedImage(R.drawable.ic_medicine_other);
+                actionChangeMedImage(Constants.IMAGE_MED_OTHER);
                 break;
             case R.id.btn_done_edit:
                 actionDone(updateMed);

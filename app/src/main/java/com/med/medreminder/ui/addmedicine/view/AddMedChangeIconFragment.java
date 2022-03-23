@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.med.medreminder.R;
 import com.med.medreminder.model.Medicine;
+import com.med.medreminder.utils.Constants;
 
 public class AddMedChangeIconFragment extends Fragment implements View.OnClickListener {
 
@@ -71,23 +72,23 @@ public class AddMedChangeIconFragment extends Fragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.med_pill_icon:
-                actionIconSelected(view, R.drawable.ic_pill);
+                actionIconSelected(view, Constants.IMAGE_PILL);
                 break;
 
             case R.id.med_injection_icon:
-                actionIconSelected(view, R.drawable.ic_injection);
+                actionIconSelected(view, Constants.IMAGE_INJECTION);
                 break;
 
             case R.id.med_drops_icon:
-                actionIconSelected(view, R.drawable.ic_drops);
+                actionIconSelected(view, Constants.IMAGE_DROPS);
                 break;
 
             case R.id.med_other_icon:
-                actionIconSelected(view, R.drawable.ic_medicine_other);
+                actionIconSelected(view, Constants.IMAGE_MED_OTHER);
                 break;
 
             default:
-                actionIconSelected(view, R.drawable.ic_medicine_other);
+                actionIconSelected(view, Constants.IMAGE_MED_OTHER);
                 break;
         }
     }

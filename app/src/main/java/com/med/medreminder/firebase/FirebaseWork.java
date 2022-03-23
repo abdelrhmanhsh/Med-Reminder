@@ -48,15 +48,18 @@ public class FirebaseWork implements FirebaseSource {
     private MedicineDao dao;
     private LiveData<List<Medicine>> medicines;
     public static final String TAG = "FirebaseWork";
+    private YourPreference preference;
 
 
     public FirebaseWork(Context context) {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         AppDatabase db = AppDatabase.getInstance(context.getApplicationContext());
+        preference = YourPreference.getInstance(context.getApplicationContext());
         dao = db.medicineDao();
         medicines = dao.getAllMedicines();
     }
+
 
     public static FirebaseWork getInstance(Context context) {
         if (localSource == null) {
@@ -152,6 +155,24 @@ public class FirebaseWork implements FirebaseSource {
             @Override
             public void onSuccess(Void unused) {
                 Log.i(TAG, "onSuccess: med added to firestore with id: " + id);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e.fillInStackTrace());
+            }
+        });
+    }
+
+    @Override
+    public void updateMedAmountFirestore(String email, long id, int newAmount) {
+        CollectionReference dbUsers = db.collection("Users");
+
+        dbUsers.document(email).collection("Meds").document(String.valueOf(id))
+                .update("medLeft", newAmount).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "onSuccess: med updated to firestore with id: " + id);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -391,13 +412,22 @@ public class FirebaseWork implements FirebaseSource {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<Medicine> allMeds = new ArrayList<>();
                 List<Medicine> meds = queryDocumentSnapshots.toObjects(Medicine.class);
+                String curEmail = preference.getData(Constants.EMAIL);
                 for (int i = 0; i < meds.size(); i++) {
 
 //                    insert(meds.get(i));
-                    if (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis()) {
+                    if ( (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis() ) && ( email.equals(curEmail) )
+                            && ( meds.get(i).getIsDaily().equals("Yes")) ) {
+
                         allMeds.add(meds.get(i));
 
                     }
+                    else if ( (meds.get(i).getStartDateMillis() <= time ) && ( meds.get(i).getEndDate().equals("Ongoing treatment" ) )
+                            && ( email.equals(curEmail) ) && ( meds.get(i).getIsDaily().equals("Yes")) ){
+                        allMeds.add(meds.get(i));
+
+                    }
+
                 }
                 firebaseHomeMedsDelegate.successToFetchMeds(allMeds);
 

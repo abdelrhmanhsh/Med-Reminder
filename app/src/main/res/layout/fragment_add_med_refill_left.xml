@@ -76,7 +76,7 @@
         android:id="@+id/text_pills_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pills_left"
+        android:text="@string/meds_left"
         android:textSize="18sp"
         android:textColor="@color/title_cyan"
         app:layout_constraintTop_toBottomOf="@id/input_med_left"

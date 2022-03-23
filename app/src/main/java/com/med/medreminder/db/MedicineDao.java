@@ -22,6 +22,9 @@ public interface MedicineDao {
     @Query("Select * From medicines Where id =:id")
     LiveData<Medicine> getMedicineById(long id);
 
+    @Query("Update medicines Set medLeft =:newAmount Where id=:id")
+    void updateMedAmount(long id, int newAmount);
+
     @Update
     void updateMedicine(Medicine medicine);
 
@@ -45,10 +48,17 @@ public interface MedicineDao {
             ":time <= startDateMillis  AND :email = userEmail)")
     LiveData<List<Medicine>> getInactiveMedications(long time, String email);
 
-    @Query("SELECT * FROM medicines WHERE (:time Between (startDateMillis AND endDateMillis) AND :email = userEmail) OR (" +
-            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail) AND (endDate!='Suspended' AND :email = userEmail)" +
-            ("AND isDaily='Yes' AND :email = userEmail"))
+//    @Query("SELECT * FROM medicines WHERE (:time Between (startDateMillis AND endDateMillis) AND :email = userEmail AND isDaily='Yes') OR (" +
+//            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail AND isDaily='Yes')")
+//    LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
+
+    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis AND :email = userEmail AND isDaily='Yes') OR (" +
+            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail AND isDaily='Yes')")
     LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
+
+
+//    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis AND :email = userEmail)")
+//    LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
 
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    void insertMedStatus(MedStatus medStatus);

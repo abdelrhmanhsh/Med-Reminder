@@ -15,6 +15,7 @@ public interface RepositoryInterface {
 
     void insertMedicine(Medicine medicine);
     void updateMedicine(Medicine medicine);
+    void updateMedAmount(long id, int newAmount);
     void updateAllMedicines(String email);
     void deleteMedicine(Medicine medicine);
     void deleteAllMedicines();
@@ -31,6 +32,7 @@ public interface RepositoryInterface {
     void addMedToFirestore(Medicine medicine, String email, long id);
     void signup(LifecycleOwner lifecycleOwner, String email, String password, FirebaseDelegate firebaseDelegate, User user);
     void updateMedFirestore(Medicine medicine, String email, long id);
+    void updateMedAmountFirestore(String email, long id, int newAmount);
     void deleteMedFirestore(String email, long id);
 
     void loginWithGoogle(Context context, firebaseLoginDelegate firebaseLoginDelegate);
