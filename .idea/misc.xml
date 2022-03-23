@@ -14,13 +14,16 @@
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_starting.xml" value="0.16458333333333333" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.2" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/menu/bottom_nav_menu.xml" value="0.11388888888888889" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/drawable/add_med_progressbar.xml" value="0.24444444444444444" />
         <entry key="app/src/main/res/drawable/button_blue_border.xml" value="0.2574074074074074" />
         <entry key="app/src/main/res/drawable/button_blue_fill.xml" value="0.2574074074074074" />
+        <entry key="app/src/main/res/drawable/down_ic.xml" value="0.2611111111111111" />
         <entry key="app/src/main/res/drawable/radius_view.xml" value="0.2638888888888889" />
         <entry key="app/src/main/res/drawable/white_rounded_button.xml" value="0.26564102564102565" />
+        <entry key="app/src/main/res/layout/active_meds.xml" value="0.13229166666666667" />
         <entry key="app/src/main/res/layout/activity_add_med.xml" value="0.21875" />
-        <entry key="app/src/main/res/layout/activity_dependent.xml" value="0.20199275362318841" />
+        <entry key="app/src/main/res/layout/activity_dependent.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.11979166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_med_display_edit.xml" value="0.20652173913043478" />
@@ -36,8 +39,8 @@
         <entry key="app/src/main/res/layout/fragment_add_med_name.xml" value="0.17651831730226394" />
         <entry key="app/src/main/res/layout/fragment_add_med_often.xml" value="0.12335359675785208" />
         <entry key="app/src/main/res/layout/fragment_add_med_reason.xml" value="0.12335359675785208" />
-        <entry key="app/src/main/res/layout/fragment_add_med_refill_left.xml" value="0.12335359675785208" />
-        <entry key="app/src/main/res/layout/fragment_add_med_refill_limit.xml" value="0.12335359675785208" />
+        <entry key="app/src/main/res/layout/fragment_add_med_refill_left.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/fragment_add_med_refill_limit.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_add_med_refill_remind_time.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_add_med_strength.xml" value="0.12335359675785208" />
         <entry key="app/src/main/res/layout/fragment_add_med_time.xml" value="0.23007246376811594" />

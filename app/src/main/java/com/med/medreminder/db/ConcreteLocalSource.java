@@ -61,6 +61,16 @@ public class ConcreteLocalSource implements LocalSource{
     }
 
     @Override
+    public void updateMedAmount(long id, int newAmount) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dao.updateMedAmount(id, newAmount);
+            }
+        }).start();
+    }
+
+    @Override
     public void delete(Medicine medicine) {
         new Thread(new Runnable() {
             @Override

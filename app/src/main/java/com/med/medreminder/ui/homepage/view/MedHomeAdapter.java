@@ -61,10 +61,31 @@ public class MedHomeAdapter extends RecyclerView.Adapter<MedHomeAdapter.ViewHold
         holder.medStrength_txt.setText(medicines.get(position).getStrength());
         holder.medForm_txt.setText(medicines.get(position).getForm());
         holder.medStatus_txt.setText(medicines.get(position).getStatus());
-        Glide.with(context).load(medicines.get(position).getImage())
+
+        int imgResource = medicines.get(position).getImage();
+        int setImgResource;
+        switch (imgResource){
+            case 1:
+                setImgResource = R.drawable.ic_pill;
+                break;
+            case 2:
+                setImgResource = R.drawable.ic_injection;
+                break;
+            case 3:
+                setImgResource = R.drawable.ic_drops;
+                break;
+            case 4:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+            default:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+        }
+
+        Glide.with(context).load(setImgResource)
                 //.apply(new RequestOptions().override(200,200))
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_medicine_other)
+                .error(R.drawable.ic_medicine_other)
                 .into(holder.med_img);
 
         holder.constraint_layout.setOnClickListener(view -> {

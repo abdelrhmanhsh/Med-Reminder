@@ -47,7 +47,6 @@ public class AddMedReasonFragment extends Fragment implements View.OnClickListen
         reasonInput = view.findViewById(R.id.input_med_reason);
         progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.title);
-      //  textSkip = view.findViewById(R.id.skip);
 
         btnNext.setOnClickListener(this);
         progressBar.setProgress(40);

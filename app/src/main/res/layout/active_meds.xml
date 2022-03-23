@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="@string/pills_left"
+                android:text="@string/meds_left"
                 app:layout_constraintBottom_toBottomOf="@+id/medStrength_txt"
                 app:layout_constraintStart_toEndOf="@+id/medNum_txt"
                 app:layout_constraintTop_toTopOf="@+id/medStrength_txt" />

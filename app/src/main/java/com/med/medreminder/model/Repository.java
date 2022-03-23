@@ -50,6 +50,11 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void updateMedAmount(long id, int newAmount) {
+        localSource.updateMedAmount(id, newAmount);
+    }
+
+    @Override
     public void updateAllMedicines(String email) {
         localSource.updateAllMedicines(email);
     }
@@ -77,6 +82,11 @@ public class Repository implements RepositoryInterface {
     @Override
     public void updateMedFirestore(Medicine medicine, String email, long id) {
         firebaseSource.updateMedFirestore(medicine, email, id);
+    }
+
+    @Override
+    public void updateMedAmountFirestore(String email, long id, int newAmount) {
+        firebaseSource.updateMedAmountFirestore(email, id, newAmount);
     }
 
     @Override

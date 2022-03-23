@@ -70,11 +70,34 @@ public class InactiveMedsAdapter extends RecyclerView.Adapter<InactiveMedsAdapte
     public void onBindViewHolder(@NonNull InactiveMedsAdapter.ViewHolder holder, int position) {
         holder.medName_txt.setText(medicineList.get(position).getName());
         holder.medStrength_txt.setText(medicineList.get(position).getStrength());
-        Glide.with(context).load(medicineList.get(position).getImage())
+
+        int imgResource = medicineList.get(position).getImage();
+        int setImgResource;
+        switch (imgResource){
+            case 1:
+                setImgResource = R.drawable.ic_pill;
+                break;
+            case 2:
+                setImgResource = R.drawable.ic_injection;
+                break;
+            case 3:
+                setImgResource = R.drawable.ic_drops;
+                break;
+            case 4:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+            default:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+        }
+
+        Glide.with(context).load(setImgResource)
                 //.apply(new RequestOptions().override(200,200))
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_medicine_other)
+                .error(R.drawable.ic_medicine_other)
                 .into(holder.med_img);
+
+
         holder.med_card_inactive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

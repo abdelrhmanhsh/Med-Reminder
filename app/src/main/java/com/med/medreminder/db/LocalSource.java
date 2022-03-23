@@ -11,6 +11,7 @@ public interface LocalSource {
     void insert(Medicine medicine);
     void update(Medicine medicine);
     void updateAllMedicines(String email);
+    void updateMedAmount(long id, int newAmount);
     void delete(Medicine medicine);
     void deleteAllMedicines();
     LiveData<Medicine> getMedicineById(long id);

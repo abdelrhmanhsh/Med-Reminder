@@ -41,9 +41,9 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
     public static final String TAG = "MedicationDrugScreenDisplayFragment";
 
-    ImageView imgEdit, imgDelete;
+    ImageView imgEdit, imgDelete, medIcon;
     Button btnSuspend, btnRefill, btnResume;
-    TextView remindersDesc, conditionsDesc, prescriptionDesc, resumeDesc;
+    TextView medName, remindersDesc, conditionsDesc, prescriptionDesc, resumeDesc;
     View resumeView;
 
     long id;
@@ -64,9 +64,11 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
         imgEdit = view.findViewById(R.id.icon_edit);
         imgDelete = view.findViewById(R.id.icon_delete);
+        medIcon = view.findViewById(R.id.med_icon);
         btnSuspend = view.findViewById(R.id.btn_suspend);
         btnRefill = view.findViewById(R.id.btn_refill);
         btnResume = view.findViewById(R.id.btn_resume);
+        medName = view.findViewById(R.id.med_name);
         remindersDesc = view.findViewById(R.id.text_reminders_description);
         conditionsDesc = view.findViewById(R.id.text_conditions_description);
         prescriptionDesc = view.findViewById(R.id.text_prescription_description);
@@ -108,11 +110,33 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
         med = medicine;
 
+        int setImgResource;
+        switch (medicine.getImage()){
+            case 1:
+                setImgResource = R.drawable.ic_pill;
+                break;
+            case 2:
+                setImgResource = R.drawable.ic_injection;
+                break;
+            case 3:
+                setImgResource = R.drawable.ic_drops;
+                break;
+            case 4:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+            default:
+                setImgResource = R.drawable.ic_medicine_other;
+                break;
+        }
+
+        medIcon.setImageResource(setImgResource);
+        medName.setText(medicine.getName());
+
         String reminderDesc = medicine.getOften() + "\n" + medicine.getTime();
         remindersDesc.setText(reminderDesc);
         conditionsDesc.setText(medicine.getReason());
 
-        String presDesc = medicine.getMedLeft() + " Pills left\n"
+        String presDesc = medicine.getMedLeft() + " Amount left\n"
             + "Refill reminder: When I have " + medicine.getRefillLimit() + " meds remaining";
         prescriptionDesc.setText(presDesc);
 
