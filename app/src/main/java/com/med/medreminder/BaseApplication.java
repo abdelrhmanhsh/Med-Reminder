@@ -9,6 +9,7 @@ public class BaseApplication extends Application {
 
     public static final String RESCHEDULE_CHANNEL = "reschedule";
     public static final String REFILL_CHANNEL = "refill";
+    public static final String MEDREMINDER_CHANNEL = "medReminder";
 
 
     @Override
@@ -30,6 +31,7 @@ public class BaseApplication extends Application {
             );
             rescheduleChannel.setDescription("Notification for reschedule medication time");
 
+
             NotificationChannel refillChannel = new NotificationChannel(
                     REFILL_CHANNEL,
                     "refill",
@@ -37,9 +39,18 @@ public class BaseApplication extends Application {
             );
             refillChannel.setDescription("Notification for reschedule medication time");
 
+
+            NotificationChannel notificationChannel2 = new NotificationChannel(
+                    MEDREMINDER_CHANNEL,
+                    "med reminder",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationChannel2.setDescription("Medical reminder");
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(rescheduleChannel);
             manager.createNotificationChannel(refillChannel);
+            manager.createNotificationChannel(notificationChannel2);
 
         }
     }

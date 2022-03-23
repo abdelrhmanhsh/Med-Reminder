@@ -167,6 +167,24 @@ public class FirebaseWork implements FirebaseSource {
         });
     }
 
+    @Override
+    public void updateMedAmountFirestore(String email, long id, int newAmount) {
+        CollectionReference dbUsers = db.collection("Users");
+
+        dbUsers.document(email).collection("Meds").document(String.valueOf(id))
+                .update("medLeft", newAmount).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "onSuccess: med updated to firestore with id: " + id);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e.fillInStackTrace());
+            }
+        });
+    }
+
 
     public void updateStatusInFirestore(String helperEmail, String patientEmail, String status) {
         Log.d("TAG", "Helper Email: " + helperEmail);

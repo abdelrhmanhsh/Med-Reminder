@@ -1,5 +1,7 @@
 package com.med.medreminder.ui.displayMedFriends.view;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,6 +77,7 @@ public class DisplayMedFriendsActivity extends AppCompatActivity implements OnCl
         yourPrefrence.saveData(Constants.isMedFriend,"true");
         Log.d("TAG","Homeeeee: med friend email"+medFriend_email);
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         getApplicationContext().startActivity(intent);
     }
 

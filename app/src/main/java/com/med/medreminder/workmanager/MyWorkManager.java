@@ -2,8 +2,9 @@ package com.med.medreminder.workmanager;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static com.med.medreminder.ui.BaseApplication.MEDREMINDER_CHANNEL;
-import static com.med.medreminder.ui.BaseApplication.RESCHEDULE_CHANNEL;
+
+import static com.med.medreminder.BaseApplication.MEDREMINDER_CHANNEL;
+import static com.med.medreminder.BaseApplication.RESCHEDULE_CHANNEL;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
