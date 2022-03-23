@@ -34,6 +34,11 @@ public class InactiveMedsAdapter extends RecyclerView.Adapter<InactiveMedsAdapte
         this.context = context;
     }
 
+    public void removeMeds(){
+        medicineList.clear();
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         View row;
         TextView medName_txt;

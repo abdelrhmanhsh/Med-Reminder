@@ -66,7 +66,7 @@ public class MyWorkManager extends Worker {
 //        sendOnReschedule(context, imageSource, medName);
 //        showDialog();
 //        showNotificationDialog(context);
-        sendOnReschedule(context, imageSource, medName, id);
+        //sendOnReschedule(context, imageSource, medName, id);
 //        sendOnReschedule(context, medicine);
 //        showDialog();
         Log.i(TAG, "doWork: DO WOooooooork");
@@ -84,7 +84,7 @@ public class MyWorkManager extends Worker {
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context, RESCHEDULE_CHANNEL)
-                .setSmallIcon(imageSource)
+           //     .setSmallIcon(imageSource)
                 .setContentTitle(context.getString(R.string.resched_notification_title))
                 .setContentText(context.getString(R.string.resched_notification_desc) + " " + medName)
                 .setContentIntent(pendingIntent)

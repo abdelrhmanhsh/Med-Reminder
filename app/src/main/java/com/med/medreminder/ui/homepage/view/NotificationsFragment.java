@@ -5,31 +5,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.med.medreminder.databinding.FragmentNotificationsBinding;
 import com.med.medreminder.firebase.FirebaseHelper;
-import com.med.medreminder.ui.displayHelpers.DisplayHelpersActivity;
-import com.med.medreminder.ui.displayMedFriends.DisplayMedFriendsActivity;
+import com.med.medreminder.ui.displayHelpers.view.DisplayHelpersActivity;
+import com.med.medreminder.ui.displayMedFriends.view.DisplayMedFriendsActivity;
 import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.request.view.RequestsActivity;
+import com.med.medreminder.utils.Constants;
 import com.med.medreminder.utils.YourPreference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class NotificationsFragment extends Fragment {
@@ -38,6 +30,8 @@ public class NotificationsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     FirebaseDatabase database;
+    YourPreference yourPrefrence;
+
 
 
     private FragmentNotificationsBinding binding;
@@ -63,7 +57,9 @@ public class NotificationsFragment extends Fragment {
 
         });
         binding.profileTxt.setOnClickListener(view1 -> {
-
+            yourPrefrence = YourPreference.getInstance(getContext());
+            yourPrefrence.saveData(Constants.isMedFriend,"false");
+            startActivity(new Intent(getActivity(), HomeActivity.class));
         });
 
         binding.myMedFriendsRequestsTxt.setOnClickListener(view1 -> {

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     app:cardCornerRadius="10dp"
-    android:id="@+id/medfriend_cardView"
+    android:id="@+id/medfriend_cv"
     app:cardElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

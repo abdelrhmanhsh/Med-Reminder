@@ -153,13 +153,13 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
 
-        <action
+       <!-- <action
             android:id="@+id/actionAddMedAlmostToInstructionsFood"
             app:destination="@id/addMedInstructionsFoodFragment"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left" />-->
         <action
             android:id="@+id/actionAddMedAlmostToChangeIcon"
             app:destination="@id/addMedChangeIconFragment"
@@ -226,7 +226,7 @@
 
     </fragment>
 
-    <fragment
+   <!-- <fragment
         android:id="@+id/addMedInstructionsFoodFragment"
         android:name="com.med.medreminder.ui.addmedicine.view.AddMedInstructionsFoodFragment"
         android:label="fragment_add_med_instructions_food"
@@ -254,7 +254,7 @@
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
-    </fragment>
+    </fragment>-->
 
     <fragment
         android:id="@+id/addMedRefillLimitFragment"

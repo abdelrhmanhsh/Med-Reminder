@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 
 import java.util.List;
@@ -40,15 +39,13 @@ public interface MedicineDao {
     @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis  AND :email = userEmail) OR (" +
             "startDateMillis <= :time AND endDate='Ongoing treatment'  AND :email = userEmail) AND (endDate!='Suspended')")
     LiveData<List<Medicine>> getActiveMedications(long time, String email);
-
     @Query("SELECT * FROM medicines WHERE (:time > endDateMillis AND endDate!='Ongoing treatment'  AND :email = userEmail) OR (" +
             ":time <= startDateMillis  AND :email = userEmail)")
     LiveData<List<Medicine>> getInactiveMedications(long time, String email);
-
-    @Query("SELECT * FROM medicines WHERE (:time Between (startDateMillis AND endDateMillis) AND :email = userEmail) OR (" +
-            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail) AND (endDate!='Suspended' AND :email = userEmail)" +
-            ("AND isDaily='Yes' AND :email = userEmail"))
+    @Query("SELECT * FROM medicines WHERE (:time Between startDateMillis AND endDateMillis AND :email = userEmail AND isDaily='Yes') OR (" +
+            "startDateMillis <= :time AND endDate='Ongoing treatment' AND :email = userEmail AND isDaily='Yes')")
     LiveData<List<Medicine>> getActiveMedicationsOnDateSelected(long time, String email);
+
 
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    void insertMedStatus(MedStatus medStatus);

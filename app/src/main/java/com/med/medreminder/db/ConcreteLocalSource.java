@@ -3,7 +3,6 @@ package com.med.medreminder.db;
 import android.content.Context;
 
 import com.med.medreminder.R;
-import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 
 import java.util.List;

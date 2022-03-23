@@ -4,6 +4,20 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2611111111111111" />
+<<<<<<< Updated upstream
+=======
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_dependent.xml" value="0.22644927536231885" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_display_med_friends.xml" value="0.14266304347826086" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/activity_med_friend.xml" value="0.1734375" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/fragment_add_med_instructions_food.xml" value="0.22644927536231885" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/fragment_add_med_instructions_other.xml" value="0.22644927536231885" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/inactive_meds.xml" value="0.15833333333333333" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/medfriend_row.xml" value="0.15833333333333333" />
+        <entry key="..\:/AndroidProjects/Med-Reminder/app/src/main/res/layout/request_row.xml" value="0.4" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/drawable/ic_pill.xml" value="0.1815" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_add_med_almost.xml" value="0.16111111111111112" />
+        <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_add_med_time.xml" value="0.25416666666666665" />
+>>>>>>> Stashed changes
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/fragment_notifications.xml" value="0.25416666666666665" />
         <entry key="..\:/ITI/android/Med-Reminder/app/src/main/res/layout/single_medicine.xml" value="0.4" />

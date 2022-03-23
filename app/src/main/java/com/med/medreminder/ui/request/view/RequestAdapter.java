@@ -32,6 +32,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     public void setRequests(List<String> emails){
         this.emails = emails;
+        notifyDataSetChanged();
+    }
+
+    public void removeRequests(){
+        emails.clear();
+        notifyDataSetChanged();
     }
 
 
@@ -74,7 +80,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                 holder.request_cardView.setVisibility(View.GONE);
                 RequestsActivity r = new RequestsActivity();
                 r.updateStatusInFirestore(currUserEmail,holder.senderEmail_txt.getText().toString(),STATUS);
-                //send currUserEmail to senderEmail
                 r.addHelperToFirestore(currUserEmail,holder.senderEmail_txt.getText().toString());
             }
         });
