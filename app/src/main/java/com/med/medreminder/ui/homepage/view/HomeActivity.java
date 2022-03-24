@@ -2,6 +2,7 @@ package com.med.medreminder.ui.homepage.view;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -68,7 +69,11 @@ public class HomeActivity extends AppCompatActivity {
 
         Log.d("TAG", "onSuccess:**********!!!!!!!!!! " + yourPreference.getData(Constants.FIRST_NAME));
 
-        binding.usernameTxt.setText(yourPreference.getData(Constants.FIRST_NAME));
+            if (yourPreference.getData(Constants.isMedFriend).equals("true")) {
+                binding.usernameTxt.setText(yourPreference.getData(Constants.MED_FRIEND_EMAIL));
+            } else {
+                binding.usernameTxt.setText(yourPreference.getData(Constants.FIRST_NAME));
+            }
 
     }
 

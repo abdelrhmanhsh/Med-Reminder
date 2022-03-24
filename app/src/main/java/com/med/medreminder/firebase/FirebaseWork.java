@@ -419,14 +419,13 @@ public class FirebaseWork implements FirebaseSource {
                 for (int i = 0; i < meds.size(); i++) {
 
 //                    insert(meds.get(i));
-                    if ( (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis() ) && ( email.equals(curEmail) )
-                    && ( meds.get(i).getIsDaily().equals("Yes")) ) {
+                    if ( (time >= meds.get(i).getStartDateMillis() && time <= meds.get(i).getEndDateMillis() ) && ( meds.get(i).getIsDaily().equals("Yes")) ) {
 
                         allMeds.add(meds.get(i));
 
                     }
                     else if ( (meds.get(i).getStartDateMillis() <= time ) && ( meds.get(i).getEndDate().equals("Ongoing treatment" ) )
-                                && ( email.equals(curEmail) ) && ( meds.get(i).getIsDaily().equals("Yes")) ){
+                            && ( meds.get(i).getIsDaily().equals("Yes")) ){
                             allMeds.add(meds.get(i));
 
                         }

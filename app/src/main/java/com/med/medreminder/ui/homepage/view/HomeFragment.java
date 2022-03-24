@@ -181,6 +181,9 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                     if (FirebaseHelper.isInternetAvailable(getContext())) {
                         if (yourPrefrence.getData(Constants.isMedFriend).equals("true")) {
                             //medFriend profile
+                            Log.i(TAG, "onDateSelected: medfriend profile");
+                            Log.i(TAG, "onDateSelected: medfriend profile ACCOUNT "  + yourPrefrence.getData(Constants.MED_FRIEND_EMAIL));
+
                             homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.MED_FRIEND_EMAIL), date.getTimeInMillis());
                         } else {
                             homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL), date.getTimeInMillis());
@@ -307,16 +310,22 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
 //        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList);
 //        Log.i(TAG, "showNotificationDialog: my med status list: " + medStatusList.size());
 
-        imgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putLong("med_id", medicine.getId());
-                NavController navController = Navigation.findNavController(getView());
-                navController.navigate(R.id.actionNavigationHomeToEditNav, bundle);
-                dialog.dismiss();
-            }
-        });
+        if(yourPrefrence.getData(Constants.isMedFriend).equals("true")){
+            imgEdit.setVisibility(View.GONE);
+        } else {
+            imgEdit.setVisibility(View.VISIBLE);
+            imgEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("med_id", medicine.getId());
+                    NavController navController = Navigation.findNavController(getView());
+                    navController.navigate(R.id.actionNavigationHomeToEditNav, bundle);
+                    dialog.dismiss();
+                }
+            });
+        }
+
 
         int setImgResource;
         switch (medicine.getImage()){
@@ -416,9 +425,10 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                                         if (currMedLeft-1 <= medicine.getRefillLimit()) {
                                             Log.d("TAG", "REFILL REMINDER" + currMedLeft);
                                             //sendRefillNotification(10,medicine.getImage(), medicine.getName());
-                                            refillReminderTime(medicine.getRefillReminderTime(), medicine.getImage(), medicine.getName());
+                                            refillReminderTime(medicine.getRefillReminderTime(), medicine.getImage(), medicine.getName(), medicine.getId(), medicine.getMedLeft(), medicine.getTime(), medicine.getStrength());
                                         }
-                                        medicine.setMedLeft(currMedLeft - 1);
+                                        int newAmount = currMedLeft-1;
+                                        medicine.setMedLeft(newAmount);
                                     }
 
                                     WorkManager.getInstance().cancelAllWorkByTag(String.valueOf(medicine.getId()));
@@ -428,6 +438,12 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                         .setNegativeButton(android.R.string.no, null)
                         .show();
 
+
+                if (currMedLeft > 0){
+                    int newAmount = currMedLeft-1;
+                    medicine.setMedLeft(newAmount);
+                }
+
                 updateMed(medicine);
                 if(FirebaseHelper.isInternetAvailable(getContext()))
                     if(FirebaseHelper.isUserLoggedIn(getContext()))
@@ -435,7 +451,6 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
                 dialog.dismiss();
             }
         });
-
 
         btnReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -604,7 +619,8 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         // WorkManager.getInstance(MainActivity.this).cancelWorkById(locationUploadWorkRequest.getId());
     }
 
-    private void refillReminderTime(String refillReminderTime, int imageResource, String medName){
+    private void refillReminderTime(String refillReminderTime, int imageResource, String medName, long id,
+                                    int amountLeft, String medTimesStr, String medStrength){
 
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -626,14 +642,20 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
         // Get msec from each, and subtract.
         long diff = refillTime.getTime() - currentTime.getTime();
         Log.d("TAG","Time: Delay"+diff);
-        sendRefillNotification(diff,imageResource,medName);
+        sendRefillNotification(diff,imageResource,medName, id, amountLeft, medTimesStr, medStrength);
 
     }
 
-    private void sendRefillNotification(long delayInMillis, int imageResource, String medName){
+    private void sendRefillNotification(long delayInMillis, int imageResource, String medName, long id,
+                                        int amountLeft, String medTimesStr, String medStrength){
+
         Data data = new Data.Builder()
-                .putInt(RefillReminder.IMAGE_RESOURCE, imageResource)
-                .putString(RefillReminder.MED_NAME, medName)
+                .putInt(Constants.IMAGE_RESOURCE, imageResource)
+                .putString(Constants.MED_NAME, medName)
+                .putLong(Constants.MED_ID, id)
+                .putInt(Constants.AMOUNT_LEFT, amountLeft)
+                .putString(Constants.MED_TIMES, medTimesStr)
+                .putString(Constants.MED_STRENGTH, medStrength)
                 .build();
 
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(RefillReminder.class)

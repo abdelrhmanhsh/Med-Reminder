@@ -33,6 +33,7 @@ import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenter;
 import com.med.medreminder.ui.addmedicine.presenter.AddMedPresenterInterface;
 import com.med.medreminder.ui.homepage.view.HomeActivity;
 import com.med.medreminder.utils.Constants;
+import com.med.medreminder.utils.YourPreference;
 import com.med.medreminder.workmanager.MyWorkManager;
 
 import java.text.ParseException;
@@ -55,6 +56,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
 
     FirebaseFirestore db;
     AddMedPresenterInterface presenterInterface;
+    YourPreference yourPreference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +75,8 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         btnSave = view.findViewById(R.id.btn_almost_save);
         progressBar = view.findViewById(R.id.progress_bar);
         textTitle = view.findViewById(R.id.description);
+
+        yourPreference = YourPreference.getInstance(getContext());
 
         presenterInterface = new AddMedPresenter(Repository.getInstance(getContext(),
                 ConcreteLocalSource.getInstance(getContext()), FirebaseWork.getInstance(getContext())));
@@ -181,13 +185,24 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 filledMed.getImage(), "", email, filledMed.isRefillReminder(), filledMed.getRefillReminderTime());
 
         Log.i(TAG, "actionSave: medicine save: " + medicine.toString());
-        addMed(medicine);
 
+        if (yourPreference.getData(Constants.isMedFriend).equals("true")) {
 
-        if(FirebaseHelper.isInternetAvailable(getContext()))
-            if(FirebaseHelper.isUserLoggedIn(getContext())){
-                addMedToFirestore(medicine, email, id);
-            }
+            if(FirebaseHelper.isInternetAvailable(getContext()))
+//                if(FirebaseHelper.isUserLoggedIn(getContext())){
+                    addMedToFirestore(medicine, yourPreference.getData(Constants.MED_FRIEND_EMAIL), id);
+//                }
+
+        } else {
+            addMed(medicine);
+
+            if(FirebaseHelper.isInternetAvailable(getContext()))
+                if(FirebaseHelper.isUserLoggedIn(getContext())){
+                    addMedToFirestore(medicine, email, id);
+                }
+//            homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL), date.getTimeInMillis());
+        }
+
 
         Log.i(TAG, "actionSave: " + FirebaseHelper.getUserEmail(getContext()));
 

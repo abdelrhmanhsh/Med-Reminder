@@ -16,6 +16,7 @@ import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentNotificationsBinding;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.ui.MainActivity;
+import com.med.medreminder.ui.displayHelpers.view.DisplayHelpersActivity;
 import com.med.medreminder.ui.displayMedFriends.view.DisplayMedFriendsActivity;
 import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.request.view.RequestsActivity;
@@ -97,6 +98,7 @@ public class NotificationsFragment extends Fragment {
                 yourPreference.saveData(Constants.FIRST_NAME,"");
                 yourPreference.saveData(Constants.SECOND_NAME,"");
                 Log.d("TAG", "onViewCreated: inside if is login" + yourPreference.getData(Constants.IS_LOGIN));
+                yourPreference.saveData(Constants.isMedFriend,"false");
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 getContext().startActivity(intent);
                 getActivity().finish();

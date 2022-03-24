@@ -17,9 +17,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MedReminder">
         <receiver
-            android:name=".broadcasts.SkipReceiver"
+            android:name=".broadcasts.DailyDialogReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
+        <receiver
+            android:name=".broadcasts.DailySnoozeReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.DailyTakeReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.DailySkipReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.RefillSkipReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.RefillSnoozeReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.RefillDialogReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".broadcasts.SkipReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <receiver
             android:name=".broadcasts.TakeReceiver"
             android:enabled="true"
@@ -50,6 +78,10 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
         <activity
+            android:name=".ui.dialogs.DailyNotificationDialogActivity"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
             android:name=".ui.dialogs.RefillDialogActivity"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Dialog" />
@@ -58,12 +90,13 @@
             android:exported="true" />
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
