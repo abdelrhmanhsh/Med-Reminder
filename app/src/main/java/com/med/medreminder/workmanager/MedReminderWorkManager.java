@@ -83,8 +83,8 @@ public class MedReminderWorkManager extends Worker {
         Log.d(TAG, "doWork: 70" + medicines.get(position).getName());
         Log.d(TAG, "doWork: 60" + position);
 
-        notification(context, medicines.get(position));
-
+        //notification(context, medicines.get(position));
+        showNotification(context,medicines.get(position).getName(),"It's time to take your medicine",100);
         setAlarm(medicines);
 
 
@@ -117,11 +117,11 @@ public class MedReminderWorkManager extends Worker {
     public static void notification(Context context, Medicine medicine) {
         Log.d(TAG, "sendOnMedicalReminder: " + "98");
 
-        int reqCode = 1;
+        int reqCode = 120;
         Intent intent = new Intent(context, HomeActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, intent, PendingIntent.FLAG_ONE_SHOT);
-        String CHANNEL_ID = "channel_name";// The id of the channel.
+        String CHANNEL_ID = "medical_reminder";// The id of the channel.
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(medicine.getImage())
                 .setContentTitle(medicine.getName())
@@ -143,6 +143,32 @@ public class MedReminderWorkManager extends Worker {
 
         Log.d("showNotification", "showNotification: " + reqCode);
 
+    }
+
+    public void showNotification(Context context, String title, String message, int reqCode) {
+
+        Intent inten1 = new Intent(context, HomeActivity.class);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, inten1, PendingIntent.FLAG_ONE_SHOT);
+        String CHANNEL_ID = "10";// The id of the channel.
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Channel Name";// The user-visible name of the channel.
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        notificationManager.notify(reqCode, notificationBuilder.build()); // 0 is the request code, it should be unique id
+
+        Log.d("showNotification", "showNotification: " + reqCode);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

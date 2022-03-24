@@ -696,9 +696,14 @@ public class HomeFragment extends Fragment implements onMedClickListener, homeMe
             int position = 0;
             int nearestDose = 0;
             for (int i = 0; i < medicines.size(); i++) {
+                Log.d(TAG, "setAlarm: 01"+ medicines.get(i).getTime());
                 if(!medicines.get(i).getTime().equals("")) {
+                    Log.d(TAG, "setAlarm: 02");
+
                     for (int j = 0; j < medicines.get(i).getTime().split(",").length; j++) {
                         timeAt = LocalDate.now().atTime(Integer.parseInt(medicines.get(i).getTime().split(",")[j].split(":")[0].trim()), Integer.parseInt(medicines.get(i).getTime().split(",")[j].split(":")[1].trim()));
+                        Log.d(TAG, "setAlarm: 03" + timeAt.isAfter(timeNow));
+                        Log.d(TAG, "setAlarm: 04" + (duration.abs().toMillis() > Duration.between(timeNow, timeAt).toMillis()));
 
                         if ((timeAt.isAfter(timeNow)) && (duration.abs().toMillis() > Duration.between(timeNow, timeAt).toMillis())) {
                             duration = Duration.between(timeNow, timeAt);

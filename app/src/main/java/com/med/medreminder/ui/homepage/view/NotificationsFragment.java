@@ -16,6 +16,7 @@ import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentNotificationsBinding;
 import com.med.medreminder.firebase.FirebaseHelper;
 import com.med.medreminder.ui.MainActivity;
+import com.med.medreminder.ui.displayHelpers.view.DisplayHelpersActivity;
 import com.med.medreminder.ui.displayMedFriends.view.DisplayMedFriendsActivity;
 import com.med.medreminder.ui.medfriend.view.MedFriendActivity;
 import com.med.medreminder.ui.request.view.RequestsActivity;
