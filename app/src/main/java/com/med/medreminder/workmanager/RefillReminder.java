@@ -81,7 +81,7 @@ public class RefillReminder extends Worker{
     }
 
     public void sendOnRefill(Context context, int imageSource, String medName, long id, int amountLeft){
-        
+
         Intent skipIntent = new Intent(context, RefillSkipReceiver.class);
         Intent snoozeIntent = new Intent(context, RefillSnoozeReceiver.class);
         Intent refillIntent = new Intent(context, RefillDialogReceiver.class);

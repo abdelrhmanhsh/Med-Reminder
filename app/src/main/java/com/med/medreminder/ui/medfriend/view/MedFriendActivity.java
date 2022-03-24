@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.RuntimeExecutionException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,7 +79,6 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
             currUserEmail = yourPrefrence.getData(Constants.EMAIL);
             if (isLogin.equals("true") && FirebaseHelper.isInternetAvailable(getApplicationContext())){
                 checkHelperEmail();
-                finish();
             }
             else {
                 Toast.makeText(this, "You must login first and be connected to the internet!", Toast.LENGTH_SHORT).show();
@@ -101,14 +102,22 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
                         .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                             @Override
                             public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                                boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
-                                if (isNewUser) {
-                                    Log.d("TAG", "User not found!");
-                                    Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.d("TAG", "User found!");
-                                    addRequestsToFirestore(currUserEmail, currUser, "PENDING", helper_email);
+                                try{
+                                    boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                                    if (isNewUser) {
+                                        Log.d("TAG", "User not found!");
+                                        Toast.makeText(getApplicationContext(), "" + "This email address doesn't exist !", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Log.d("TAG", "User found!");
+                                        addRequestsToFirestore(currUserEmail, currUser, "PENDING", helper_email);
+                                        Toast.makeText(getApplicationContext(), "" + "Request sent!", Toast.LENGTH_LONG).show();
+                                        finish();
+                                        
+                                    }
+                                }catch(RuntimeExecutionException ex){
+                                    Toast.makeText(getApplicationContext(), "" + "Email badly formatted!", Toast.LENGTH_LONG).show();
                                 }
+
                             }
                         });
             }else{

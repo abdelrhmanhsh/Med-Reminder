@@ -82,28 +82,9 @@ public class MyWorkManager extends Worker {
         Log.i(TAG, "doWork: " + medTimes);
         Log.i(TAG, "doWork: " + medStrength);
 
-//        sendOnReschedule(context, imageSource, medName);
-//        showDialog();
-//        showNotificationDialog(context);
-
-
-
         sendOnReschedule(context, imageSource, medName, id, amountLeft);
-       sendNotificationDialog(imageSource, medName, id, medTimes, medStrength, amountLeft);
-//        sendNotification2Dialog();
+        sendNotificationDialog(imageSource, medName, id, medTimes, medStrength, amountLeft);
 
-
-
-
-//        dialogReceiver = new DialogReceiver();
-//        context.startActivity(new Intent(context, NotificationDialogActivity.class));
-//        Intent intent = new Intent(context, NotificationDialogActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//        Intent intent = new Intent(context, NotificationDialogActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intent);
-//        sendOnReschedule(context, medicine);
-//        showDialog();
         Log.i(TAG, "doWork: DO WOooooooork");
         return Result.success();
 
@@ -135,10 +116,7 @@ public class MyWorkManager extends Worker {
     public void sendOnReschedule(Context context, int imageSource, String medName, long id, int amountLeft){
 
         Intent intent = new Intent(context, HomeActivity.class);
-//        Medicine medicine = null;
-//        MedStatus medStatus = new MedStatus(123456, "20-03-2022", "Taken", "abdelrahman@gmail.com");
-//        intent.putExtra("med", id);
-//        intent.putExtra("flag", "notification");
+
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
 
         Intent skipIntent = new Intent(context, SkipReceiver.class);
@@ -151,14 +129,10 @@ public class MyWorkManager extends Worker {
         snoozeIntent.putExtra(Constants.AMOUNT_LEFT, amountLeft);
         snoozeIntent.putExtra(Constants.MED_NAME, medName);
         snoozeIntent.putExtra(Constants.IMAGE_RESOURCE, imageSource);
-//        snoozeIntent = WorkManager.getInstance(getApplicationContext())
-//                .createCancelPendingIntent(getId());
 
         takeIntent.putExtra(Constants.MED_ID, id);
         takeIntent.putExtra(Constants.AMOUNT_LEFT, amountLeft);
 
-//        PendingIntent intent = WorkManager.getInstance(getApplicationContext())
-//                .createCancelPendingIntent(getId());
 
         PendingIntent skipActionIntent = PendingIntent.getBroadcast(context,
                 0, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
