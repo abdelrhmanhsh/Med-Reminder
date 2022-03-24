@@ -189,9 +189,9 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
         if (yourPreference.getData(Constants.isMedFriend).equals("true")) {
 
             if(FirebaseHelper.isInternetAvailable(getContext()))
-//                if(FirebaseHelper.isUserLoggedIn(getContext())){
-                    addMedToFirestore(medicine, yourPreference.getData(Constants.MED_FRIEND_EMAIL), id);
-//                }
+                addMedToFirestore(medicine, yourPreference.getData(Constants.MED_FRIEND_EMAIL), id);
+            startActivity(new Intent(getActivity(), HomeActivity.class));
+            getActivity().finish();
 
         } else {
             addMed(medicine);
@@ -200,9 +200,7 @@ public class AddMedAlmostFragment extends Fragment implements View.OnClickListen
                 if(FirebaseHelper.isUserLoggedIn(getContext())){
                     addMedToFirestore(medicine, email, id);
                 }
-//            homeMedPresenterInterface.getMedicinesOnDateFromFirebase(yourPrefrence.getData(Constants.EMAIL), date.getTimeInMillis());
         }
-
 
         Log.i(TAG, "actionSave: " + FirebaseHelper.getUserEmail(getContext()));
 

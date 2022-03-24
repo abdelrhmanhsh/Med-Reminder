@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.dialogs;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -116,6 +117,7 @@ public class NotificationDialogActivity extends Activity {
             public void onClick(View view) {
                 Toast.makeText(NotificationDialogActivity.this, "Skipped!", Toast.LENGTH_SHORT).show();
                 WorkManager.getInstance().cancelAllWorkByTag(String.valueOf(medId));
+                NotificationManagerCompat.from(NotificationDialogActivity.this).cancel(1);
                 finish();
             }
         });
@@ -128,7 +130,9 @@ public class NotificationDialogActivity extends Activity {
                     String userEmail = FirebaseHelper.getUserEmail(NotificationDialogActivity.this);
                     int newAmount = medLeft - 1;
                     updateMedAmount(medId, newAmount);
-                    updateMedAmountFirestore(userEmail, medId, newAmount);
+                    if(FirebaseHelper.isInternetAvailable(NotificationDialogActivity.this))
+                        if(FirebaseHelper.isUserLoggedIn(NotificationDialogActivity.this))
+                            updateMedAmountFirestore(userEmail, medId, newAmount);
                     Toast.makeText(NotificationDialogActivity.this, "Medicine Taken!", Toast.LENGTH_SHORT).show();
                 }
 

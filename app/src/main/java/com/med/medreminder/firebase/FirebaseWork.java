@@ -222,8 +222,10 @@ public class FirebaseWork implements FirebaseSource {
                             medicines.observe(lifecycleOwner, new Observer<List<Medicine>>() {
                                 @Override
                                 public void onChanged(List<Medicine> medicines) {
-                                    for (Medicine medicine : medicines){
-                                        addMedToFirestore(medicine, email, medicine.getId());
+                                    if (medicines.size()>0){
+                                        for (Medicine medicine : medicines){
+                                            addMedToFirestore(medicine, email, medicine.getId());
+                                        }
                                     }
 
                                 }

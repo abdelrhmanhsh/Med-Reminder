@@ -64,6 +64,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     private FragmentDashboardBinding binding;
     private FirebaseFirestore db;
     long curDate;
+    YourPreference yourPreference;
 
 
     @Override
@@ -76,6 +77,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        yourPreference = YourPreference.getInstance(getContext());
         activeMeds = view.findViewById(R.id.recyclerView_ActiveMeds);
         inactiveMeds = view.findViewById(R.id.recyclerView_InctiveMeds);
         medBtn = view.findViewById(R.id.medBtn);
@@ -109,6 +111,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
         YourPreference yourPrefrence = YourPreference.getInstance(getContext());
         //get all medications from firestore
+        if (yourPrefrence.getData(Constants.IS_LOGIN).equals("true")) {
         if (FirebaseHelper.isInternetAvailable(getContext())){
             if(yourPrefrence.getData(Constants.isMedFriend).equals("true"))
             {
@@ -128,7 +131,11 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
                 inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
             }
         }
-    }
+    }else {
+            activePresenterInterface.showActiveStoredMedicines(getViewLifecycleOwner(), email);
+            inactivePresenterInterface.showInactiveStoredMedicines(getViewLifecycleOwner(), email);
+        }
+        }
 
     @Override
     public void onDestroyView() {
@@ -195,22 +202,27 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     @Override
     public void onActiveCLick(Medicine medicine) {
-        Bundle bundle = new Bundle();
-        bundle.putLong("id", medicine.getId());
-        bundle.putBoolean("suspended", false);
-        NavController navController = Navigation.findNavController(getView());
-        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        if (!yourPreference.getData(Constants.isMedFriend).equals("true")) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", medicine.getId());
+            bundle.putBoolean("suspended", false);
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        }
+
     }
 
     @Override
     public void onInactiveClick(Medicine medicine) {
-        Bundle bundle = new Bundle();
-        bundle.putLong("id", medicine.getId());
-        bundle.putBoolean("suspended", true);
-        NavController navController = Navigation.findNavController(getView());
-        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
-    }
+        if (!yourPreference.getData(Constants.isMedFriend).equals("true")) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", medicine.getId());
+            bundle.putBoolean("suspended", true);
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        }
 
+    }
 
 
 

@@ -65,7 +65,7 @@ public class RefillReminder extends Worker{
     }
 
     private void sendRefillDialog(int imageSource, String medName, long id, String medTimes, String medStrength, int medLeft){
-        IntentFilter intentFilter = new IntentFilter("notification_dialog");
+        IntentFilter intentFilter = new IntentFilter("refill_dialog");
         getApplicationContext().registerReceiver(refillReceiver, intentFilter);
         Intent intent = new Intent();
         intent.putExtra(Constants.MED_NAME, medName);
@@ -74,22 +74,14 @@ public class RefillReminder extends Worker{
         intent.putExtra(Constants.MED_TIMES, medTimes);
         intent.putExtra(Constants.MED_STRENGTH, medStrength);
         intent.putExtra(Constants.AMOUNT_LEFT, medLeft);
-        intent.setAction("notification_dialog");
+        intent.setAction("refill_dialog");
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         getApplicationContext().sendBroadcast(intent);
 
     }
 
     public void sendOnRefill(Context context, int imageSource, String medName, long id, int amountLeft){
-
-//        PendingIntent intent = WorkManager.getInstance(getApplicationContext())
-//                .createCancelPendingIntent(getId());
-
-        //snooze --> Snooze for extra 5 mins
-        //refill --> refill
-
-//        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
-
+        
         Intent skipIntent = new Intent(context, RefillSkipReceiver.class);
         Intent snoozeIntent = new Intent(context, RefillSnoozeReceiver.class);
         Intent refillIntent = new Intent(context, RefillDialogReceiver.class);
@@ -100,20 +92,17 @@ public class RefillReminder extends Worker{
         snoozeIntent.putExtra(Constants.AMOUNT_LEFT, amountLeft);
         snoozeIntent.putExtra(Constants.MED_NAME, medName);
         snoozeIntent.putExtra(Constants.IMAGE_RESOURCE, imageSource);
-//        snoozeIntent = WorkManager.getInstance(getApplicationContext())
-//                .createCancelPendingIntent(getId());
+
 
         refillIntent.putExtra(Constants.MED_ID, id);
         refillIntent.putExtra(Constants.AMOUNT_LEFT, amountLeft);
 
-//        PendingIntent intent = WorkManager.getInstance(getApplicationContext())
-//                .createCancelPendingIntent(getId());
+
 
         PendingIntent skipActionIntent = PendingIntent.getBroadcast(context,
                 0, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
 
-//        PendingIntent refillActionIntent = PendingIntent.getBroadcast(context,
-//                0, refillIntent, PendingIntent.FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);
+
 
         PendingIntent snoozeActionIntent = PendingIntent.getBroadcast(context,
                 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT|FLAG_IMMUTABLE);

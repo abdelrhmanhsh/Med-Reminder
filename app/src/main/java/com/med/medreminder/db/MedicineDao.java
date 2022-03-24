@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.med.medreminder.model.MedStatus;
 import com.med.medreminder.model.Medicine;
 
 import java.util.List;

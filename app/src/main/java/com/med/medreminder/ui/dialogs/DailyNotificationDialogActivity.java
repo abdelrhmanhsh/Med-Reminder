@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -102,6 +103,7 @@ public class DailyNotificationDialogActivity  extends Activity {
             public void onClick(View view) {
                 Toast.makeText(DailyNotificationDialogActivity.this, "Skipped!", Toast.LENGTH_SHORT).show();
 //                WorkManager.getInstance().cancelAllWorkByTag(String.valueOf(medId));
+                NotificationManagerCompat.from(DailyNotificationDialogActivity.this).cancel(100);
                 finish();
             }
         });
@@ -114,7 +116,9 @@ public class DailyNotificationDialogActivity  extends Activity {
                     String userEmail = FirebaseHelper.getUserEmail(DailyNotificationDialogActivity.this);
                     int newAmount = medLeft - 1;
                     updateMedAmount(medId, newAmount);
-                    updateMedAmountFirestore(userEmail, medId, newAmount);
+                    if(FirebaseHelper.isInternetAvailable(DailyNotificationDialogActivity.this))
+                        if(FirebaseHelper.isUserLoggedIn(DailyNotificationDialogActivity.this))
+                            updateMedAmountFirestore(userEmail, medId, newAmount);
                     Toast.makeText(DailyNotificationDialogActivity.this, "Medicine Taken!", Toast.LENGTH_SHORT).show();
                 }
 

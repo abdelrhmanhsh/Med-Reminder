@@ -14,7 +14,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.med.medreminder.R;
 import com.med.medreminder.databinding.FragmentNotificationsBinding;
+import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseHelper;
+import com.med.medreminder.firebase.FirebaseWork;
+import com.med.medreminder.model.Repository;
+import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.MainActivity;
 import com.med.medreminder.ui.displayHelpers.view.DisplayHelpersActivity;
 import com.med.medreminder.ui.displayMedFriends.view.DisplayMedFriendsActivity;
@@ -34,8 +38,9 @@ public class NotificationsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     FirebaseDatabase database;
+    RepositoryInterface repo;
 
-   // TextView logout_txt;
+    // TextView logout_txt;
 
     YourPreference yourPreference;
 
@@ -60,17 +65,20 @@ public class NotificationsFragment extends Fragment {
 
         //logout_txt = view.findViewById(R.id.logout_txt);
 
+        repo = Repository.getInstance(getContext(), ConcreteLocalSource.getInstance(getContext()),
+                FirebaseWork.getInstance(getContext()));
+
         yourPreference = YourPreference.getInstance(getContext());
 
         if (yourPreference.getData(Constants.IS_LOGIN).equals("false") || yourPreference.getData(Constants.IS_LOGIN).equals("")){
-           // logout_txt.setText(R.string.login);
+            // logout_txt.setText(R.string.login);
             binding.logoutTxt.setText(R.string.login);
             binding.logoutTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.login_ic,0,0,0);
 
         }
         else {
             //logout_txt.setText(R.string.logout);
-           binding.logoutTxt.setText(R.string.logout);
+            binding.logoutTxt.setText(R.string.logout);
             binding.logoutTxt.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.logout_ic,0,0,0);
 
         }
@@ -99,6 +107,10 @@ public class NotificationsFragment extends Fragment {
                 yourPreference.saveData(Constants.SECOND_NAME,"");
                 Log.d("TAG", "onViewCreated: inside if is login" + yourPreference.getData(Constants.IS_LOGIN));
                 yourPreference.saveData(Constants.isMedFriend,"false");
+
+                deleteAllMedicines();
+
+
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 getContext().startActivity(intent);
                 getActivity().finish();
@@ -172,6 +184,9 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 
+    public void deleteAllMedicines() {
+        repo.deleteAllMedicines();
+    }
 
 
 

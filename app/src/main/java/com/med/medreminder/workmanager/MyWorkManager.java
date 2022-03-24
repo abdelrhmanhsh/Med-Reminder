@@ -42,12 +42,12 @@ public class MyWorkManager extends Worker {
 
     private static NotificationManagerCompat notificationManagerCompat;
     Context context;
-    public static RefillDialogReceiver dialogReceiver;
+    public static DialogReceiver dialogReceiver;
 
     public MyWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
-        dialogReceiver = new RefillDialogReceiver();
+        dialogReceiver = new DialogReceiver();
     }
 
     @NonNull
@@ -89,7 +89,7 @@ public class MyWorkManager extends Worker {
 
 
         sendOnReschedule(context, imageSource, medName, id, amountLeft);
-        sendNotificationDialog(imageSource, medName, id, medTimes, medStrength, amountLeft);
+       sendNotificationDialog(imageSource, medName, id, medTimes, medStrength, amountLeft);
 //        sendNotification2Dialog();
 
 

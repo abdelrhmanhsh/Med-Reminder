@@ -163,7 +163,7 @@ public class MedReminderWorkManager extends Worker {
 
 
     private void sendNotificationDialog(Medicine medicine){
-        IntentFilter intentFilter = new IntentFilter("notification_dialog");
+        IntentFilter intentFilter = new IntentFilter("notify_dialog");
         getApplicationContext().registerReceiver(dialogReceiver, intentFilter);
         Intent intent = new Intent();
         intent.putExtra(Constants.MED_NAME, medicine.getName());
@@ -172,7 +172,7 @@ public class MedReminderWorkManager extends Worker {
         intent.putExtra(Constants.MED_TIMES, medicine.getTime());
         intent.putExtra(Constants.MED_STRENGTH, medicine.getStrength());
         intent.putExtra(Constants.AMOUNT_LEFT, medicine.getMedLeft());
-        intent.setAction("notification_dialog");
+        intent.setAction("notify_dialog");
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         getApplicationContext().sendBroadcast(intent);
 

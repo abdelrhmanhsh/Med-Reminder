@@ -9,6 +9,8 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
+
 import com.med.medreminder.R;
 import com.med.medreminder.db.ConcreteLocalSource;
 import com.med.medreminder.firebase.FirebaseHelper;
@@ -70,6 +72,7 @@ public class RefillDialogActivity extends Activity {
         textCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NotificationManagerCompat.from(RefillDialogActivity.this).cancel(2);
                 finish();
             }
         });

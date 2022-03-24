@@ -77,6 +77,7 @@ public class MedFriendActivity extends AppCompatActivity implements MedFriendVie
             currUserEmail = yourPrefrence.getData(Constants.EMAIL);
             if (isLogin.equals("true") && FirebaseHelper.isInternetAvailable(getApplicationContext())){
                 checkHelperEmail();
+                finish();
             }
             else {
                 Toast.makeText(this, "You must login first and be connected to the internet!", Toast.LENGTH_SHORT).show();
