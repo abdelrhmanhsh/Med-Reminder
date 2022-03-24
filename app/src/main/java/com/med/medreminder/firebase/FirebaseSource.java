@@ -25,6 +25,7 @@ public interface FirebaseSource {
     void login(String email, String password, Context context, firebaseLoginDelegate firebaseLoginDelegate);
 
     void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate);
+    void getMedFromFirestoreById(String email, long id, FirebaseGetMedDelegate firebaseGetMedDelegate);
 
     void addHelperToFirestore(String helperEmail,String patientEmail);
     void addRequestsToFirestore(String email,String name,String status,String helper_email);

@@ -49,6 +49,7 @@ public class FirebaseWork implements FirebaseSource {
     private MedicineDao dao;
     private LiveData<List<Medicine>> medicines;
     public static final String TAG = "FirebaseWork";
+    Medicine medicine = null;
 
     YourPreference preference;
 
@@ -222,10 +223,11 @@ public class FirebaseWork implements FirebaseSource {
                             medicines.observe(lifecycleOwner, new Observer<List<Medicine>>() {
                                 @Override
                                 public void onChanged(List<Medicine> medicines) {
-                                    for (Medicine medicine : medicines){
-                                        addMedToFirestore(medicine, email, medicine.getId());
+                                    if (medicines.size()>0){
+                                        for (Medicine medicine : medicines){
+                                            addMedToFirestore(medicine, email, medicine.getId());
+                                        }
                                     }
-
                                 }
                             });
 
@@ -451,6 +453,47 @@ public class FirebaseWork implements FirebaseSource {
             @Override
             public void onFailure(@NonNull Exception e) {
                 firebaseHomeMedsDelegate.failedToFetchMeds("Failed to retrieve medicines");
+            }
+        });
+    }
+
+    @Override
+    public void getMedFromFirestoreById(String email, long id, FirebaseGetMedDelegate firebaseGetMedDelegate) {
+        db.collection("Users").document(email).collection("Meds")
+                .document(String.valueOf(id)).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                long id = (long) documentSnapshot.get("id");
+                String name = documentSnapshot.get("name").toString();
+                String form = documentSnapshot.get("form").toString();
+                String strength = documentSnapshot.get("strength").toString();
+                String reason = documentSnapshot.get("reason").toString();
+                String isDaily = documentSnapshot.get("isDaily").toString();
+                String often = documentSnapshot.get("often").toString();
+                String time = documentSnapshot.get("time").toString();
+                String startDate = documentSnapshot.get("startDate").toString();
+                String endDate = documentSnapshot.get("endDate").toString();
+                long startDateMillis = (long) documentSnapshot.get("startDateMillis");
+                long endDateMillis = (long) documentSnapshot.get("endDateMillis");
+                int medLeft = (int) documentSnapshot.get("medLeft");
+                int refillLimit = (int) documentSnapshot.get("refillLimit");
+                int image = (int) documentSnapshot.get("image");
+//                String userEmail =  documentSnapshot.get("userEmail").toString();
+
+                medicine = new Medicine(id, name, form, strength, reason, isDaily, often, time, startDate, endDate,
+                        123456L, 123456L, 20, 2, 1, "", "abdelrahman@gmail.com",
+                        true, "");
+                firebaseGetMedDelegate.onSuccess(medicine);
+
+                Log.i("HOME ACTIVITY", "onSuccess: NAME" + documentSnapshot.get("name"));
+                Log.i("HOME ACTIVITY", "onSuccess: NAME" + documentSnapshot.get("name"));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                firebaseGetMedDelegate.onFailure("Failed to load med!");
+                Log.i(TAG, "onFailure: " + e.fillInStackTrace());
             }
         });
     }

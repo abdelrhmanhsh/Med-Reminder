@@ -634,6 +634,11 @@ public class MedicationDrugScreenEditFragment extends Fragment implements Displa
     }
 
     @Override
+    public void getMedByIdFirestore(Medicine medicine) {
+
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.first_reminder:

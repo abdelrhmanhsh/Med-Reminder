@@ -11,5 +11,6 @@ public interface DisplayEditViewInterface {
     void deleteMed(Medicine medicine);
     void updateMedFirestore(Medicine medicine, String email, long id);
     void deleteMedFirestore(String email, long id);
+    void getMedByIdFirestore(Medicine medicine);
 
 }

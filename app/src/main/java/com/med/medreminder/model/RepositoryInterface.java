@@ -5,6 +5,7 @@ import android.content.Context;
 import com.med.medreminder.firebase.FirebaseActiveMedDelegate;
 import com.med.medreminder.firebase.FirebaseDelegate;
 import com.med.medreminder.firebase.FirebaseDisplayMedFriendsDelegate;
+import com.med.medreminder.firebase.FirebaseGetMedDelegate;
 import com.med.medreminder.firebase.FirebaseInactiveMedDelegate;
 import com.med.medreminder.firebase.FirebaseHelpersDelegate;
 import com.med.medreminder.firebase.FirebaseLoadRequestsDelegate;
@@ -52,6 +53,7 @@ public interface RepositoryInterface {
 
 
     void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate);
+    void getMedFromFirestoreById(String email, long id, FirebaseGetMedDelegate firebaseGetMedDelegate);
     void getInactiveMedsFromFirebase(String email,long time, FirebaseInactiveMedDelegate firebaseInactiveMedDelegate);
     void getActiveMedsFromFirebase(String email,long time, FirebaseActiveMedDelegate firebaseActiveMedDelegate);
     void Helpers(String myEmail, FirebaseHelpersDelegate firebaseHelpersDelegate);

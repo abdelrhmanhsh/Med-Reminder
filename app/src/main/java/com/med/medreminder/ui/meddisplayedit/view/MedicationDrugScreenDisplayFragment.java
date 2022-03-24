@@ -85,6 +85,8 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
         btnRefill.setOnClickListener(this);
         btnResume.setOnClickListener(this);
 
+
+
         id = getArguments().getLong("id");
         isSuspended = getArguments().getBoolean("suspended");
         getMedicine(id);
@@ -92,6 +94,9 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     }
 
     public void getMedicine(long id){
+//        Medicine medd = getMedByIdFirestore("abdelrahman@gmail.com", id);
+//        Log.i(TAG, "getMedicine: medddddddd " + medd.toString());
+        presenterInterface.getMedByIdFirestore("abdelrahman@gmail.com", id);
         LiveData<Medicine> medicine = getMedDetails(id);
         medicine.observe(this, new Observer<Medicine>() {
             @Override
@@ -104,6 +109,7 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
 
             }
         });
+
     }
 
     private void updateUI(Medicine medicine){
@@ -331,5 +337,16 @@ public class MedicationDrugScreenDisplayFragment extends Fragment implements Vie
     public void deleteMedFirestore(String email, long id) {
         presenterInterface.deleteMedFirestore(email, id);
     }
+
+    @Override
+    public void getMedByIdFirestore(Medicine medicine) {
+        Log.i(TAG, "getMedByIdFirestore: " + medicine.toString());
+
+    }
+//
+//    @Override
+//    public Medicine getMedByIdFirestore(String email, long id) {
+//        return presenterInterface.getMedByIdFirestore(email, id);
+//    }
 
 }

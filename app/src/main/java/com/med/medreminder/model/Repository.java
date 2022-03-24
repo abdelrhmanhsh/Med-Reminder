@@ -5,6 +5,7 @@ import android.content.Context;
 import com.med.medreminder.db.LocalSource;
 import com.med.medreminder.firebase.FirebaseActiveMedDelegate;
 import com.med.medreminder.firebase.FirebaseDisplayMedFriendsDelegate;
+import com.med.medreminder.firebase.FirebaseGetMedDelegate;
 import com.med.medreminder.firebase.FirebaseInactiveMedDelegate;
 import com.med.medreminder.firebase.FirebaseHelpersDelegate;
 import com.med.medreminder.firebase.FirebaseLoadRequestsDelegate;
@@ -166,6 +167,11 @@ public class Repository implements RepositoryInterface {
     @Override
     public void getMedicinesOnDateFromFirebase(String email, long time, firebaseHomeMedsDelegate firebaseHomeMedsDelegate) {
         firebaseSource.getMedicinesOnDateFromFirebase(email,time,firebaseHomeMedsDelegate);
+    }
+
+    @Override
+    public void getMedFromFirestoreById(String email, long id, FirebaseGetMedDelegate firebaseGetMedDelegate) {
+        firebaseSource.getMedFromFirestoreById(email, id, firebaseGetMedDelegate);
     }
 
     @Override

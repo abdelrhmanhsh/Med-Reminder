@@ -42,12 +42,12 @@ public class MyWorkManager extends Worker {
 
     private static NotificationManagerCompat notificationManagerCompat;
     Context context;
-    public static RefillDialogReceiver dialogReceiver;
+    public static DialogReceiver dialogReceiver;
 
     public MyWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.context = context;
-        dialogReceiver = new RefillDialogReceiver();
+        dialogReceiver = new DialogReceiver();
     }
 
     @NonNull
@@ -88,11 +88,9 @@ public class MyWorkManager extends Worker {
 
 
 
-        sendOnReschedule(context, imageSource, medName, id, amountLeft);
+        sendOnReschedule(context, imageSource, medName, id, amountLeft, medTimes, medStrength);
         sendNotificationDialog(imageSource, medName, id, medTimes, medStrength, amountLeft);
 //        sendNotification2Dialog();
-
-
 
 
 //        dialogReceiver = new DialogReceiver();
@@ -132,7 +130,7 @@ public class MyWorkManager extends Worker {
 
     }
 
-    public void sendOnReschedule(Context context, int imageSource, String medName, long id, int amountLeft){
+    public void sendOnReschedule(Context context, int imageSource, String medName, long id, int amountLeft, String medTimes, String medStrength){
 
         Intent intent = new Intent(context, HomeActivity.class);
 //        Medicine medicine = null;
@@ -151,6 +149,17 @@ public class MyWorkManager extends Worker {
         snoozeIntent.putExtra(Constants.AMOUNT_LEFT, amountLeft);
         snoozeIntent.putExtra(Constants.MED_NAME, medName);
         snoozeIntent.putExtra(Constants.IMAGE_RESOURCE, imageSource);
+        snoozeIntent.putExtra(Constants.MED_STRENGTH, medStrength);
+        snoozeIntent.putExtra(Constants.MED_TIMES, medTimes);
+
+
+//                .putString(Constants.MED_STRENGTH, medStrength)
+//                .putString(Constants.MED_TIMES, medTimes)
+
+        Log.i(TAG, "sendOnReschedule: MyWorkManander " + id);
+        Log.i(TAG, "sendOnReschedule: MyWorkManander " + amountLeft);
+        Log.i(TAG, "sendOnReschedule: MyWorkManander " + medName);
+        Log.i(TAG, "sendOnReschedule: MyWorkManander " + imageSource);
 //        snoozeIntent = WorkManager.getInstance(getApplicationContext())
 //                .createCancelPendingIntent(getId());
 

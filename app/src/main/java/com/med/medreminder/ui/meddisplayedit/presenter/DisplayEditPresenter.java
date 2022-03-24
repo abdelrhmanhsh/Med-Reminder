@@ -2,11 +2,12 @@ package com.med.medreminder.ui.meddisplayedit.presenter;
 
 import androidx.lifecycle.LiveData;
 
+import com.med.medreminder.firebase.FirebaseGetMedDelegate;
 import com.med.medreminder.model.Medicine;
 import com.med.medreminder.model.RepositoryInterface;
 import com.med.medreminder.ui.meddisplayedit.view.DisplayEditViewInterface;
 
-public class DisplayEditPresenter implements DisplayPresenterInterface{
+public class DisplayEditPresenter implements DisplayPresenterInterface, FirebaseGetMedDelegate {
 
     DisplayEditViewInterface view;
     RepositoryInterface repo;
@@ -27,6 +28,11 @@ public class DisplayEditPresenter implements DisplayPresenterInterface{
     }
 
     @Override
+    public void getMedByIdFirestore(String email, long id) {
+        repo.getMedFromFirestoreById(email, id, this);
+    }
+
+    @Override
     public void deleteMed(Medicine medicine) {
         repo.deleteMedicine(medicine);
     }
@@ -39,6 +45,16 @@ public class DisplayEditPresenter implements DisplayPresenterInterface{
     @Override
     public void deleteMedFirestore(String email, long id) {
         repo.deleteMedFirestore(email, id);
+    }
+
+    @Override
+    public void onSuccess(Medicine medicine) {
+        view.getMedByIdFirestore(medicine);
+    }
+
+    @Override
+    public void onFailure(String msg) {
+
     }
 
 }

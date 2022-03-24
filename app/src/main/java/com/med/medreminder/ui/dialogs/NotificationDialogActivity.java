@@ -1,5 +1,6 @@
 package com.med.medreminder.ui.dialogs;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -116,6 +117,7 @@ public class NotificationDialogActivity extends Activity {
             public void onClick(View view) {
                 Toast.makeText(NotificationDialogActivity.this, "Skipped!", Toast.LENGTH_SHORT).show();
                 WorkManager.getInstance().cancelAllWorkByTag(String.valueOf(medId));
+                NotificationManagerCompat.from(NotificationDialogActivity.this).cancel(1);
                 finish();
             }
         });
@@ -133,6 +135,7 @@ public class NotificationDialogActivity extends Activity {
                 }
 
                 WorkManager.getInstance().cancelAllWorkByTag(String.valueOf(medId));
+                NotificationManagerCompat.from(NotificationDialogActivity.this).cancel(1);
                 finish();
 
             }
@@ -142,7 +145,9 @@ public class NotificationDialogActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(NotificationDialogActivity.this, "Snoozed 15 minutes!", Toast.LENGTH_SHORT).show();
-                sendSnoozeNotification(NotificationDialogActivity.this, imageResource, medNameStr, medId, medLeft);
+                sendSnoozeNotification(NotificationDialogActivity.this, imageResource,
+                        medNameStr, medId, medLeft, medStrengthStr, medTimes);
+                NotificationManagerCompat.from(NotificationDialogActivity.this).cancel(1);
                 finish();
             }
         });
@@ -152,13 +157,17 @@ public class NotificationDialogActivity extends Activity {
 
     }
 
-    private void sendSnoozeNotification(Context context, int imageResource, String medName, long id, int amountLeft){
+    private void sendSnoozeNotification(Context context, int imageResource, String medName, long id, int amountLeft,
+                                        String medStrength, String medTimes){
         Data data = new Data.Builder()
                 .putInt(Constants.IMAGE_RESOURCE, imageResource)
                 .putString(Constants.MED_NAME, medName)
                 .putLong(Constants.MED_ID, id)
                 .putInt(Constants.AMOUNT_LEFT, amountLeft)
+                .putString(Constants.MED_STRENGTH, medStrength)
+                .putString(Constants.MED_TIMES, medTimes)
                 .build();
+
 
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(MyWorkManager.class)
                 .setInputData(data)

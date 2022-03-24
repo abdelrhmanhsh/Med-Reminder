@@ -244,7 +244,6 @@ public class MedReminderWorkManager extends Worker {
                 .setContentText(message)
                 .setAutoCancel(true)
                 .addAction(R.mipmap.ic_launcher, "Skip", skipActionIntent)
-                .addAction(R.mipmap.ic_launcher, "Snooze", snoozeActionIntent)
                 .addAction(R.mipmap.ic_launcher, "Take", takeActionIntent)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);

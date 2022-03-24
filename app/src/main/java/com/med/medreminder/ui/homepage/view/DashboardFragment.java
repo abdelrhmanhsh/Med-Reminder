@@ -64,6 +64,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
     private FragmentDashboardBinding binding;
     private FirebaseFirestore db;
     long curDate;
+    YourPreference yourPreference;
 
 
     @Override
@@ -88,6 +89,7 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
         activeAdapter = new ActiveMedsAdapter(this,getContext());
         activeMeds.setAdapter(activeAdapter);
 
+        yourPreference = YourPreference.getInstance(getContext());
 
         inactiveMeds.setHasFixedSize(true);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext());
@@ -195,22 +197,27 @@ public class DashboardFragment extends Fragment implements OnInactiveMedClickLis
 
     @Override
     public void onActiveCLick(Medicine medicine) {
-        Bundle bundle = new Bundle();
-        bundle.putLong("id", medicine.getId());
-        bundle.putBoolean("suspended", false);
-        NavController navController = Navigation.findNavController(getView());
-        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        if (!yourPreference.getData(Constants.isMedFriend).equals("true")) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", medicine.getId());
+            bundle.putBoolean("suspended", false);
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        }
+
     }
 
     @Override
     public void onInactiveClick(Medicine medicine) {
-        Bundle bundle = new Bundle();
-        bundle.putLong("id", medicine.getId());
-        bundle.putBoolean("suspended", true);
-        NavController navController = Navigation.findNavController(getView());
-        navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
-    }
+        if (!yourPreference.getData(Constants.isMedFriend).equals("true")) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", medicine.getId());
+            bundle.putBoolean("suspended", true);
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.actionNavigationDashboardToDisplayEditMedicationGraph, bundle);
+        }
 
+    }
 
 
 
